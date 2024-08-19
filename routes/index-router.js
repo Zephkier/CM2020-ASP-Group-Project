@@ -59,7 +59,9 @@ router.get("/courses", (request, response) => {
 
 // Contact
 router.get("/contact", (request, response) => {
-    return response.send("Contact");
+    return response.render("contact.ejs", {
+        pageName: "Contact",
+    });
 });
 
 // Handle invalid URLs via '/*'
