@@ -7,7 +7,7 @@ const port = 3000;
 // Tell Express to use EJS as templating engine
 app.set("view engine", "ejs");
 
-// Set location of static files
+// Set location of static files (eg. css, image, js)
 app.use(express.static(__dirname + "/public"));
 
 // Set default 'locals.variables', then call next() to proceed with rest of code file
@@ -15,7 +15,7 @@ app.use(express.static(__dirname + "/public"));
 app.use((request, response, next) => {
     response.locals.pageName = "You forgot to set 'pageName' in this page's .ejs file!";
     response.locals.tabNameSeparator = " | ";
-    response.locals.appName = "BLA";
+    response.locals.appName = "Bright Learning Academy";
     next();
 });
 
