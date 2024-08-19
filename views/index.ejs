@@ -19,6 +19,7 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/contact.css" />
         <style>
             body {
                 background-image: url("images/bg-texture.png");
@@ -32,16 +33,16 @@
 
         <header>
             <div class="container header__container">
-                <div class="header__left">
-                    <h1>Grow your skills to andvance your career path</h1>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam saepe animi, ad quis et atque iste placeat minus ipsa rem?</p>
-                    <a href="/courses" class="btn btn-primary">Get Started</a>
-                </div>
-
                 <div class="header__right">
                     <div class="header__right-image">
                         <img src="images/header.svg" />
                     </div>
+                </div>
+                <div class="header__left">
+                    <h1>Grow your skills to advance your career path</h1>
+                    <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends. </p>
+                    <a href="/courses" class="btn btn-primary">Sign Up</a>
+                    <a href="/courses" class="btn btn-primary">Learn More</a>
                 </div>
             </div>
         </header>
@@ -51,7 +52,7 @@
             <div class="container categories__container">
                 <div class="categories__left">
                     <h1>Categories</h1>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum tenetur aut qui explicabo modi ipsa optio, ab doloremque quas, provident rerum et, fugiat amet quia. Quisquam neque similique quas optio!</p>
+                    <p>Expand your coding expertise and dive into the world of technology. Whether you're a beginner or looking to advance your skills, explore these courses designed to enhance your programming knowledge.</p>
                     <a href="#" class="btn">Learn More</a>
                 </div>
 
@@ -60,48 +61,50 @@
                         <span class="category__icon">
                             <i class="uil uil-bitcoin-circle"></i>
                         </span>
-                        <h5>Blockchain</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Web Development</h5>
+                        <p>Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites.</p>
                     </article>
 
                     <article class="category">
                         <span class="category__icon">
                             <i class="uil uil-palette"></i>
                         </span>
-                        <h5>Graphic Design</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Mobile App Development</h5>
+                        <p>Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter.</p>
                     </article>
 
                     <article class="category">
                         <span class="category__icon">
                             <i class="uil uil-usd-circle"></i>
                         </span>
-                        <h5>Finance</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Data Structures & Algorithms</h5>
+                        <p>Understand the core concepts of data structures and algorithms to solve complex problems efficiently.</p>
                     </article>
 
                     <article class="category">
                         <span class="category__icon">
                             <i class="uil uil-megaphone"></i>
                         </span>
-                        <h5>Marketing</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Machine Learning</h5>
+                        <p>Explore the world of AI by learning the principles of machine learning, including supervised and unsupervised learning.</p>
                     </article>
 
                     <article class="category">
                         <span class="category__icon">
                             <i class="uil uil-music"></i>
                         </span>
-                        <h5>Music</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Cybersecurity</h5>
+                        <p>Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices.</p>
                     </article>
 
                     <article class="category">
                         <span class="category__icon">
                             <i class="uil uil-puzzle-piece"></i>
                         </span>
-                        <h5>Business</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, elit temporibus, qui.</p>
+                        <h5>Cloud Computing</h5>
+                        <p>Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud.
+
+                        </p>
                     </article>
                 </div>
             </div>
@@ -111,38 +114,20 @@
         <section class="courses">
             <h2>Our Popular Courses</h2>
             <div class="container courses__container">
-                <article class="course">
-                    <div class="course__image">
-                        <img src="images/course1.jpg" />
-                    </div>
-                    <div class="course__info">
-                        <h4>Responsive Social Media Website UI Design</h4>
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt aperiam deserunt eaque quos iure ad debitis.</p>
-                        <a href="/courses" class="btn btn-primary">Learn More</a>
-                    </div>
-                </article>
-
-                <article class="course">
-                    <div class="course__image">
-                        <img src="images/course2.jpg" />
-                    </div>
-                    <div class="course__info">
-                        <h4>Responsive SmartHome Website Design</h4>
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt aperiam deserunt eaque quos iure ad debitis.</p>
-                        <a href="/courses" class="btn btn-primary">Learn More</a>
-                    </div>
-                </article>
-
-                <article class="course">
-                    <div class="course__image">
-                        <img src="images/course3.jpg" />
-                    </div>
-                    <div class="course__info">
-                        <h4>Responsive Admin Dashboard UI Design</h4>
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt aperiam deserunt eaque quos iure ad debitis.</p>
-                        <a href="/courses" class="btn btn-primary">Learn More</a>
-                    </div>
-                </article>
+                <%courses.forEach((course, index) => { %>
+                    <a href="#">
+                        <article class="course">
+                            <div class="course__image">
+                                <img src="images/course<%= index + 1 %>.jpg" />
+                            </div>
+                            <div class="course__info">
+                                <h4><%= course.title %></h4>
+                                <p><%= course.description %></p>
+                                <p class="course__enroll">Students enrolled: <%= course.enrollCount %></p>
+                            </div>
+                        </article>
+                    </a>
+                <%}) %>
             </div>
         </section>
         <!-- ========================= END OF COURSES ========================= -->
@@ -150,87 +135,90 @@
         <section class="faqs">
             <h2>Frequently Asked Questions</h2>
             <div class="container faqs__container">
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>How do I choose the right course for my needs?</h4>
+                        <p>We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>What is the course format?</h4>
+                        <p>Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>Will I receive a certificate upon completion?</h4>
+                        <p>Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>Can I access the course content after completing it?</h4>
+                        <p>Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>Are there any prerequisites for enrolling in a course?</h4>
+                        <p>Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>How do I interact with instructors and other students?</h4>
+                        <p>You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>What if I have questions during the course?</h4>
+                        <p>If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>What is your refund policy?</h4>
+                        <p>We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>How do I access the course materials?</h4>
+                        <p>Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection.</p>
                     </div>
                 </article>
-
+        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
-                        <h4>How do I know the right courses for me?</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laudantium quis qui similique quidem at voluptatem ex. Est dolorum minima dolor aut ut, accusantium vitae architecto aliquid nostrum numquam quibusdam.</p>
+                        <h4>Do you offer group discounts or corporate training?</h4>
+                        <p>Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information.</p>
                     </div>
                 </article>
+        
             </div>
         </section>
+        
         <!-- ========================= END OF FAQs ========================= -->
 
         <section class="container testimonials__container mySwiper">
