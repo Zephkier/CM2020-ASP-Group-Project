@@ -1,21 +1,22 @@
 {
-  "name": "asp-final",
-  "version": "1.0.0",
-  "description": "agile software project source code",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "express-validator": "^7.2.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
-  }
+    "name": "asp-final",
+    "version": "1.0.0",
+    "description": "agile software project source code",
+    "main": "main.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "devStart": "nodemon index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "express-session": "^1.18.0",
+        "express-validator": "^7.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.4"
+    }
 }
