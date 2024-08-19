@@ -21,7 +21,7 @@ const router = express.Router();
  * <label for="matchingName"> selects <input id="matchingName">, this helps with accessibility
  *
  * <button name="whatIsYourName"> returns its <button value="theName">
- 
+ *
  * =========================
  * Linking URLs and source files:
  * -------------------------
@@ -30,9 +30,9 @@ const router = express.Router();
  *
  * Whenever a source file is referenced (eg. css' <link href=""> / url() / <img src=""> / <script src="">),
  * Express looks into 'public' dir for a matching file name to load
- * 
+ *
  * This is set in index.js via "express.static()"
- * 
+ *
  * =========================
  */
 
@@ -52,7 +52,9 @@ router.get("/about", (request, response) => {
 
 // Courses
 router.get("/courses", (request, response) => {
-    return response.send("Courses");
+    return response.render("courses.ejs", {
+        pageName: "Courses",
+    });
 });
 
 // Contact
