@@ -5,16 +5,16 @@ const router = express.Router();
 /**
  * Useful notes to reference throughout implementation!
  *
- * ===== =====
+ * =========================
  * Express functions:
- * ----- -----
+ * -------------------------
  * app.get()/router.get() = the endpoint with prefix, if any
  * response.render()      = looks into 'views' dir for a matching file name to load
  * response.redirect()    = the endpoint without prefix
  *
- * ===== =====
+ * =========================
  * Forms and accessibility:
- * ----- -----
+ * -------------------------
  * <* name="someName"> is used as variable name for routing in .js
  *
  * <form action="endpointHere"> must match with .js .post("endpointHere") function
@@ -22,9 +22,9 @@ const router = express.Router();
  *
  * <button name="whatIsYourName"> returns its <button value="theName">
  
- * ===== =====
+ * =========================
  * Linking URLs and source files:
- * ----- -----
+ * -------------------------
  * <a href=""> = the endpoint with prefix, if any
  * <a href=""> only does GET requests
  *
@@ -33,7 +33,7 @@ const router = express.Router();
  * 
  * This is set in index.js via "express.static()"
  * 
- * ===== =====
+ * =========================
  */
 
 // Home
