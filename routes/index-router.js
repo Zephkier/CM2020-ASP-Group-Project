@@ -45,7 +45,9 @@ router.get("/", (request, response) => {
 
 // About
 router.get("/about", (request, response) => {
-    return response.send("About");
+    return response.render("about.ejs", {
+        pageName: "About",
+    });
 });
 
 // Courses
