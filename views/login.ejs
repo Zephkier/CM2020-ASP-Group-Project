@@ -1,85 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + tabNameSeparator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= pageName + tabNameSeparator + appName %></title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS (MONTSERRAT) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS (MONTSERRAT) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/contact.css" />
-    <link rel="stylesheet" href="css/about.css" />
-    <style>
-        body {
-            background-image: url("images/bg-texture.png");
-        }
-    </style>
-</head>
-
-<body>
-    <%- include("./partials/navbar.ejs") %>
-    <!-- ========================= END OF NAVBAR ========================= -->
-
-
-
-    <main>
-        <div class="container">
-            <section class="form-section">
-                
-                <h2>Login to Your Account</h2>
-                <% if (errorMessage) { %>
-                    <!-- Display error message if there is one -->
-                    <div class="error-message">
-                        <%= errorMessage %>
-                    </div>
-                    <% } %>
-                        <form action="/login" method="POST" class="login-form">
-                            <div class="form-group">
-                                <label for="usernameOrEmail">Username or Email:</label>
-                                <input type="text" id="usernameOrEmail" name="usernameOrEmail" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password:</label>
-                                <input type="password" id="password" name="password" required>
-                                <!-- Toggle password visibility -->
-                                <span class="toggle-password" onclick="togglePassword()">Show Password</span>
-                            </div>
-                            <button type="submit">Login</button>
-                        </form>
-                        <div class="login-redirect">
-                            <a href="/add_user">Create a new account</a>
-                        </div>
-            </section>
-        </div>
-    </main>
-
-    
-    <%- include("./partials/footer.ejs") %>
-        <!-- ========================= END OF FOOTER ========================= -->
-    <script>
-        // Function to toggle the visibility of the password field
-        function togglePassword() {
-            const passwordField = document.getElementById('password');
-            const togglePassword = document.querySelector('.toggle-password');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                togglePassword.textContent = 'Hide Password';
-            } else {
-                passwordField.type = 'password';
-                togglePassword.textContent = 'Show Password';
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/contact.css" />
+        <link rel="stylesheet" href="css/about.css" />
+        <style>
+            body {
+                background-image: url("images/bg-texture.png");
             }
-        }
-    </script>
-</body>
+        </style>
+    </head>
 
+    <body>
+        <%- include("./partials/navbar.ejs") %>
+        <!-- ========================= END OF NAVBAR ========================= -->
+
+        <main>
+            <div class="container">
+                <section class="form-section">
+                    <h2>Login to Your Account</h2>
+                    <% if (errorMessage) { %>
+                    <!-- Display error message if there is one -->
+                    <div class="error-message"><%= errorMessage %></div>
+                    <% } %>
+                    <form action="/login" method="POST" class="login-form">
+                        <div class="form-group">
+                            <label for="usernameOrEmail">Username or Email:</label>
+                            <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required />
+                            <!-- Toggle password visibility -->
+                            <span class="toggle-password" onclick="togglePassword()">Show Password</span>
+                        </div>
+                        <button type="submit">Login</button>
+                    </form>
+                    <div class="login-redirect">
+                        <a href="/add_user">Create a new account</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <!-- ========================= END OF LOGIN ========================= -->
+
+        <%- include("./partials/footer.ejs") %>
+        <!-- ========================= END OF FOOTER ========================= -->
+        <script>
+            // Function to toggle the visibility of the password field
+            function togglePassword() {
+                const passwordField = document.getElementById("password");
+                const togglePassword = document.querySelector(".toggle-password");
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    togglePassword.textContent = "Hide Password";
+                } else {
+                    passwordField.type = "password";
+                    togglePassword.textContent = "Show Password";
+                }
+            }
+        </script>
+    </body>
 </html>

@@ -35,4 +35,3 @@ const closeNav = () => {
 };
 
 closeBtn.addEventListener("click", closeNav);
-

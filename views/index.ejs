@@ -40,7 +40,7 @@
                 </div>
                 <div class="header__left">
                     <h1>Grow your skills to advance your career path</h1>
-                    <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends. </p>
+                    <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends.</p>
                     <a href="/courses" class="btn btn-primary">Sign Up</a>
                     <a href="/courses" class="btn btn-primary">Learn More</a>
                 </div>
@@ -102,9 +102,7 @@
                             <i class="uil uil-puzzle-piece"></i>
                         </span>
                         <h5>Cloud Computing</h5>
-                        <p>Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud.
-
-                        </p>
+                        <p>Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud.</p>
                     </article>
                 </div>
             </div>
@@ -115,18 +113,18 @@
             <h2>Our Popular Courses</h2>
             <div class="container courses__container">
                 <%courses.forEach((course, index) => { %>
-                    <a href="#">
-                        <article class="course">
-                            <div class="course__image">
-                                <img src="images/course<%= index + 1 %>.jpg" />
-                            </div>
-                            <div class="course__info">
-                                <h4><%= course.title %></h4>
-                                <p><%= course.description %></p>
-                                <p class="course__enroll">Students enrolled: <%= course.enrollCount %></p>
-                            </div>
-                        </article>
-                    </a>
+                <a href="#">
+                    <article class="course">
+                        <div class="course__image">
+                            <img src="images/course<%= index + 1 %>.jpg" />
+                        </div>
+                        <div class="course__info">
+                            <h4><%= course.title %></h4>
+                            <p><%= course.description %></p>
+                            <p class="course__enroll">Students enrolled: <%= course.enrollCount %></p>
+                        </div>
+                    </article>
+                </a>
                 <%}) %>
             </div>
         </section>
@@ -135,7 +133,6 @@
         <section class="faqs">
             <h2>Frequently Asked Questions</h2>
             <div class="container faqs__container">
-        
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -143,7 +140,7 @@
                         <p>We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -151,7 +148,7 @@
                         <p>Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -159,7 +156,7 @@
                         <p>Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -167,7 +164,7 @@
                         <p>Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -175,7 +172,7 @@
                         <p>Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -183,7 +180,7 @@
                         <p>You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -191,7 +188,7 @@
                         <p>If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -199,7 +196,7 @@
                         <p>We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -207,7 +204,7 @@
                         <p>Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection.</p>
                     </div>
                 </article>
-        
+
                 <article class="faq">
                     <div class="faq__icon"><i class="uil uil-plus"></i></div>
                     <div class="question__answer">
@@ -215,10 +212,8 @@
                         <p>Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information.</p>
                     </div>
                 </article>
-        
             </div>
         </section>
-        
         <!-- ========================= END OF FAQs ========================= -->
 
         <section class="container testimonials__container mySwiper">

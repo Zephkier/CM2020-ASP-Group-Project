@@ -28,9 +28,10 @@ app.use((request, response, next) => {
 
 app.use("/", indexRouter);
 
-app.get("/*", (request, response) => {
-    return response.redirect("/");
-});
+// Handle invalid URLs via '/*'
+// app.get("/*", (request, response) => {
+//     return response.redirect("/");
+// });
 
 // Start server
 app.listen(port, () => {
