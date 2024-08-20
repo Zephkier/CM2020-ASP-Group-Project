@@ -164,52 +164,52 @@ router.post("/login", (request, response) => {
     // });
 });
 
-// Route - render the add-user form
-router.get("/add_user", (request, response) => {
-    return response.render("add_user.ejs", {
-        pageName: "Add User",
+
+//registration page
+router.get("/register", (request, response) => {
+    return response.render("register.ejs", {
+        pageName: "Register",
     });
 });
 
-// Route - handle user registration form submission
-router.post("/add_user", (request, response) => {
-    const { username, email, password } = req.body;
 
-    // Check if the username or email already exists
-    db.get("SELECT * FROM users WHERE username = ? OR email = ?", [username, email], (err, row) => {
-        if (err) {
-            console.error("Database error:", err.message);
-            res.status(500).send("Database error");
-        } else if (row) {
-            // Respond with an error if the username or email is taken
-            if (row.username === username) {
-                res.status(400).send("Username already exists");
-            } else {
-                res.status(400).send("Email already exists");
-            }
-        } else {
-            // Insert the new user into the database
-            db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, password], function (err) {
-                if (err) {
-                    console.error("Error inserting user:", err.message);
-                    res.status(500).send("Error inserting user");
-                } else {
-                    const userId = this.lastID;
-                    // Insert default profile info for the new user
-                    db.run("INSERT INTO user_profiles (user_id, bio, introduction, displayName, blogTitle, icon) VALUES (?, ?, ?, ?, ?, ?)", [userId, "No bio available.", "No introduction available.", username, `${username}'s Blog`, "user.png"], (err) => {
-                        if (err) {
-                            console.error("Error inserting user profile:", err.message);
-                            res.status(500).send("Error inserting user profile");
-                        } else {
-                            console.log("New user and profile inserted:", username);
-                            res.redirect("/login");
-                        }
-                    });
+// inserting value to datbase (registering)
+router.post('/register', (req, res) => {
+    const { role, username, email, password, major, year, department, title } = req.body;
+
+    // Insert into the users table
+    global.db.run('INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)', [email, username, password, role], function(error) {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Database error');
+            return;
+        }
+
+        const userId = this.lastID;  // Get the ID of the newly inserted user
+
+        // Insert additional data into the appropriate table
+        if (role === 'student') {
+            global.db.run('INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)', [userId, major || 'Not Enrolled', year || 0], (error) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).send('Database error');
+                    return;
                 }
+                res.redirect('/register');
+            });
+        } else if (role === 'educator') {
+            global.db.run('INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)', [userId, department || 'No Department', title || 'No Title'], (error) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).send('Database error');
+                    return;
+                }
+                res.redirect('/register');
             });
         }
     });
 });
+
 
 // Cart
 router.get("/cart", (request, response) => {
