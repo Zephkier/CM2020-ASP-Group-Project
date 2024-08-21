@@ -83,6 +83,11 @@ textarea {
     color: var(--color-white);
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Slightly transparent white */
+}
+
 .contact__form .btn {
     width: max-content;
     margin-top: 1rem;
