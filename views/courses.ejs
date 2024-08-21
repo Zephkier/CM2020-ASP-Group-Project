@@ -44,7 +44,7 @@
             
             <div class="container courses__container">
                 <% courses.forEach((course, index) => { %>
-                    <a href="courses/course/<%= course.title %>">
+                    <a href="/courses/course/<%= course.title %>">
                         <article class="course">
                             <div class="course__image">
                                 <img src="images/course<%= index + 1 %>.jpg" />
@@ -57,6 +57,7 @@
                         </article>
                     </a>
                 <% }) %>
+                
             </div>
         </section>
         <!-- ========================= END OF COURSES ========================= -->

@@ -99,12 +99,47 @@ router.get("/courses", (request, response) => {
 
 // (Individual) Course
 router.get("/courses/course/:courseTitle", (request, response) => {
-    let chosenCourseTitle = request.params.courseTitle;
+    const chosenCourseTitle = request.params.courseTitle;
+
+    // Define the courses array as a single source of truth
+    const courses = [
+        { title: "HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
+        { title: "CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
+        { title: "JavaScript", description: "Get hands-on with JavaScript to build interactive web pages.", enrollCount: 234 },
+        { title: "PHP", description: "Develop server-side applications with PHP.", enrollCount: 2314 },
+        { title: "Python", description: "Explore Python for web development, data science, and more.", enrollCount: 753 },
+        { title: "C++", description: "Enhance your programming skills with C++.", enrollCount: 124 },
+        { title: "C#", description: "Build robust applications using C# and .NET framework.", enrollCount: 69 },
+        { title: "Java", description: "Write cross-platform applications with Java.", enrollCount: 6432 },
+        { title: "Ruby", description: "Create dynamic web applications with Ruby on Rails.", enrollCount: 7573 },
+        { title: "Go", description: "Build efficient and scalable systems with Go.", enrollCount: 3622 },
+        { title: "Kotlin", description: "Develop modern Android apps with Kotlin.", enrollCount: 6244 },
+        { title: "Swift", description: "Create iOS apps using Swift.", enrollCount: 734 },
+        { title: "Rust", description: "Build safe and fast systems with Rust.", enrollCount: 11235 },
+        { title: "Dart", description: "Develop cross-platform mobile apps with Dart and Flutter.", enrollCount: 2234 },
+        { title: "R", description: "Perform statistical analysis and data visualization with R.", enrollCount: 1543 },
+        { title: "Lua", description: "Integrate Lua scripting in your applications.", enrollCount: 8342 },
+        { title: "Haskell", description: "Dive into functional programming with Haskell.", enrollCount: 124 },
+        { title: "Elixir", description: "Build scalable and maintainable applications with Elixir.", enrollCount: 1563 },
+    ];
+
+    const courseIndex = courses.findIndex(course => course.title === chosenCourseTitle);
+
+    if (courseIndex === -1) {
+        // Handle case where course is not found
+        return response.status(404).send("Course not found");
+    }
+
+    const chosenCourse = courses[courseIndex];
+
     return response.render("course.ejs", {
         pageName: "Course",
-        chosenCourseTitle: chosenCourseTitle,
+        chosenCourseTitle: chosenCourse.title,
+        courseDescription: chosenCourse.description,
+        courseIndex: courseIndex + 1,  // Adjust index for image path
     });
 });
+
 
 // Contact
 router.get("/contact", (request, response) => {
