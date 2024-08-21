@@ -8,16 +8,7 @@
 
         <!-- ICONSCOUT CDN -->
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
-
-        <!-- GOOGLE FONTS (MONTSERRAT) -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-        <!-- CSS -->
         <link rel="stylesheet" href="css/style.css" />
-        <link rel="stylesheet" href="css/contact.css" />
-        <link rel="stylesheet" href="css/about.css" />
         <style>
             body {
                 background-image: url("images/bg-texture.png");
@@ -27,8 +18,7 @@
 
     <body>
         <%- include("./partials/navbar.ejs") %>
-        <!-- ========================= END OF NAVBAR ========================= -->
-
+        
         <main>
             <div class="container">
                 <section class="form-section">
@@ -45,7 +35,6 @@
                         <div class="form-group">
                             <label for="password">Password:</label>
                             <input type="password" id="password" name="password" required />
-                            <!-- Toggle password visibility -->
                             <span class="toggle-password" onclick="togglePassword()">Show Password</span>
                         </div>
                         <button type="submit">Login</button>
@@ -56,12 +45,10 @@
                 </section>
             </div>
         </main>
-        <!-- ========================= END OF LOGIN ========================= -->
 
         <%- include("./partials/footer.ejs") %>
-        <!-- ========================= END OF FOOTER ========================= -->
+        
         <script>
-            // Function to toggle the visibility of the password field
             function togglePassword() {
                 const passwordField = document.getElementById("password");
                 const togglePassword = document.querySelector(".toggle-password");
