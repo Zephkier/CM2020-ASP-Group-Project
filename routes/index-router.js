@@ -38,7 +38,6 @@ const router = express.Router();
 
 // Home
 router.get("/", (request, response) => {
-    // Get top 3 courses with most enrollCount, this will be in backend anyway
     let courses = [
         { title: "Learn HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
         { title: "Learn CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
@@ -81,19 +80,16 @@ router.get("/courses", (request, response) => {
         { title: "Elixir", description: "Build scalable and maintainable applications with Elixir.", enrollCount: 1563 },
     ];
 
-    // Get the sorting option from query parameters
     const sortOption = request.query.sort || "popular";
 
-    // Sort the courses based on the selected option
-    if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount); // Most popular first
-    else if (sortOption === "asc") courses.sort((a, b) => a.title.localeCompare(b.title)); // Alphabetical A-Z
-    else if (sortOption === "desc") courses.sort((a, b) => b.title.localeCompare(a.title)); // Alphabetical Z-A
+    if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount);
+    else if (sortOption === "asc") courses.sort((a, b) => a.title.localeCompare(b.title));
+    else if (sortOption === "desc") courses.sort((a, b) => b.title.localeCompare(a.title));
 
-    // Render the courses page with sorted courses
     return response.render("courses.ejs", {
         pageName: "Courses",
         courses: courses,
-        sort: sortOption, // Pass the selected sort option to the template
+        sort: sortOption,
     });
 });
 
@@ -101,7 +97,6 @@ router.get("/courses", (request, response) => {
 router.get("/courses/course/:courseTitle", (request, response) => {
     const chosenCourseTitle = request.params.courseTitle;
 
-    // Define the courses array as a single source of truth
     const courses = [
         { title: "HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
         { title: "CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
@@ -126,7 +121,6 @@ router.get("/courses/course/:courseTitle", (request, response) => {
     const courseIndex = courses.findIndex(course => course.title === chosenCourseTitle);
 
     if (courseIndex === -1) {
-        // Handle case where course is not found
         return response.status(404).send("Course not found");
     }
 
@@ -136,10 +130,9 @@ router.get("/courses/course/:courseTitle", (request, response) => {
         pageName: "Course",
         chosenCourseTitle: chosenCourse.title,
         courseDescription: chosenCourse.description,
-        courseIndex: courseIndex + 1,  // Adjust index for image path
+        courseIndex: courseIndex + 1,
     });
 });
-
 
 // Contact
 router.get("/contact", (request, response) => {
@@ -149,15 +142,54 @@ router.get("/contact", (request, response) => {
 });
 
 // Profile
-// If user is not logged in, then redirect to login page
-// If user is logged in, then proceed to profile page as per normal
 router.get("/profile", (request, response) => {
+    if (!request.session || !request.session.authenticated) {
+        return response.redirect("/login");
+    }
+
     return response.render("profile.ejs", {
         pageName: "My Profile",
+        user: {
+            username: request.session.username,
+            bio: request.session.bio,
+            introduction: request.session.introduction,
+            displayName: request.session.displayName
+        }
     });
 });
 
-//log in
+// Route - handle user login
+router.post("/login", (request, response) => {
+    const { usernameOrEmail, password } = request.body;
+
+    global.db.get('SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?', [usernameOrEmail, usernameOrEmail, password], (err, row) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Database error' });
+        }
+        if (row) {
+            global.db.get('SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?', [row.user_id], (err, profile) => {
+                if (err) {
+                    console.error('Database error:', err.message);
+                    return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Database error' });
+                } else {
+                    request.session.authenticated = true;
+                    request.session.username = row.username;
+                    request.session.userId = row.user_id;
+                    request.session.bio = profile ? profile.bio : 'No bio available.';
+                    request.session.introduction = profile ? profile.introduction : 'No introduction available.';
+                    request.session.displayName = profile ? profile.displayName : row.username;
+
+                    return response.redirect('/profile');
+                }
+            });
+        } else {
+            return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Invalid username/email or password' });
+        }
+    });
+});
+
+// Login page route (GET)
 router.get("/login", (request, response) => {
     return response.render("login.ejs", {
         pageName: "Login",
@@ -165,86 +197,38 @@ router.get("/login", (request, response) => {
     });
 });
 
-// Route - handle user login
-router.post("/login", (request, response) => {
-    const { usernameOrEmail, password } = req.body;
 
-    // // Verify the user's credentials
-    // db.get('SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?', [usernameOrEmail, usernameOrEmail, password], (err, row) => {
-    //     if (err) {
-    //         console.error('Database error:', err.message);
-    //         res.render('login', { title: 'Login', errorMessage: 'Database error' });
-    //     } else if (row) {
-    //         // Fetch user profile information
-    //         db.get('SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?', [row.user_id], (err, profile) => {
-    //             if (err) {
-    //                 console.error('Database error:', err.message);
-    //                 res.render('login', { title: 'Login', errorMessage: 'Database error' });
-    //             } else {
-    //                 // Set session variables for the authenticated user
-    //                 req.session.authenticated = true;
-    //                 req.session.username = row.username;
-    //                 req.session.userId = row.user_id;
-    //                 req.session.bio = profile ? profile.bio : 'No bio available.';
-    //                 req.session.introduction = profile ? profile.introduction : 'No introduction available.';
-    //                 req.session.displayName = profile ? profile.displayName : row.username;
-    //                 req.session.blogTitle = profile ? profile.blogTitle : `${row.username}'s Blog`;
-
-    //                 res.redirect('/profile');
-    //             }
-    //         });
-    //     } else {
-    //         res.render('login', { title: 'Login', errorMessage: 'Invalid username/email or password' });
-    //     }
-    // });
-});
-
-
-//registration page
-router.get("/register", (request, response) => {
-    return response.render("register.ejs", {
-        pageName: "Register",
-    });
-});
-
-
-// inserting value to datbase (registering)
+// Register new user
 router.post('/register', (req, res) => {
     const { role, username, email, password, major, year, department, title } = req.body;
 
-    // Insert into the users table
     global.db.run('INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)', [email, username, password, role], function(error) {
         if (error) {
             console.error(error);
-            res.status(500).send('Database error');
-            return;
+            return res.status(500).send('Database error');
         }
 
-        const userId = this.lastID;  // Get the ID of the newly inserted user
+        const userId = this.lastID;
 
-        // Insert additional data into the appropriate table
         if (role === 'student') {
             global.db.run('INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)', [userId, major || 'Not Enrolled', year || 0], (error) => {
                 if (error) {
                     console.error(error);
-                    res.status(500).send('Database error');
-                    return;
+                    return res.status(500).send('Database error');
                 }
-                res.redirect('/register');
+                return res.redirect('/login');
             });
         } else if (role === 'educator') {
             global.db.run('INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)', [userId, department || 'No Department', title || 'No Title'], (error) => {
                 if (error) {
                     console.error(error);
-                    res.status(500).send('Database error');
-                    return;
+                    return res.status(500).send('Database error');
                 }
-                res.redirect('/register');
+                return res.redirect('/login');
             });
         }
     });
 });
-
 
 // Cart
 router.get("/cart", (request, response) => {
@@ -264,10 +248,4 @@ router.get("/search", (request, response) => {
     });
 });
 
-// Handle invalid URLs via '/*'
-// router.get("/*", (request, response) => {
-//     return response.redirect("/");
-// });
-
-// Export module containing the following so external files can access it
 module.exports = router;
