@@ -1,0 +1,97 @@
+* {
+    margin: 0 auto;
+}
+
+/* Form section styling */
+.form-section {
+    background-color: #2e3267; /* Match background color */
+    border-radius: 15px;
+    padding: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    color: #fff;
+}
+
+/* Form header */
+.form-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Error message styling */
+.error-message {
+    background-color: #f75842;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+/* Input fields */
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #424890; /* Match input background */
+    color: #fff;
+}
+
+/* Toggle password visibility */
+.toggle-password {
+    margin-top: 0.5rem;
+    display: inline-block;
+    cursor: pointer;
+    color: #f7c94b;
+    font-size: 0.9rem;
+}
+
+/* Login button */
+button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: #00bf8e; /* Use a nice contrasting color */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #009b75;
+}
+
+/* Redirect link */
+.login-redirect {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.login-redirect a {
+    color: #00bf8e;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-redirect a:hover {
+    text-decoration: underline;
+}
