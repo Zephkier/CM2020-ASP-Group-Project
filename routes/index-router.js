@@ -162,6 +162,14 @@ router.post("/login", (request, response) => {
     });
 });
 
+// Handle GET request for the register page
+router.get("/register", (request, response) => {
+    return response.render("register.ejs", {
+        pageName: "Register",
+    });
+});
+
+
 // Register new user
 router.post("/register", (req, res) => {
     const { role, username, email, password, major, year, department, title } = req.body;

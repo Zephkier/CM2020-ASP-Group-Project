@@ -1,3 +1,5 @@
+/* ----------- Login Page CSS ------------- */
+
 * {
     margin: 0 auto;
 }
@@ -94,4 +96,26 @@ button[type="submit"]:hover {
 
 .login-redirect a:hover {
     text-decoration: underline;
+}
+
+/* ----------- Login Page CSS ------------- */
+
+/* Button Styles */
+button {
+    background-color: #00bf8e;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00a77e;
+}
+
+button + button {
+    margin-left: 0.5rem;
 }

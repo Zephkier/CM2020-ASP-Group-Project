@@ -15,9 +15,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
         <!-- CSS -->
+        <link rel="stylesheet" href="css/login.css" />
         <link rel="stylesheet" href="css/style.css" />
-        <link rel="stylesheet" href="css/contact.css" />
-        <link rel="stylesheet" href="css/about.css" />
+
         <style>
             body {
                 background-image: url("images/bg-texture.png");
@@ -41,6 +41,8 @@
         <%- include("./partials/navbar.ejs") %>
         <!-- ========================= END OF NAVBAR ========================= -->
 
+
+        <main>
         <div class="container">
             <section class="form-section">
                 <h2 id="form-title">Create a New User</h2>
@@ -85,6 +87,7 @@
                 </div>
             </section>
         </div>
+    </main>
     
         <script>
             function showForm(role) {
