@@ -1,5 +1,7 @@
 // Import and setup modules
 const express = require("express");
+const { db } = require("../public/db.js");
+
 const router = express.Router();
 
 /**
@@ -59,7 +61,7 @@ router.get("/about", (request, response) => {
 
 // Courses
 router.get("/courses", (request, response) => {
-    global.db.all("SELECT * FROM courses", (err, allCourses) => {
+    db.all("SELECT * FROM courses", (err, allCourses) => {
         if (err) return console.error("Database error:", err.message);
         if (!allCourses) return console.error("No courses found!");
 
@@ -78,7 +80,7 @@ router.get("/courses", (request, response) => {
 
 // (Individual) Course
 router.get("/courses/course/:courseId", (request, response) => {
-    global.db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
+    db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
         if (err) return console.error("Database error:", err.message);
         if (!chosenCourse) return console.error("No chosen course!");
 
@@ -117,7 +119,7 @@ router.get("/profile", (request, response) => {
 router.post("/login", (request, response) => {
     const { usernameOrEmail, password } = request.body;
 
-    global.db.get("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?", [usernameOrEmail, usernameOrEmail, password], (err, row) => {
+    db.get("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?", [usernameOrEmail, usernameOrEmail, password], (err, row) => {
         if (err) {
             console.error("Database error:", err.message);
             return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
@@ -125,7 +127,7 @@ router.post("/login", (request, response) => {
 
         if (!row) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid username/email or password" });
 
-        global.db.get("SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?", [row.user_id], (err, profile) => {
+        db.get("SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?", [row.user_id], (err, profile) => {
             if (err) {
                 console.error("Database error:", err.message);
                 return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
@@ -154,7 +156,7 @@ router.get("/login", (request, response) => {
 router.post("/register", (req, res) => {
     const { role, username, email, password, major, year, department, title } = req.body;
 
-    global.db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (error) {
+    db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (error) {
         if (error) {
             console.error(error);
             return res.status(500).send("Database error");
@@ -163,7 +165,7 @@ router.post("/register", (req, res) => {
         const userId = this.lastID;
 
         if (role === "student") {
-            global.db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
+            db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
                 if (error) {
                     console.error(error);
                     return res.status(500).send("Database error");
@@ -171,7 +173,7 @@ router.post("/register", (req, res) => {
                 return res.redirect("/login");
             });
         } else if (role === "educator") {
-            global.db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
+            db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
                 if (error) {
                     console.error(error);
                     return res.status(500).send("Database error");
