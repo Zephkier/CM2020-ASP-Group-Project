@@ -78,10 +78,24 @@ router.get("/courses", (request, response) => {
 });
 
 // (Individual) Course
+/**
+ * FIXME
+ * For some reason, when accessing this page, the GET request is sent twice.
+ * 1st GET request: 'chosenCourse' is an object due to query (as expected)
+ * 2nd GET request: 'chosenCourse' becomes undefined
+ *
+ * Page still loads image and text as expected, but the `console.log()` is irritating me.
+ *
+ * Uncomment 'console.log()' lines to see it in action.
+ */
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
         if (err) return console.error("Database error:", err.message);
         if (!chosenCourse) return console.error("No chosen course!");
+
+        // console.log("^^^^^");
+        // console.log(chosenCourse);
+        // console.log("vvvvv");
 
         return response.render("course.ejs", {
             pageName: "Course",
@@ -99,55 +113,52 @@ router.get("/contact", (request, response) => {
 
 // Profile
 router.get("/profile", (request, response) => {
-    if (!request.session || !request.session.authenticated) {
-        return response.redirect("/login");
-    }
+    // Ensure user logged in
+    if (!request.session.user) return response.redirect("/login");
 
     return response.render("profile.ejs", {
         pageName: "My Profile",
-        user: {
-            username: request.session.username,
-            bio: request.session.bio,
-            introduction: request.session.introduction,
-            displayName: request.session.displayName,
-        },
+        user: request.session.user,
     });
 });
 
-// Route - handle user login
-router.post("/login", (request, response) => {
-    const { usernameOrEmail, password } = request.body;
-
-    db.get("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?", [usernameOrEmail, usernameOrEmail, password], (err, row) => {
-        if (err) {
-            console.error("Database error:", err.message);
-            return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
-        }
-
-        if (!row) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid username/email or password" });
-
-        db.get("SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?", [row.user_id], (err, profile) => {
-            if (err) {
-                console.error("Database error:", err.message);
-                return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
-            } else {
-                request.session.authenticated = true;
-                request.session.username = row.username;
-                request.session.userId = row.user_id;
-                request.session.bio = profile ? profile.bio : "No bio available.";
-                request.session.introduction = profile ? profile.introduction : "No introduction available.";
-                request.session.displayName = profile ? profile.displayName : row.username;
-                return response.redirect("/profile");
-            }
-        });
-    });
-});
-
-// Login page route (GET)
+// Login
 router.get("/login", (request, response) => {
     return response.render("login.ejs", {
         pageName: "Login",
         errorMessage: null,
+    });
+});
+
+// Login - submitting form
+router.post("/login", (request, response) => {
+    const { usernameOrEmail, password } = request.body;
+
+    // Ensure user exists in database
+    let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
+    let params = [usernameOrEmail, usernameOrEmail, password];
+    db.get(query, params, (err, existingUser) => {
+        if (err) {
+            console.error("Database error:", err.message);
+            return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
+        }
+        if (!existingUser) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
+
+        // At this point, user does indeed exists in database
+        let query = `
+        SELECT *
+        FROM profiles JOIN users
+        ON profiles.user_id = users.id
+        WHERE profiles.user_id = ?`;
+        db.get(query, [existingUser.id], (err, userInfo) => {
+            if (err) {
+                console.error("Database error:", err.message);
+                return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
+            }
+            request.session.user = userInfo;
+            console.log(request.session);
+            return response.redirect("/profile");
+        });
     });
 });
 

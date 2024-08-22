@@ -22,12 +22,27 @@ CREATE TABLE educators (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    displayName TEXT NOT NULL,
+    bio TEXT,
+    introduction TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     enrollCount INTEGER NOT NULL
 );
+
+INSERT INTO users (email, username, password, role) VALUES ('student@email.com', 'student', 'student', 'student');
+INSERT INTO users (email, username, password, role) VALUES ('educator@email.com', 'educator', 'educator', 'educator');
+
+INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (1, 'Studious Sam', 'I am studying 24/7!', 'Not sure what''s the difference between intro and bio');
+INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (2, 'Educational Eddie', 'Or should I put my educational instutution here?', 'Ah whatever...');
 
 INSERT INTO courses (name, description, enrollCount) VALUES ('HTML', 'Master the basics of web development with HTML.', 3423);
 INSERT INTO courses (name, description, enrollCount) VALUES ('CSS', 'Style your websites with modern CSS techniques.', 692);
