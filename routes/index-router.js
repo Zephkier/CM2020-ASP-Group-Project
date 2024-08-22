@@ -2,6 +2,7 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 
+// Initialize router
 const router = express.Router();
 
 /**
@@ -78,24 +79,10 @@ router.get("/courses", (request, response) => {
 });
 
 // (Individual) Course
-/**
- * FIXME
- * For some reason, when accessing this page, the GET request is sent twice.
- * 1st GET request: 'chosenCourse' is an object due to query (as expected)
- * 2nd GET request: 'chosenCourse' becomes undefined
- *
- * Page still loads image and text as expected, but the `console.log()` is irritating me.
- *
- * Uncomment 'console.log()' lines to see it in action.
- */
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
         if (err) return console.error("Database error:", err.message);
         if (!chosenCourse) return console.error("No chosen course!");
-
-        // console.log("^^^^^");
-        // console.log(chosenCourse);
-        // console.log("vvvvv");
 
         return response.render("course.ejs", {
             pageName: "Course",
@@ -113,12 +100,77 @@ router.get("/contact", (request, response) => {
 
 // Profile
 router.get("/profile", (request, response) => {
-    // Ensure user logged in
-    if (!request.session.user) return response.redirect("/login");
+    if (!request.session || !request.session.authenticated) {
+        return response.redirect("/login");
+    }
 
-    return response.render("profile.ejs", {
-        pageName: "My Profile",
-        user: request.session.user,
+    const userId = request.session.userId;
+
+    // Fetch user profile information and enrolled courses
+    db.all(`
+        SELECT courses.name, courses.description
+        FROM enrollments
+        JOIN courses ON enrollments.course_id = courses.id
+        WHERE enrollments.user_id = ?
+    `, [userId], (err, enrolledCourses) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return response.status(500).send('Database error');
+        }
+
+        // Ensure enrolledCourses is always defined as an array
+        enrolledCourses = enrolledCourses || [];
+
+        response.render("profile.ejs", {
+            pageName: "My Profile",
+            user: {
+                username: request.session.username,
+                bio: request.session.bio,
+                introduction: request.session.introduction,
+                displayName: request.session.displayName,
+                enrolledCourses: enrolledCourses
+            }
+        });
+    });
+});
+
+// Route to handle course enrollment
+router.post('/enroll', (request, response) => {
+    if (!request.session || !request.session.authenticated) {
+        return response.redirect('/login');
+    }
+
+    const userId = request.session.userId;
+    const courseId = request.body.courseId;
+
+    // Insert into the enrollments table
+    db.run('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)', [userId, courseId], function (error) {
+        if (error) {
+            console.error('Database error:', error);
+            return response.status(500).send('Database error');
+        }
+
+        response.redirect('/profile');
+    });
+});
+
+// Buy Now route
+router.post('/buy-course', (request, response) => {
+    if (!request.session || !request.session.authenticated) {
+        return response.redirect('/login');
+    }
+
+    const userId = request.session.userId;
+    const courseId = request.body.courseId;
+
+    // Insert into the enrollments table
+    db.run('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)', [userId, courseId], function (error) {
+        if (error) {
+            console.error('Database error:', error);
+            return response.status(500).send('Database error');
+        }
+
+        response.redirect('/profile');
     });
 });
 
@@ -130,7 +182,7 @@ router.get("/login", (request, response) => {
     });
 });
 
-// Login - submitting form
+/// Login - submitting form
 router.post("/login", (request, response) => {
     const { usernameOrEmail, password } = request.body;
 
@@ -144,23 +196,33 @@ router.post("/login", (request, response) => {
         }
         if (!existingUser) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
 
-        // At this point, user does indeed exists in database
-        let query = `
+        // At this point, user does indeed exist in the database
+        let profileQuery = `
         SELECT *
         FROM profiles JOIN users
         ON profiles.user_id = users.id
         WHERE profiles.user_id = ?`;
-        db.get(query, [existingUser.id], (err, userInfo) => {
+        
+        db.get(profileQuery, [existingUser.id], (err, userInfo) => {
             if (err) {
                 console.error("Database error:", err.message);
                 return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
             }
-            request.session.user = userInfo;
-            console.log(request.session);
+
+            // Store user info in session
+            request.session.authenticated = true;
+            request.session.userId = existingUser.id;
+            request.session.username = existingUser.username;
+            request.session.bio = userInfo.bio;
+            request.session.introduction = userInfo.introduction;
+            request.session.displayName = userInfo.displayName;
+
+            // Redirect to profile after successful login
             return response.redirect("/profile");
         });
     });
 });
+
 
 // Handle GET request for the register page
 router.get("/register", (request, response) => {
@@ -168,7 +230,6 @@ router.get("/register", (request, response) => {
         pageName: "Register",
     });
 });
-
 
 // Register new user
 router.post("/register", (req, res) => {
@@ -214,7 +275,6 @@ router.post('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
 
 // Cart
 router.get("/cart", (request, response) => {

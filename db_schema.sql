@@ -62,3 +62,12 @@ INSERT INTO courses (name, description, enrollCount) VALUES ('R', 'Perform stati
 INSERT INTO courses (name, description, enrollCount) VALUES ('Lua', 'Integrate Lua scripting in your applications.', 8342);
 INSERT INTO courses (name, description, enrollCount) VALUES ('Haskell', 'Dive into functional programming with Haskell.', 124);
 INSERT INTO courses (name, description, enrollCount) VALUES ('Elixir', 'Build scalable and maintainable applications with Elixir.', 1563);
+
+CREATE TABLE enrollments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    course_id INTEGER,
+    enrollment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
