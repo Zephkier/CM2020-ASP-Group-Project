@@ -16,6 +16,7 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/profile.css" />
         <style>
             body {
                 background-image: url("images/bg-texture.png");
@@ -23,94 +24,37 @@
                 padding: 0;
                 font-family: "Montserrat", sans-serif;
             }
-
-            .profile-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 2rem;
-            }
-
-            .profile-header {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin-bottom: 2rem;
-            }
-
-            .profile-header img {
-                border-radius: 50%;
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-                border: 4px solid #007bff;
-            }
-
-            .profile-header h1 {
-                margin-top: 1rem;
-                font-size: 2.5rem;
-                color: #333;
-            }
-
-            .profile-details {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                background: rgba(255, 255, 255, 0.9);
-                padding: 2rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .profile-details h2 {
-                margin-bottom: 1.5rem;
-                color: #007bff;
-            }
-
-            .profile-details p {
-                margin: 0.5rem 0;
-                font-size: 1.1rem;
-                color: #555;
-            }
-
-            .profile-details button {
-                margin-top: 1.5rem;
-                padding: 0.75rem 2rem;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-
-            .profile-details button:hover {
-                background-color: #0056b3;
-            }
         </style>
     </head>
 
+
     <body>
         <%- include("./partials/navbar.ejs") %>
-        <!-- ========================= END OF NAVBAR ========================= -->
-
-        <div class="profile-container">
-            <div class="profile-header">
-                <img src="<%= user.profilePicture %>" alt="Profile Picture" />
-                <h1>Welcome, <%= user.displayName %></h1>
+    
+        <main class="profile-main">
+            <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                </div>
+    
+                <!-- Profile Details -->
+                <div class="profile-details">
+                    <h2 class="profile-details-title">Your Details</h2>
+                    <p class="profile-detail"><strong>Email:</strong> <%= user.email %></p>
+                    <p class="profile-detail"><strong>Username:</strong> <%= user.username %></p>
+                    <p class="profile-detail"><strong>Bio:</strong> <%= user.bio %></p>
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
+                    <!-- Logout Button -->
+                    <form action="/logout" method="POST" style="margin-top: 1rem;">
+                        <button type="submit" class="btn btn-secondary">Logout</button>
+                    </form>
+                </div>
             </div>
-
-            <div class="profile-details">
-                <h2>Your Details</h2>
-                <p><strong>Email:</strong> <%= user.email %></p>
-                <p><strong>Username:</strong> <%= user.username %></p>
-                <p><strong>Bio:</strong> <%= user.bio %></p>
-
-                <button onclick="window.location.href='/edit-profile'">Edit Profile</button>
-            </div>
-        </div>
-        <!-- ========================= END OF PROFILE ========================= -->
-
+        </main>
+    
         <%- include("./partials/footer.ejs") %>
-        <!-- ========================= END OF FOOTER ========================= -->
     </body>
-</html>
+    </html>

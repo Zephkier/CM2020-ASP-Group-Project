@@ -202,6 +202,20 @@ router.post("/register", (req, res) => {
     });
 });
 
+// Handle user logout
+router.post('/logout', (req, res) => {
+    // Destroy the session to log the user out
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error during logout:', err);
+            return res.status(500).send('An error occurred while logging out');
+        }
+        // Redirect to the login page after successful logout
+        res.redirect('/login');
+    });
+});
+
+
 // Cart
 router.get("/cart", (request, response) => {
     return response.render("cart.ejs", {
