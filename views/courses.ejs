@@ -43,20 +43,20 @@
             </form>
             
             <div class="container courses__container">
-                <% courses.forEach((course, index) => { %>
-                    <a href="/courses/course/<%= course.title %>">
+                <%allCourses.forEach(course => { %>
+                    <a href="/courses/course/<%= course.id %>">
                         <article class="course">
                             <div class="course__image">
-                                <img src="images/course<%= index + 1 %>.jpg" />
+                                <img src="/images/course<%= course.id %>.jpg" />
                             </div>
                             <div class="course__info">
-                                <h4>Learn <%= course.title %></h4>
+                                <h4>Learn <%= course.name %></h4>
                                 <p><%= course.description %></p>
                                 <p class="course__enroll">Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %></p>
                             </div>
                         </article>
                     </a>
-                <% }) %>
+                <%}) %>
                 
             </div>
         </section>

@@ -59,78 +59,33 @@ router.get("/about", (request, response) => {
 
 // Courses
 router.get("/courses", (request, response) => {
-    let courses = [
-        { title: "HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
-        { title: "CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
-        { title: "JavaScript", description: "Get hands-on with JavaScript to build interactive web pages.", enrollCount: 234 },
-        { title: "PHP", description: "Develop server-side applications with PHP.", enrollCount: 2314 },
-        { title: "Python", description: "Explore Python for web development, data science, and more.", enrollCount: 753 },
-        { title: "C++", description: "Enhance your programming skills with C++.", enrollCount: 124 },
-        { title: "C#", description: "Build robust applications using C# and .NET framework.", enrollCount: 69 },
-        { title: "Java", description: "Write cross-platform applications with Java.", enrollCount: 6432 },
-        { title: "Ruby", description: "Create dynamic web applications with Ruby on Rails.", enrollCount: 7573 },
-        { title: "Go", description: "Build efficient and scalable systems with Go.", enrollCount: 3622 },
-        { title: "Kotlin", description: "Develop modern Android apps with Kotlin.", enrollCount: 6244 },
-        { title: "Swift", description: "Create iOS apps using Swift.", enrollCount: 734 },
-        { title: "Rust", description: "Build safe and fast systems with Rust.", enrollCount: 11235 },
-        { title: "Dart", description: "Develop cross-platform mobile apps with Dart and Flutter.", enrollCount: 2234 },
-        { title: "R", description: "Perform statistical analysis and data visualization with R.", enrollCount: 1543 },
-        { title: "Lua", description: "Integrate Lua scripting in your applications.", enrollCount: 8342 },
-        { title: "Haskell", description: "Dive into functional programming with Haskell.", enrollCount: 124 },
-        { title: "Elixir", description: "Build scalable and maintainable applications with Elixir.", enrollCount: 1563 },
-    ];
+    global.db.all("SELECT * FROM courses", (err, allCourses) => {
+        if (err) return console.error("Database error:", err.message);
+        if (!allCourses) return console.error("No courses found!");
 
-    const sortOption = request.query.sort || "popular";
+        let sortOption = request.query.sort || "popular";
+        if (sortOption === "popular") allCourses.sort((a, b) => b.enrollCount - a.enrollCount);
+        else if (sortOption === "asc") allCourses.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sortOption === "desc") allCourses.sort((a, b) => b.name.localeCompare(a.name));
 
-    if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount);
-    else if (sortOption === "asc") courses.sort((a, b) => a.title.localeCompare(b.title));
-    else if (sortOption === "desc") courses.sort((a, b) => b.title.localeCompare(a.title));
-
-    return response.render("courses.ejs", {
-        pageName: "Courses",
-        courses: courses,
-        sort: sortOption,
+        return response.render("courses.ejs", {
+            pageName: "Courses",
+            allCourses: allCourses,
+            sort: sortOption,
+        });
     });
 });
 
 // (Individual) Course
-router.get("/courses/course/:courseTitle", (request, response) => {
-    const chosenCourseTitle = request.params.courseTitle;
+router.get("/courses/course/:courseId", (request, response) => {
+    global.db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
+        if (err) return console.error("Database error:", err.message);
+        if (!chosenCourse) return console.error("No chosen course!");
 
-    const courses = [
-        { title: "HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
-        { title: "CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
-        { title: "JavaScript", description: "Get hands-on with JavaScript to build interactive web pages.", enrollCount: 234 },
-        { title: "PHP", description: "Develop server-side applications with PHP.", enrollCount: 2314 },
-        { title: "Python", description: "Explore Python for web development, data science, and more.", enrollCount: 753 },
-        { title: "C++", description: "Enhance your programming skills with C++.", enrollCount: 124 },
-        { title: "C#", description: "Build robust applications using C# and .NET framework.", enrollCount: 69 },
-        { title: "Java", description: "Write cross-platform applications with Java.", enrollCount: 6432 },
-        { title: "Ruby", description: "Create dynamic web applications with Ruby on Rails.", enrollCount: 7573 },
-        { title: "Go", description: "Build efficient and scalable systems with Go.", enrollCount: 3622 },
-        { title: "Kotlin", description: "Develop modern Android apps with Kotlin.", enrollCount: 6244 },
-        { title: "Swift", description: "Create iOS apps using Swift.", enrollCount: 734 },
-        { title: "Rust", description: "Build safe and fast systems with Rust.", enrollCount: 11235 },
-        { title: "Dart", description: "Develop cross-platform mobile apps with Dart and Flutter.", enrollCount: 2234 },
-        { title: "R", description: "Perform statistical analysis and data visualization with R.", enrollCount: 1543 },
-        { title: "Lua", description: "Integrate Lua scripting in your applications.", enrollCount: 8342 },
-        { title: "Haskell", description: "Dive into functional programming with Haskell.", enrollCount: 124 },
-        { title: "Elixir", description: "Build scalable and maintainable applications with Elixir.", enrollCount: 1563 },
-    ];
-
-    const courseIndex = courses.findIndex(course => course.title === chosenCourseTitle);
-
-    if (courseIndex === -1) {
-        return response.status(404).send("Course not found");
-    }
-
-    const chosenCourse = courses[courseIndex];
-
-    return response.render("course.ejs", {
-        pageName: "Course",
-        chosenCourseTitle: chosenCourse.title,
-        courseDescription: chosenCourse.description,
-        courseIndex: courseIndex + 1,
+        return response.render("course.ejs", {
+            pageName: "Course",
+            chosenCourse: chosenCourse,
+        });
     });
 });
 
@@ -153,8 +108,8 @@ router.get("/profile", (request, response) => {
             username: request.session.username,
             bio: request.session.bio,
             introduction: request.session.introduction,
-            displayName: request.session.displayName
-        }
+            displayName: request.session.displayName,
+        },
     });
 });
 
@@ -162,30 +117,28 @@ router.get("/profile", (request, response) => {
 router.post("/login", (request, response) => {
     const { usernameOrEmail, password } = request.body;
 
-    global.db.get('SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?', [usernameOrEmail, usernameOrEmail, password], (err, row) => {
+    global.db.get("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?", [usernameOrEmail, usernameOrEmail, password], (err, row) => {
         if (err) {
-            console.error('Database error:', err.message);
-            return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Database error' });
+            console.error("Database error:", err.message);
+            return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
         }
-        if (row) {
-            global.db.get('SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?', [row.user_id], (err, profile) => {
-                if (err) {
-                    console.error('Database error:', err.message);
-                    return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Database error' });
-                } else {
-                    request.session.authenticated = true;
-                    request.session.username = row.username;
-                    request.session.userId = row.user_id;
-                    request.session.bio = profile ? profile.bio : 'No bio available.';
-                    request.session.introduction = profile ? profile.introduction : 'No introduction available.';
-                    request.session.displayName = profile ? profile.displayName : row.username;
 
-                    return response.redirect('/profile');
-                }
-            });
-        } else {
-            return response.render('login.ejs', { pageName: 'Login', errorMessage: 'Invalid username/email or password' });
-        }
+        if (!row) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid username/email or password" });
+
+        global.db.get("SELECT bio, introduction, displayName FROM user_profiles WHERE user_id = ?", [row.user_id], (err, profile) => {
+            if (err) {
+                console.error("Database error:", err.message);
+                return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
+            } else {
+                request.session.authenticated = true;
+                request.session.username = row.username;
+                request.session.userId = row.user_id;
+                request.session.bio = profile ? profile.bio : "No bio available.";
+                request.session.introduction = profile ? profile.introduction : "No introduction available.";
+                request.session.displayName = profile ? profile.displayName : row.username;
+                return response.redirect("/profile");
+            }
+        });
     });
 });
 
@@ -197,34 +150,33 @@ router.get("/login", (request, response) => {
     });
 });
 
-
 // Register new user
-router.post('/register', (req, res) => {
+router.post("/register", (req, res) => {
     const { role, username, email, password, major, year, department, title } = req.body;
 
-    global.db.run('INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)', [email, username, password, role], function(error) {
+    global.db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (error) {
         if (error) {
             console.error(error);
-            return res.status(500).send('Database error');
+            return res.status(500).send("Database error");
         }
 
         const userId = this.lastID;
 
-        if (role === 'student') {
-            global.db.run('INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)', [userId, major || 'Not Enrolled', year || 0], (error) => {
+        if (role === "student") {
+            global.db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
                 if (error) {
                     console.error(error);
-                    return res.status(500).send('Database error');
+                    return res.status(500).send("Database error");
                 }
-                return res.redirect('/login');
+                return res.redirect("/login");
             });
-        } else if (role === 'educator') {
-            global.db.run('INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)', [userId, department || 'No Department', title || 'No Title'], (error) => {
+        } else if (role === "educator") {
+            global.db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
                 if (error) {
                     console.error(error);
-                    return res.status(500).send('Database error');
+                    return res.status(500).send("Database error");
                 }
-                return res.redirect('/login');
+                return res.redirect("/login");
             });
         }
     });

@@ -109,15 +109,15 @@
         <div class="container">
             <div class="course-detail">
                 <div class="course-detail__image">
-                    <img src="/images/course<%= courseIndex %>.jpg" alt="Course Image">
+                    <img src="/images/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
                 </div>
                 <div class="course-detail__info">
-                    <h1>Learn <%= chosenCourseTitle %></h1>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa nemo aut architecto dignissimos aliquid quasi error id quidem totam maxime.</p>
+                    <h1>Learn <%= chosenCourse.name %>!</h1>
+                    <p><%= chosenCourse.description %></p>
                     <p><strong>What you'll learn:</strong></p>
                     <ul>
-                        <li>Topic 1: Introduction to <%= chosenCourseTitle %></li>
-                        <li>Topic 2: Advanced techniques in <%= chosenCourseTitle %></li>
+                        <li>Topic 1: Introduction to <%= chosenCourse.name %></li>
+                        <li>Topic 2: Advanced techniques in <%= chosenCourse.name %></li>
                         <li>Topic 3: Real-world applications</li>
                     </ul>
 
