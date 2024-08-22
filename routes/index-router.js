@@ -40,15 +40,14 @@ const router = express.Router();
 
 // Home
 router.get("/", (request, response) => {
-    let courses = [
-        { title: "Learn HTML", description: "Master the basics of web development with HTML.", enrollCount: 3423 },
-        { title: "Learn CSS", description: "Style your websites with modern CSS techniques.", enrollCount: 692 },
-        { title: "Learn JavaScript", description: "Get hands-on with JavaScript to build interactive web pages.", enrollCount: 234 },
-    ];
+    db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
+        if (err) return console.error("Database error:", err.message);
+        if (!topCourses) return console.error("No courses found!");
 
-    return response.render("index.ejs", {
-        pageName: "Home",
-        courses: courses,
+        return response.render("index.ejs", {
+            pageName: "Home",
+            topCourses: topCourses,
+        });
     });
 });
 

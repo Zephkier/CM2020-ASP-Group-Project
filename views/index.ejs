@@ -112,16 +112,16 @@
         <section class="courses">
             <h2>Our Popular Courses</h2>
             <div class="container courses__container">
-                <%courses.forEach((course, index) => { %>
+                <%topCourses.forEach(topCourse => { %>
                 <a href="#">
                     <article class="course">
                         <div class="course__image">
-                            <img src="images/course<%= index + 1 %>.jpg" />
+                            <img src="images/course<%= topCourse.id %>.jpg" />
                         </div>
                         <div class="course__info">
-                            <h4><%= course.title %></h4>
-                            <p><%= course.description %></p>
-                            <p class="course__enroll">Students enrolled: <%= course.enrollCount %></p>
+                            <h4><%= topCourse.name %></h4>
+                            <p><%= topCourse.description %></p>
+                            <p class="course__enroll">Students enrolled: <%= topCourse.enrollCount.toLocaleString().replace(",", ", ") %></p>
                         </div>
                     </article>
                 </a>
