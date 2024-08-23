@@ -185,11 +185,11 @@ router.get("/login", (request, response) => {
     });
 });
 
-/// Login - submitting form
+// Login - submitting form
 router.post("/login", (request, response) => {
     const { usernameOrEmail, password } = request.body;
 
-    // Ensure user exists in database
+    // Ensure user exists in the database
     let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
     let params = [usernameOrEmail, usernameOrEmail, password];
     db.get(query, params, (err, existingUser) => {
@@ -197,9 +197,11 @@ router.post("/login", (request, response) => {
             console.error("Database error:", err.message);
             return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
         }
-        if (!existingUser) return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
+        if (!existingUser) {
+            return response.render("login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
+        }
 
-        // At this point, user does indeed exist in the database
+        // At this point, the user exists in the database
         let profileQuery = `
         SELECT *
         FROM profiles JOIN users
@@ -212,19 +214,25 @@ router.post("/login", (request, response) => {
                 return response.render("login.ejs", { pageName: "Login", errorMessage: "Database error" });
             }
 
+            // Handle the case where the profile is missing
+            if (!userInfo) {
+                return response.render("login.ejs", { pageName: "Login", errorMessage: "Profile not found. Please complete your registration." });
+            }
+
             // Store user info in session
             request.session.authenticated = true;
             request.session.userId = existingUser.id;
             request.session.username = existingUser.username;
-            request.session.bio = userInfo.bio;
-            request.session.introduction = userInfo.introduction;
-            request.session.displayName = userInfo.displayName;
+            request.session.bio = userInfo.bio || "";  // Set to empty string if `bio` is not defined
+            request.session.introduction = userInfo.introduction || "";  // Set to empty string if `introduction` is not defined
+            request.session.displayName = userInfo.displayName || "";  // Set to empty string if `displayName` is not defined
 
             // Redirect to profile after successful login
             return response.redirect("/profile");
         });
     });
 });
+
 
 // Handle GET request for the register page
 router.get("/register", (request, response) => {
@@ -261,13 +269,13 @@ router.post("/register", (req, res) => {
 
             const userId = this.lastID;
 
+            // Insert into the appropriate table based on the role
             if (role === "student") {
                 db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
                     if (error) {
                         console.error("Database error inserting student:", error.message);
                         return res.status(500).send("Database error");
                     }
-                    return res.redirect("/login");
                 });
             } else if (role === "educator") {
                 db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
@@ -275,12 +283,22 @@ router.post("/register", (req, res) => {
                         console.error("Database error inserting educator:", error.message);
                         return res.status(500).send("Database error");
                     }
-                    return res.redirect("/login");
                 });
             }
+
+            // Automatically create a profile for the new user
+            db.run("INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (?, ?, ?, ?)", 
+                [userId, username, "", ""], (error) => {
+                    if (error) {
+                        console.error("Database error inserting profile:", error.message);
+                        return res.status(500).send("Database error");
+                    }
+                    return res.redirect("/login");
+                });
         });
     });
 });
+
 
 
 // Handle user logout
