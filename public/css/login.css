@@ -113,18 +113,18 @@ button[type="submit"]:hover {
 button {
     background-color: #01b177;
     color: #fff;
-    padding: 0.8rem 1.5rem;
+    padding: 1.4rem 4rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.2rem;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #009f78;
+    background-color: #009b75;
 }
 
 button + button {
-    margin-left: 0.5rem;
+    margin-left: 5rem;
 }
