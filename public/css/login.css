@@ -4,43 +4,51 @@
     margin: 0 auto;
 }
 
+.container{
+    display: flex;
+    justify-content: center;
+    padding: 4rem;
+}
+
 /* Form section styling */
 .form-section {
     background-color: #2e3267; /* Match background color */
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 3rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
+    max-width: 800px;
     width: 100%;
     color: #fff;
 }
 
 /* Form header */
 .form-section h2 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     margin-bottom: 2rem;
     text-align: center;
 }
 
 /* Error message styling */
 .error-message {
-    background-color: #f75842;
+    background-color: #f23232;
     color: white;
     padding: 1rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
     text-align: center;
 }
 
 /* Form group styling */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 /* Labels */
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
@@ -50,7 +58,7 @@
     padding: 0.8rem;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.4rem;
     background-color: #424890; /* Match input background */
     color: #fff;
 }
@@ -61,7 +69,7 @@
     display: inline-block;
     cursor: pointer;
     color: #f7c94b;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 /* Login button */
@@ -70,7 +78,7 @@ button[type="submit"] {
     padding: 1rem;
     background-color: #00bf8e; /* Use a nice contrasting color */
     color: white;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     border: none;
     border-radius: 8px;
@@ -89,8 +97,9 @@ button[type="submit"]:hover {
 }
 
 .login-redirect a {
-    color: #00bf8e;
+    color: #f7c94b;
     text-decoration: none;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
@@ -102,7 +111,7 @@ button[type="submit"]:hover {
 
 /* Button Styles */
 button {
-    background-color: #00bf8e;
+    background-color: #01b177;
     color: #fff;
     padding: 0.8rem 1.5rem;
     border: none;
@@ -113,7 +122,7 @@ button {
 }
 
 button:hover {
-    background-color: #00a77e;
+    background-color: #009f78;
 }
 
 button + button {
