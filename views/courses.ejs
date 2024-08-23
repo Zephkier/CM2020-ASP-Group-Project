@@ -41,7 +41,7 @@
                     <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
                 </select>
             </form>
-            
+
             <div class="container courses__container">
                 <%allCourses.forEach(course => { %>
                     <a href="/courses/course/<%= course.id %>">
@@ -65,6 +65,6 @@
         <%- include("./partials/footer.ejs") %>
         <!-- ========================= END OF FOOTER ========================= -->
 
-        <script src="main.js"></script>
+        <script src="/main.js"></script>
     </body>
 </html>

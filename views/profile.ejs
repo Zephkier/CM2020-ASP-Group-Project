@@ -1,68 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile - <%= appName %></title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile - <%= appName %></title>
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- GOOGLE FONTS (MONTSERRAT) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <!-- GOOGLE FONTS (MONTSERRAT) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/profile.css" />
-</head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/profile.css" />
+    </head>
 
-<body>
-    <%- include("./partials/navbar.ejs") %>
+    <body>
+        <%- include("./partials/navbar.ejs") %>
 
-    <main class="profile-main">
-        <div class="profile-container">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
-                <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
-            </div>
+        <main class="profile-main">
+            <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                </div>
 
-            <!-- Profile Details -->
-            <div class="profile-details">
-                <h2>Your Details</h2>
-                <p><strong>Email:</strong> <%= user.email %></p>
-                <p><strong>Username:</strong> <%= user.username %></p>
-                <p><strong>Bio:</strong> <%= user.bio %></p>
-                
-                <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
-                <form action="/logout" method="POST" style="margin-top: 1rem;">
-                    <button type="submit" class="btn btn-secondary">Logout</button>
-                </form>
-            </div>
+                <!-- Profile Details -->
+                <div class="profile-details">
+                    <h2>Your Details</h2>
+                    <p><strong>Email:</strong> <%= user.email %></p>
+                    <p><strong>Username:</strong> <%= user.username %></p>
+                    <p><strong>Bio:</strong> <%= user.bio %></p>
 
-            <!-- Enrolled Courses -->
-            <div class="enrolled-courses">
-                <h2>Your Enrolled Courses</h2>
-                <% if (user.enrolledCourses && user.enrolledCourses.length > 0) { %>
+                    <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
+                    <form action="/logout" method="POST" style="margin-top: 1rem">
+                        <button type="submit" class="btn btn-secondary">Logout</button>
+                    </form>
+                </div>
+
+                <!-- Enrolled Courses -->
+                <div class="enrolled-courses">
+                    <h2>Your Enrolled Courses</h2>
+                    <% if (user.enrolledCourses && user.enrolledCourses.length > 0) { %>
                     <ul>
                         <% user.enrolledCourses.forEach(course => { %>
-                            <li class="course-item">
-                                <h4><%= course.name %></h4>
-                                <p><%= course.description %></p>
-                            </li>
+                        <li class="course-item">
+                            <h4><%= course.name %></h4>
+                            <p><%= course.description %></p>
+                        </li>
                         <% }) %>
                     </ul>
-                <% } else { %>
+                    <% } else { %>
                     <p>You have not enrolled in any courses yet.</p>
-                <% } %>
+                    <% } %>
+                </div>
             </div>
-            
-        </div>
-    </main>
+        </main>
 
-    <%- include("./partials/footer.ejs") %>
-</body>
+        <%- include("./partials/footer.ejs") %>
+    </body>
 </html>
