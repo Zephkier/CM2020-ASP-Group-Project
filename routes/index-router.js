@@ -237,33 +237,51 @@ router.get("/register", (request, response) => {
 router.post("/register", (req, res) => {
     const { role, username, email, password, major, year, department, title } = req.body;
 
-    db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (error) {
-        if (error) {
-            console.error(error);
+    // Check if the email already exists
+    db.get("SELECT * FROM users WHERE email = ?", [email], (err, existingUser) => {
+        if (err) {
+            console.error("Database error:", err.message);
             return res.status(500).send("Database error");
         }
-
-        const userId = this.lastID;
-
-        if (role === "student") {
-            db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).send("Database error");
-                }
-                return res.redirect("/login");
-            });
-        } else if (role === "educator") {
-            db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).send("Database error");
-                }
-                return res.redirect("/login");
+        if (existingUser) {
+            // Email already exists
+            return res.render("register.ejs", {
+                pageName: "Register",
+                errors: { email: "This email is already registered." },
+                formData: { username, email, major, year, department, title }
             });
         }
+
+        // Proceed with registration if email does not exist
+        db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (error) {
+            if (error) {
+                console.error("Database error inserting user:", error.message);
+                return res.status(500).send("Database error");
+            }
+
+            const userId = this.lastID;
+
+            if (role === "student") {
+                db.run("INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)", [userId, major || "Not Enrolled", year || 0], (error) => {
+                    if (error) {
+                        console.error("Database error inserting student:", error.message);
+                        return res.status(500).send("Database error");
+                    }
+                    return res.redirect("/login");
+                });
+            } else if (role === "educator") {
+                db.run("INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)", [userId, department || "No Department", title || "No Title"], (error) => {
+                    if (error) {
+                        console.error("Database error inserting educator:", error.message);
+                        return res.status(500).send("Database error");
+                    }
+                    return res.redirect("/login");
+                });
+            }
+        });
     });
 });
+
 
 // Handle user logout
 router.post("/logout", (req, res) => {
