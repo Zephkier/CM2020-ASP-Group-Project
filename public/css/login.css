@@ -4,10 +4,12 @@
     margin: 0 auto;
 }
 
-.container{
+.login-container{
     display: flex;
     justify-content: center;
-    padding: 4rem;
+    align-items: center;    
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 /* Form section styling */
@@ -48,7 +50,7 @@
 .form-group label {
     display: block;
     margin-bottom: 1rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -58,7 +60,7 @@
     padding: 0.8rem;
     border: none;
     border-radius: 8px;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     background-color: #424890; /* Match input background */
     color: #fff;
 }
@@ -78,7 +80,7 @@ button[type="submit"] {
     padding: 1rem;
     background-color: #00bf8e; /* Use a nice contrasting color */
     color: white;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     border: none;
     border-radius: 8px;
@@ -99,7 +101,7 @@ button[type="submit"]:hover {
 .login-redirect a {
     color: #f7c94b;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
 }
 
