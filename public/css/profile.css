@@ -60,3 +60,26 @@
 .profile-details button:hover {
     background-color: #0056b3;
 }
+
+.profile-picture-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.profile-picture-option {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.profile-picture-options label input[type="radio"] {
+    display: none;
+}
+
+.profile-picture-options label input[type="radio"]:checked + img {
+    border-color: #007bff;
+}

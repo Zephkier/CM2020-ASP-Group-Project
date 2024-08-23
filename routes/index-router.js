@@ -299,6 +299,59 @@ router.post("/register", (req, res) => {
     });
 });
 
+// Route to display the Edit Profile page
+router.get("/edit-profile", (req, res) => {
+    if (!req.session || !req.session.authenticated) {
+        return res.redirect("/login");
+    }
+
+    const userId = req.session.userId;
+
+    // Fetch the current profile information
+    db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, user) => {
+        if (err) {
+            console.error("Database error:", err.message);
+            return res.status(500).send("Database error");
+        }
+
+        if (!user) {
+            return res.status(404).send("Profile not found");
+        }
+
+        res.render("edit-profile.ejs", {
+            appName: "Your App Name", // replace with your app name variable
+            user: user
+        });
+    });
+});
+
+router.post("/update-profile", (req, res) => {
+    const userId = req.session.userId;
+    const { displayName, bio, introduction, profilePicture } = req.body;
+
+    // Update the user's profile in the database
+    const updateQuery = `
+        UPDATE profiles
+        SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
+        WHERE user_id = ?
+    `;
+    db.run(updateQuery, [displayName, bio, introduction, profilePicture, userId], (err) => {
+        if (err) {
+            console.error("Database error updating profile:", err.message);
+            return res.status(500).send("Database error");
+        }
+
+        // Update the session data with the new values
+        req.session.displayName = displayName;
+        req.session.bio = bio;
+        req.session.introduction = introduction;
+        req.session.profilePicture = profilePicture;
+
+        // Redirect back to the profile page
+        res.redirect("/profile");
+    });
+});
+
 
 
 // Handle user logout

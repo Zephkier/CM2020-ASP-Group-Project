@@ -24,11 +24,15 @@
 
         <main class="profile-main">
             <div class="profile-container">
-                <!-- Profile Header -->
-                <div class="profile-header">
-                    <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
-                    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
-                </div>
+<!-- Profile Header -->
+<!-- Profile Header -->
+<div class="profile-header">
+    <img src="/images/<%= user.profilePicture || 'dog.png' %>" alt="Profile Picture" class="profile-image" />
+    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+</div>
+
+
+
 
                 <!-- Profile Details -->
                 <div class="profile-details">

@@ -71,3 +71,5 @@ CREATE TABLE enrollments (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
 );
+
+ALTER TABLE profiles ADD COLUMN profilePicture TEXT;
