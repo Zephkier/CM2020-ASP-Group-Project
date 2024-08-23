@@ -83,7 +83,6 @@ router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
         if (err) return console.error("Database error:", err.message);
         if (!chosenCourse) return console.error("No chosen course!");
-
         return response.render("course.ejs", {
             pageName: "Course",
             chosenCourse: chosenCourse,
@@ -107,70 +106,74 @@ router.get("/profile", (request, response) => {
     const userId = request.session.userId;
 
     // Fetch user profile information and enrolled courses
-    db.all(`
+    db.all(
+        `
         SELECT courses.name, courses.description
         FROM enrollments
         JOIN courses ON enrollments.course_id = courses.id
         WHERE enrollments.user_id = ?
-    `, [userId], (err, enrolledCourses) => {
-        if (err) {
-            console.error('Database error:', err.message);
-            return response.status(500).send('Database error');
-        }
-
-        // Ensure enrolledCourses is always defined as an array
-        enrolledCourses = enrolledCourses || [];
-
-        response.render("profile.ejs", {
-            pageName: "My Profile",
-            user: {
-                username: request.session.username,
-                bio: request.session.bio,
-                introduction: request.session.introduction,
-                displayName: request.session.displayName,
-                enrolledCourses: enrolledCourses
+    `,
+        [userId],
+        (err, enrolledCourses) => {
+            if (err) {
+                console.error("Database error:", err.message);
+                return response.status(500).send("Database error");
             }
-        });
-    });
+
+            // Ensure enrolledCourses is always defined as an array
+            enrolledCourses = enrolledCourses || [];
+
+            response.render("profile.ejs", {
+                pageName: "My Profile",
+                user: {
+                    username: request.session.username,
+                    bio: request.session.bio,
+                    introduction: request.session.introduction,
+                    displayName: request.session.displayName,
+                    enrolledCourses: enrolledCourses,
+                },
+            });
+        }
+    );
 });
 
 // Route to handle course enrollment
-router.post('/enroll', (request, response) => {
+router.post("/enroll", (request, response) => {
     if (!request.session || !request.session.authenticated) {
-        return response.redirect('/login');
+        return response.redirect("/login");
     }
 
     const userId = request.session.userId;
     const courseId = request.body.courseId;
 
     // Insert into the enrollments table
-    db.run('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)', [userId, courseId], function (error) {
+    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], function (error) {
         if (error) {
-            console.error('Database error:', error);
-            return response.status(500).send('Database error');
+            console.error("Database error:", error);
+            return response.status(500).send("Database error");
         }
 
-        response.redirect('/profile');
+        response.redirect("/profile");
     });
 });
 
 // Buy Now route
-router.post('/buy-course', (request, response) => {
+router.post("/buy-course", (request, response) => {
     if (!request.session || !request.session.authenticated) {
-        return response.redirect('/login');
+        return response.redirect("/login");
     }
 
     const userId = request.session.userId;
     const courseId = request.body.courseId;
 
     // Insert into the enrollments table
-    db.run('INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)', [userId, courseId], function (error) {
+    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], function (error) {
         if (error) {
-            console.error('Database error:', error);
-            return response.status(500).send('Database error');
+            console.error("Database error:", error);
+            return response.status(500).send("Database error");
         }
 
-        response.redirect('/profile');
+        response.redirect("/profile");
     });
 });
 
@@ -202,7 +205,7 @@ router.post("/login", (request, response) => {
         FROM profiles JOIN users
         ON profiles.user_id = users.id
         WHERE profiles.user_id = ?`;
-        
+
         db.get(profileQuery, [existingUser.id], (err, userInfo) => {
             if (err) {
                 console.error("Database error:", err.message);
@@ -222,7 +225,6 @@ router.post("/login", (request, response) => {
         });
     });
 });
-
 
 // Handle GET request for the register page
 router.get("/register", (request, response) => {
@@ -264,15 +266,15 @@ router.post("/register", (req, res) => {
 });
 
 // Handle user logout
-router.post('/logout', (req, res) => {
+router.post("/logout", (req, res) => {
     // Destroy the session to log the user out
     req.session.destroy((err) => {
         if (err) {
-            console.error('Error during logout:', err);
-            return res.status(500).send('An error occurred while logging out');
+            console.error("Error during logout:", err);
+            return res.status(500).send("An error occurred while logging out");
         }
         // Redirect to the login page after successful logout
-        res.redirect('/login');
+        res.redirect("/login");
     });
 });
 
