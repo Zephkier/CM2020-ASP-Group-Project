@@ -17,6 +17,11 @@
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/profile.css" />
+        <style>
+            body {
+                background-image: url("images/bg-texture.png");
+            }
+        </style>
     </head>
 
     <body>
@@ -24,7 +29,7 @@
 
         <main class="profile-main">
             <div class="profile-container">
-
+                <div class="profile-left-section">
                 <!-- Profile Header -->
                 <div class="profile-header">
                     <img src="/images/<%= session.profilePicture %>" alt="Profile Picture" class="profile-image" />
@@ -48,7 +53,7 @@
                         <button type="submit" class="btn btn-secondary">Logout</button>
                     </form>
                 </div>
-
+            </div>
                 <!-- Enrolled Courses -->
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
