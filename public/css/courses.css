@@ -1,3 +1,4 @@
+/* =================== COURSES ===================== */
 .courses__container {
     display: flex;
     flex-wrap: wrap;
@@ -21,4 +22,92 @@
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
+}
+
+/* =================== COURSE ===================== */
+.course-detail {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 7rem;
+    padding: 5rem;
+    border-radius: 8px;
+}
+
+.course-detail__image {
+    flex: 1 1 50%;
+    max-width: 50%;
+    margin-right: 5rem;
+    margin-bottom: 5rem;
+}
+
+.course-detail__image img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.course-detail__info {
+    flex: 1 1 40%;
+    max-width: 40%;
+    margin-left: auto;
+}
+
+.course-detail__info h1 {
+    font-size: 6rem;
+    margin-bottom: 4rem;
+    color: var(--color-white);
+}
+
+.course-detail__info p {
+    font-size: 2.5rem;
+    margin-bottom: 3.5rem;
+    color: var(--color-white);
+}
+
+.course-detail__info h2 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+.course-detail__info ul {
+    margin-bottom: 4rem;
+}
+
+.course-detail__info ul li {
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.course-detail__actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.course-detail__actions .btn {
+    padding: 1.4rem 2.4rem;
+    font-size: 2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--color-bg1);
+    color: var(--color-white);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-light-dark);
 }
