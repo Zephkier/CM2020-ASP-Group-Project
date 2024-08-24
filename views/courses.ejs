@@ -31,37 +31,39 @@
     <body>
         <%- include("./partials/navbar.ejs") %>
         <!-- ========================= END OF NAVBAR ========================= -->
+        <main>
+            
+            <section class="courses">
+                <form action="/courses" method="GET" id="sortForm" class="container">
+                    <label for="sort">Sort by:</label>
+                    <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();">
+                        <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>Most Popular</option>
+                        <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
+                        <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
+                    </select>
+                </form>
 
-        <section class="courses">
-            <form action="/courses" method="GET" id="sortForm" class="container">
-                <label for="sort">Sort by:</label>
-                <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();">
-                    <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>Most Popular</option>
-                    <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
-                    <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
-                </select>
-            </form>
+                <div class="container courses__container">
+                    <%allCourses.forEach(course => { %>
+                        <a href="/courses/course/<%= course.id %>">
+                            <article class="course">
+                                <div class="course__image">
+                                    <img src="/images/course<%= course.id %>.jpg" />
+                                </div>
+                                <div class="course__info">
+                                    <h4>Learn <%= course.name %></h4>
+                                    <p><%= course.description %></p>
+                                    <p class="course__enroll">Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %></p>
+                                </div>
+                            </article>
+                        </a>
+                    <%}) %>
+                    
+                </div>
+            </section>
+            <!-- ========================= END OF COURSES ========================= -->
 
-            <div class="container courses__container">
-                <%allCourses.forEach(course => { %>
-                    <a href="/courses/course/<%= course.id %>">
-                        <article class="course">
-                            <div class="course__image">
-                                <img src="/images/course<%= course.id %>.jpg" />
-                            </div>
-                            <div class="course__info">
-                                <h4>Learn <%= course.name %></h4>
-                                <p><%= course.description %></p>
-                                <p class="course__enroll">Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %></p>
-                            </div>
-                        </article>
-                    </a>
-                <%}) %>
-                
-            </div>
-        </section>
-        <!-- ========================= END OF COURSES ========================= -->
-
+        </main>
         <%- include("./partials/footer.ejs") %>
         <!-- ========================= END OF FOOTER ========================= -->
 

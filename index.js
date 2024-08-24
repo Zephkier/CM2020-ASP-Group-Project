@@ -16,6 +16,7 @@ app.use((request, response, next) => {
     response.locals.pageName = "You forgot to set 'pageName' in this page's .ejs file!";
     response.locals.tabNameSeparator = " | ";
     response.locals.appName = "Bright Learning Academy";
+    response.locals.session = request.session;
     next();
 });
 

@@ -35,33 +35,35 @@
         <%- include("./partials/navbar.ejs") %>
         <!-- ========================= END OF NAVBAR ========================= -->
 
-        <div class="container">
-            <div class="course-detail">
-                <div class="course-detail__image">
-                    <img src="/images/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
-                </div>
-                <div class="course-detail__info">
-                    <h1>Learn <%= chosenCourse.name %>!</h1>
-                    <p><%= chosenCourse.description %></p>
-                    <h2><strong>What you'll learn:</strong></h2>
-                    <ul>
-                        <li>Topic 1: Introduction to <%= chosenCourse.name %></li>
-                        <li>Topic 2: Advanced techniques in <%= chosenCourse.name %></li>
-                        <li>Topic 3: Real-world applications</li>
-                    </ul>
+        <main>
+            <div class="container">
+                <div class="course-detail">
+                    <div class="course-detail__image">
+                        <img src="/images/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
+                    </div>
+                    <div class="course-detail__info">
+                        <h1>Learn <%= chosenCourse.name %>!</h1>
+                        <p><%= chosenCourse.description %></p>
+                        <h2><strong>What you'll learn:</strong></h2>
+                        <ul>
+                            <li>Topic 1: Introduction to <%= chosenCourse.name %></li>
+                            <li>Topic 2: Advanced techniques in <%= chosenCourse.name %></li>
+                            <li>Topic 3: Real-world applications</li>
+                        </ul>
 
-                    <div class="course-detail__actions">
-                        <!-- Form to handle course enrollment -->
-                        <form action="/enroll" method="POST">
-                            <input type="hidden" name="courseId" value="<%= chosenCourse.id %>" />
-                            <button type="submit" class="btn btn-secondary">Buy Now</button>
-                        </form>
+                        <div class="course-detail__actions">
+                            <!-- Form to handle course enrollment -->
+                            <form action="/enroll" method="POST">
+                                <input type="hidden" name="courseId" value="<%= chosenCourse.id %>" />
+                                <button type="submit" class="btn btn-secondary">Buy Now</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- ========================= END OF COURSE ========================= -->
+            <!-- ========================= END OF COURSE ========================= -->
 
+        </main>
         <%- include("./partials/footer.ejs") %>
         <!-- ========================= END OF FOOTER ========================= -->
 

@@ -6,6 +6,7 @@
     text-decoration: none;
     list-style: none;
     box-sizing: border-box;
+
 }
 
 :root {
@@ -30,6 +31,7 @@
 
 main {
     flex: 1;
+    padding-top: 5rem;
 }
 
 html, body {
@@ -45,6 +47,7 @@ body {
     color: var(--color-white);
     background: var(--color-bg);
 }
+
 
 .container {
     width: var(--container-width-lg);
@@ -117,18 +120,16 @@ img {
 
 /* =================== NAVBAR ===================== */
 nav {
-    /* Original 'background' */
+
     /* background: transparent; */
-
-    /* Replaced 'background' with this */
     background: var(--color-primary);
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
 
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); 
     width: 100vw;
     height: 5rem;
     position: fixed;
     top: 0;
-    z-index: 11;
+    z-index: 11; 
 }
 
 /* Change navbar styles on scroll using javascript */
@@ -152,6 +153,7 @@ nav button {
     display: flex;
     align-items: center;
     gap: 2rem;
+   
 }
 
 .nav__menu a {
@@ -161,6 +163,36 @@ nav button {
 
 .nav__menu a:hover {
     color: var(--color-bg2);
+}
+
+.nav-profile-info {
+    display:flex;
+    align-items: center;
+}
+
+.nav-profile-image {
+    width: 40px;             
+    height: 40px;       
+    border-radius: 50%;   
+    object-fit: cover;   
+    margin-right: 8px;     
+    vertical-align: middle; 
+}
+
+
+.profile-link:hover .nav-profile-image {
+
+
+    border: 2px solid var(--color-bg2); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    transform: scale(1.1); 
+    transition: border 0.1s ease;
+
+}
+
+
+.profile-link:hover .username {
+    color: var(--color-bg2); 
 }
 
 .search-container {

@@ -28,8 +28,10 @@ CREATE TABLE profiles (
     displayName TEXT NOT NULL,
     bio TEXT,
     introduction TEXT,
+    profilePicture TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
 
 CREATE TABLE courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,4 +74,4 @@ CREATE TABLE enrollments (
     FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 
-ALTER TABLE profiles ADD COLUMN profilePicture TEXT;
+

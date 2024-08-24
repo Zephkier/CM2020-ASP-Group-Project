@@ -24,12 +24,12 @@
 
         <main class="profile-main">
             <div class="profile-container">
-<!-- Profile Header -->
-<!-- Profile Header -->
-<div class="profile-header">
-    <img src="/images/<%= user.profilePicture || 'dog.png' %>" alt="Profile Picture" class="profile-image" />
-    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
-</div>
+
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <img src="/images/<%= session.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                </div>
 
 
 
@@ -41,7 +41,9 @@
                     <p><strong>Username:</strong> <%= user.username %></p>
                     <p><strong>Bio:</strong> <%= user.bio %></p>
 
+                    <!-- <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button> -->
                     <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
+
                     <form action="/logout" method="POST" style="margin-top: 1rem">
                         <button type="submit" class="btn btn-secondary">Logout</button>
                     </form>

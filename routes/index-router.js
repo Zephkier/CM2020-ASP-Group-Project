@@ -226,11 +226,13 @@ router.post("/login", (request, response) => {
             request.session.bio = userInfo.bio || "";  // Set to empty string if `bio` is not defined
             request.session.introduction = userInfo.introduction || "";  // Set to empty string if `introduction` is not defined
             request.session.displayName = userInfo.displayName || "";  // Set to empty string if `displayName` is not defined
-
+            request.session.profilePicture = userInfo.profilePicture; 
+            
             // Redirect to profile after successful login
             return response.redirect("/profile");
         });
     });
+    
 });
 
 
@@ -287,8 +289,8 @@ router.post("/register", (req, res) => {
             }
 
             // Automatically create a profile for the new user
-            db.run("INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (?, ?, ?, ?)", 
-                [userId, username, "", ""], (error) => {
+            db.run("INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)", 
+                [userId, username, "", "", "dog.png"], (error) => {
                     if (error) {
                         console.error("Database error inserting profile:", error.message);
                         return res.status(500).send("Database error");
@@ -299,31 +301,14 @@ router.post("/register", (req, res) => {
     });
 });
 
-// Route to display the Edit Profile page
+
 router.get("/edit-profile", (req, res) => {
-    if (!req.session || !req.session.authenticated) {
-        return res.redirect("/login");
-    }
-
-    const userId = req.session.userId;
-
-    // Fetch the current profile information
-    db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, user) => {
-        if (err) {
-            console.error("Database error:", err.message);
-            return res.status(500).send("Database error");
-        }
-
-        if (!user) {
-            return res.status(404).send("Profile not found");
-        }
-
-        res.render("edit-profile.ejs", {
-            appName: "Your App Name", // replace with your app name variable
-            user: user
-        });
+    res.render("edit-profile", {
+        pageName: "Edit Profile",
+        //user: user
     });
 });
+
 
 router.post("/update-profile", (req, res) => {
     const userId = req.session.userId;
