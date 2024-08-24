@@ -44,7 +44,6 @@ body {
     line-height: 1.7;
     color: var(--color-white);
     background: var(--color-bg);
-    margin-top: 5rem;
 }
 
 .container {
@@ -53,12 +52,12 @@ body {
 }
 
 section {
-    padding: 10rem 0;
+    padding: 8rem 0;
 }
 
 section h2 {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
 }
 
 h1,
@@ -70,19 +69,19 @@ h5 {
 }
 
 h1 {
-    font-size: 2.4rem;
+    font-size: 4.5rem;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 3.5rem;
 }
 
 h3 {
-    font-size: 1.6rem;
+    font-size: 3rem;
 }
 
 h4 {
-    font-size: 1.3rem;
+    font-size: 2.5rem;
 }
 
 a {
@@ -175,7 +174,7 @@ nav button {
 
 .search-icon {
     margin-right: 10px;
-    font-size: 1.2em; /* Adjust the size of the icon */
+    font-size: 1.2em;
 }
 
 .search-box {
@@ -209,7 +208,7 @@ header {
 /* =================== CATEGORIES ===================== */
 .categories {
     background: var(--color-bg1);
-    height: 32rem;
+    height: 70rem;
 }
 
 .categories h1 {
@@ -228,6 +227,7 @@ header {
 
 .categories__left p {
     margin: 1rem 0 3rem;
+    font-size: 1.3rem;
 }
 
 .categories__right {
@@ -272,21 +272,23 @@ header {
 
 .category h5 {
     margin: 2rem 0 1rem;
+    font-size: 1.6rem;
 }
 
 .category p {
-    font-size: 0.85rem;
+    font-size: 1.2rem;
 }
 
 /* =================== POPULAR COURSES ===================== */
 .courses {
-    margin-top: 10rem;
+    margin-top: 3rem;
 }
 
 .courses__container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+
 }
 
 .course {
@@ -341,23 +343,26 @@ header {
 }
 
 .faq {
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     gap: 1.4rem;
     height: fit-content;
     background: var(--color-primary);
     cursor: pointer;
+    min-height: 110px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .faq h4 {
-    font-size: 1rem;
+    font-size: 1.2rem;
     line-height: 2.2;
 }
 
 .faq__icon {
     align-self: flex-start;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .faq p {
@@ -373,7 +378,8 @@ header {
 .testimonials__container {
     overflow-x: hidden;
     position: relative;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
+    min-height: 50rem;
 }
 
 .testimonial {
@@ -381,8 +387,8 @@ header {
 }
 
 .avatar {
-    width: 6rem;
-    height: 6rem;
+    width: 10rem;
+    height: 10rem;
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto 1rem;
@@ -391,6 +397,7 @@ header {
 
 .testimonial__info {
     text-align: center;
+    font-size: 1.4rem;
 }
 
 .testimonial__body {
@@ -398,6 +405,7 @@ header {
     padding: 2rem;
     margin-top: 3rem;
     position: relative;
+    font-size: 1.2rem;
 }
 
 .testimonial__body::before {
