@@ -110,4 +110,5 @@
 
 .btn-secondary:hover {
     background-color: var(--color-light-dark);
+    border: 2px solid;
 }
