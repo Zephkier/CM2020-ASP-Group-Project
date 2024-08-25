@@ -23,10 +23,10 @@
                 background-image: url("/images/bg-texture.png");
             }
             .container {
-            flex: 1;
+                flex: 1;
             }
-           footer {
-            margin-top: auto;
+            footer {
+                margin-top: auto;
             }
         </style>
     </head>
@@ -39,7 +39,7 @@
             <div class="container">
                 <div class="course-detail">
                     <div class="course-detail__image">
-                        <img src="/images/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
+                        <img src="/images/courses/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
                     </div>
                     <div class="course-detail__info">
                         <h1>Learn <%= chosenCourse.name %>!</h1>
@@ -62,7 +62,6 @@
                 </div>
             </div>
             <!-- ========================= END OF COURSE ========================= -->
-
         </main>
         <%- include("./partials/footer.ejs") %>
         <!-- ========================= END OF FOOTER ========================= -->

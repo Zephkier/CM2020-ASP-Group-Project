@@ -39,7 +39,7 @@
                             <% const profilePictures = ["bear.png", "cat.png", "chicken.png", "dog.png", "meerkat.png", "panda.png", "rabbit.png", "user.png", "woman.png"]; %> <% profilePictures.forEach((picture) => { %>
                             <label>
                                 <input type="radio" name="profilePicture" value="<%= picture %>" <%= session.user.profilePicture === picture ? "checked" : "" %> />
-                                <img src="/images/<%= picture %>" alt="<%= picture %>" class="profile-picture-option" />
+                                <img src="/images/profile-pictures/<%= picture %>" alt="<%= picture %>" class="profile-picture-option" />
                             </label>
                             <% }) %>
                         </div>
