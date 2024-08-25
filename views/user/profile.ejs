@@ -25,7 +25,7 @@
     </head>
 
     <body>
-        <%- include("./partials/navbar.ejs") %>
+        <%- include("../partials/navbar.ejs") %>
 
         <main class="profile-main">
             <div class="profile-container">
@@ -41,9 +41,9 @@
                         <p><strong>Email:</strong> <%= session.user.email %></p>
                         <p><strong>Username:</strong> <%= session.user.username %></p>
                         <p><strong>Bio:</strong> <%= session.user.bio %></p>
-                        <!-- <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button> -->
-                        <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
-                        <form action="/logout" method="GET" style="margin-top: 1rem">
+                        <!-- <button class="btn btn-primary" onclick="window.location.href='/user/edit-profile'">Edit Profile</button> -->
+                        <button class="btn btn-primary" onclick="window.location.href='/user/edit-profile'">Edit Profile</button>
+                        <form action="/user/logout" method="GET" style="margin-top: 1rem">
                             <button type="submit" class="btn btn-secondary">Logout</button>
                         </form>
                     </div>
@@ -68,6 +68,8 @@
             </div>
         </main>
 
-        <%- include("./partials/footer.ejs") %>
+        <%- include("../partials/footer.ejs") %>
+
+        <script src="/main.js"></script>
     </body>
 </html>

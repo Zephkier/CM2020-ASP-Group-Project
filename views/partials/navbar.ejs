@@ -9,6 +9,7 @@
             <li>
                 <a href="/cart"><i class="uil uil-shopping-cart" style="font-size: 1.5rem"></i></a>
             </li>
+
             <!-- Search text box -->
             <li>
                 <form method="GET" action="/search" id="search-form" class="search-container">
@@ -17,18 +18,19 @@
                 </form>
             </li>
 
+            <!-- Profile, login, logout -->
             <% if (session.user) { %>
             <li>
-                <a href="/profile" class="profile-link">
+                <a href="/user/profile" class="profile-link">
                     <div class="nav-profile-info">
                         <img src="/images/<%=  session.user.profilePicture %>" alt="Profile Picture" class="nav-profile-image" />
                         <span><%= session.user.username %></span>
                     </div>
                 </a>
             </li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/user/logout">Logout</a></li>
             <% } else { %>
-            <li><a href="/login">Login</a></li>
+            <li><a href="/user/login">Login</a></li>
             <% } %>
         </ul>
         <button id="open-menu-btn"><i class="uil uil-bars"></i></button>

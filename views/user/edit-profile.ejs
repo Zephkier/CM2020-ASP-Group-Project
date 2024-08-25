@@ -25,13 +25,13 @@
     </head>
 
     <body>
-        <%- include("./partials/navbar.ejs") %>
+        <%- include("../partials/navbar.ejs") %>
 
         <main class="profile-main">
             <div class="profile-container">
                 <!-- Edit Profile Form -->
                 <h2>Edit Your Profile</h2>
-                <form action="/update-profile" method="POST">
+                <form action="/user/update-profile" method="POST">
                     <!-- Profile Picture Selection -->
                     <div class="form-group">
                         <label for="profilePicture">Profile Picture:</label>
@@ -62,6 +62,8 @@
             </div>
         </main>
 
-        <%- include("./partials/footer.ejs") %>
+        <%- include("../partials/footer.ejs") %>
+
+        <script src="/main.js"></script>
     </body>
 </html>
