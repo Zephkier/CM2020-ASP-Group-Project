@@ -9,7 +9,7 @@ const app = express();
 app.set("view engine", "ejs"); // Tell Express to use EJS as templating engine
 app.use(express.static(__dirname + "/public")); // Set location of static files (eg. css, image, js)
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: "secretKey", saveUninitialized: false, resave: false }));
+app.use(session({ secret: "secretKey", saveUninitialized: false, resave: false })); // Ensure session called first, and then routers
 
 // Set default 'locals.variables', then call next() to proceed with rest of code file (mainly for .ejs file's <title>)
 app.use((request, response, next) => {

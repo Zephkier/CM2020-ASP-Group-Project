@@ -32,29 +32,29 @@
                 <!-- Profile Header and Details (eg. email, username, bio) -->
                 <div class="profile-left-section">
                     <div class="profile-header">
-                        <img src="/images/<%= session.profilePicture %>" alt="Profile Picture" class="profile-image" />
-                        <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                        <img src="/images/<%= session.user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                        <h1 class="profile-name">Welcome, <%= session.user.displayName %></h1>
                     </div>
 
                     <div class="profile-details">
                         <h2>Your Details</h2>
-                        <p><strong>Email:</strong> <%= user.email %></p>
-                        <p><strong>Username:</strong> <%= user.username %></p>
-                        <p><strong>Bio:</strong> <%= user.bio %></p>
+                        <p><strong>Email:</strong> <%= session.user.email %></p>
+                        <p><strong>Username:</strong> <%= session.user.username %></p>
+                        <p><strong>Bio:</strong> <%= session.user.bio %></p>
                         <!-- <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button> -->
                         <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
-                        <form action="/logout" method="POST" style="margin-top: 1rem">
+                        <form action="/logout" method="GET" style="margin-top: 1rem">
                             <button type="submit" class="btn btn-secondary">Logout</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Enrolled courses -->
+                <!-- Enrolled Courses -->
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
-                    <% if (user.enrolledCourses && user.enrolledCourses.length > 0) { %>
+                    <% if (session.user.enrolledCourses && session.user.enrolledCourses.length > 0) { %>
                     <ul>
-                        <% user.enrolledCourses.forEach(course => { %>
+                        <% session.user.enrolledCourses.forEach(course => { %>
                         <li class="course-item">
                             <h4><%= course.name %></h4>
                             <p><%= course.description %></p>

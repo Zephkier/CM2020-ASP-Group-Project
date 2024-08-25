@@ -9,24 +9,24 @@ CREATE TABLE users (
 CREATE TABLE students (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
-    major TEXT DEFAULT 'Not Enrolled',
-    year INTEGER DEFAULT 0,
+    major TEXT,
+    year INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE educators (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
-    department TEXT DEFAULT 'No Department',
-    title TEXT  DEFAULT 'No Title',
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    department TEXT,
+    title TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     displayName TEXT NOT NULL,
-    bio TEXT,
+    bio TEXT ,
     introduction TEXT,
     profilePicture TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
