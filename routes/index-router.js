@@ -78,7 +78,6 @@ router.get("/courses", (request, response) => {
     });
 });
 
-// (Individual) Course
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
         if (err) return console.error("Database error:", err.message);
@@ -137,6 +136,57 @@ router.get("/profile", (request, response) => {
     );
 });
 
+router.get("/edit-profile", (req, res) => {
+    res.render("edit-profile", {
+        pageName: "Edit Profile",
+    });
+});
+
+router.post("/update-profile", (req, res) => {
+    const userId = req.session.userId;
+    const { displayName, bio, introduction, profilePicture } = req.body;
+
+    // Update the user's profile in the database
+    const updateQuery = `
+        UPDATE profiles
+        SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
+        WHERE user_id = ?
+    `;
+    db.run(updateQuery, [displayName, bio, introduction, profilePicture, userId], (err) => {
+        if (err) {
+            console.error("Database error updating profile:", err.message);
+            return res.status(500).send("Database error");
+        }
+
+        // Update the session data with the new values
+        req.session.displayName = displayName;
+        req.session.bio = bio;
+        req.session.introduction = introduction;
+        req.session.profilePicture = profilePicture;
+
+        // Redirect back to the profile page
+        res.redirect("/profile");
+    });
+});
+
+// Cart
+router.get("/cart", (request, response) => {
+    return response.render("cart.ejs", {
+        pageName: "Cart",
+    });
+});
+
+// Search
+router.get("/search", (request, response) => {
+    const query = request.query.q;
+    if (!query) return response.redirect("/");
+
+    return response.render("search.ejs", {
+        pageName: "Search",
+        query: query,
+    });
+});
+
 // Route to handle course enrollment
 router.post("/enroll", (request, response) => {
     if (!request.session || !request.session.authenticated) {
@@ -185,7 +235,6 @@ router.get("/login", (request, response) => {
     });
 });
 
-// Login - submitting form
 router.post("/login", (request, response) => {
     const { usernameOrEmail, password } = request.body;
 
@@ -223,20 +272,30 @@ router.post("/login", (request, response) => {
             request.session.authenticated = true;
             request.session.userId = existingUser.id;
             request.session.username = existingUser.username;
-            request.session.bio = userInfo.bio || "";  // Set to empty string if `bio` is not defined
-            request.session.introduction = userInfo.introduction || "";  // Set to empty string if `introduction` is not defined
-            request.session.displayName = userInfo.displayName || "";  // Set to empty string if `displayName` is not defined
-            request.session.profilePicture = userInfo.profilePicture; 
-            
+            request.session.bio = userInfo.bio || ""; // Set to empty string if `bio` is not defined
+            request.session.introduction = userInfo.introduction || ""; // Set to empty string if `introduction` is not defined
+            request.session.displayName = userInfo.displayName || ""; // Set to empty string if `displayName` is not defined
+            request.session.profilePicture = userInfo.profilePicture;
+
             // Redirect to profile after successful login
             return response.redirect("/profile");
         });
     });
-    
 });
 
+router.post("/logout", (req, res) => {
+    // Destroy the session to log the user out
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error during logout:", err);
+            return res.status(500).send("An error occurred while logging out");
+        }
+        // Redirect to the login page after successful logout
+        res.redirect("/login");
+    });
+});
 
-// Handle GET request for the register page
+// Register
 router.get("/register", (request, response) => {
     return response.render("register.ejs", {
         pageName: "Register",
@@ -258,7 +317,7 @@ router.post("/register", (req, res) => {
             return res.render("register.ejs", {
                 pageName: "Register",
                 errors: { email: "This email is already registered." },
-                formData: { username, email, major, year, department, title }
+                formData: { username, email, major, year, department, title },
             });
         }
 
@@ -289,84 +348,14 @@ router.post("/register", (req, res) => {
             }
 
             // Automatically create a profile for the new user
-            db.run("INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)", 
-                [userId, username, "", "", "dog.png"], (error) => {
-                    if (error) {
-                        console.error("Database error inserting profile:", error.message);
-                        return res.status(500).send("Database error");
-                    }
-                    return res.redirect("/login");
-                });
+            db.run("INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)", [userId, username, "", "", "dog.png"], (error) => {
+                if (error) {
+                    console.error("Database error inserting profile:", error.message);
+                    return res.status(500).send("Database error");
+                }
+                return res.redirect("/login");
+            });
         });
-    });
-});
-
-
-router.get("/edit-profile", (req, res) => {
-    res.render("edit-profile", {
-        pageName: "Edit Profile",
-        //user: user
-    });
-});
-
-
-router.post("/update-profile", (req, res) => {
-    const userId = req.session.userId;
-    const { displayName, bio, introduction, profilePicture } = req.body;
-
-    // Update the user's profile in the database
-    const updateQuery = `
-        UPDATE profiles
-        SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
-        WHERE user_id = ?
-    `;
-    db.run(updateQuery, [displayName, bio, introduction, profilePicture, userId], (err) => {
-        if (err) {
-            console.error("Database error updating profile:", err.message);
-            return res.status(500).send("Database error");
-        }
-
-        // Update the session data with the new values
-        req.session.displayName = displayName;
-        req.session.bio = bio;
-        req.session.introduction = introduction;
-        req.session.profilePicture = profilePicture;
-
-        // Redirect back to the profile page
-        res.redirect("/profile");
-    });
-});
-
-
-
-// Handle user logout
-router.post("/logout", (req, res) => {
-    // Destroy the session to log the user out
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Error during logout:", err);
-            return res.status(500).send("An error occurred while logging out");
-        }
-        // Redirect to the login page after successful logout
-        res.redirect("/login");
-    });
-});
-
-// Cart
-router.get("/cart", (request, response) => {
-    return response.render("cart.ejs", {
-        pageName: "Cart",
-    });
-});
-
-// Search
-router.get("/search", (request, response) => {
-    const query = request.query.q;
-    if (!query) return response.redirect("/");
-
-    return response.render("search.ejs", {
-        pageName: "Search",
-        query: query,
     });
 });
 

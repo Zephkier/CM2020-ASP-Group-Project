@@ -29,32 +29,27 @@
 
         <main class="profile-main">
             <div class="profile-container">
+                <!-- Profile Header and Details (eg. email, username, bio) -->
                 <div class="profile-left-section">
-                <!-- Profile Header -->
-                <div class="profile-header">
-                    <img src="/images/<%= session.profilePicture %>" alt="Profile Picture" class="profile-image" />
-                    <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                    <div class="profile-header">
+                        <img src="/images/<%= session.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                        <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
+                    </div>
+
+                    <div class="profile-details">
+                        <h2>Your Details</h2>
+                        <p><strong>Email:</strong> <%= user.email %></p>
+                        <p><strong>Username:</strong> <%= user.username %></p>
+                        <p><strong>Bio:</strong> <%= user.bio %></p>
+                        <!-- <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button> -->
+                        <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
+                        <form action="/logout" method="POST" style="margin-top: 1rem">
+                            <button type="submit" class="btn btn-secondary">Logout</button>
+                        </form>
+                    </div>
                 </div>
 
-
-
-
-                <!-- Profile Details -->
-                <div class="profile-details">
-                    <h2>Your Details</h2>
-                    <p><strong>Email:</strong> <%= user.email %></p>
-                    <p><strong>Username:</strong> <%= user.username %></p>
-                    <p><strong>Bio:</strong> <%= user.bio %></p>
-
-                    <!-- <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button> -->
-                    <button class="btn btn-primary" onclick="window.location.href='/edit-profile'">Edit Profile</button>
-
-                    <form action="/logout" method="POST" style="margin-top: 1rem">
-                        <button type="submit" class="btn btn-secondary">Logout</button>
-                    </form>
-                </div>
-            </div>
-                <!-- Enrolled Courses -->
+                <!-- Enrolled courses -->
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
                     <% if (user.enrolledCourses && user.enrolledCourses.length > 0) { %>

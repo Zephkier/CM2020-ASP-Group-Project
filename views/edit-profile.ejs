@@ -36,12 +36,11 @@
                     <div class="form-group">
                         <label for="profilePicture">Profile Picture:</label>
                         <div class="profile-picture-options">
-                            <% const profilePictures = ["bear.png", "cat.png", "chicken.png", "dog.png", "meerkat.png", "panda.png", "rabbit.png", "user.png", "woman.png"]; %>
-                            <% profilePictures.forEach((picture) => { %>
-                                <label>
-                                    <input type="radio" name="profilePicture" value="<%= picture %>" <%= session.profilePicture === picture ? "checked" : "" %> />
-                                    <img src="/images/<%= picture %>" alt="<%= picture %>" class="profile-picture-option" />
-                                </label>
+                            <% const profilePictures = ["bear.png", "cat.png", "chicken.png", "dog.png", "meerkat.png", "panda.png", "rabbit.png", "user.png", "woman.png"]; %> <% profilePictures.forEach((picture) => { %>
+                            <label>
+                                <input type="radio" name="profilePicture" value="<%= picture %>" <%= session.profilePicture === picture ? "checked" : "" %> />
+                                <img src="/images/<%= picture %>" alt="<%= picture %>" class="profile-picture-option" />
+                            </label>
                             <% }) %>
                         </div>
                     </div>
