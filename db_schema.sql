@@ -43,8 +43,8 @@ CREATE TABLE courses (
 INSERT INTO users (email, username, password, role) VALUES ('student@email.com', 'student', 'student', 'student');
 INSERT INTO users (email, username, password, role) VALUES ('educator@email.com', 'educator', 'educator', 'educator');
 
-INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (1, 'Studious Sam', 'I am studying 24/7!', 'Not sure what''s the difference between intro and bio');
-INSERT INTO profiles (user_id, displayName, bio, introduction) VALUES (2, 'Educational Eddie', 'Or should I put my educational instutution here?', 'Ah whatever...');
+INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (1, 'Studious Sam', 'I am studying 24/7!', 'Not sure what''s the difference between intro and bio', 'dog.png');
+INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (2, 'Educational Eddie', 'Or should I put my educational instutution here?', 'Ah whatever...', 'dog.png');
 
 INSERT INTO courses (name, description, enrollCount) VALUES ('HTML', 'Master the basics of web development with HTML.', 3423);
 INSERT INTO courses (name, description, enrollCount) VALUES ('CSS', 'Style your websites with modern CSS techniques.', 692);
