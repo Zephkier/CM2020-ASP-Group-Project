@@ -2,9 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + tabNameSeparator + appName %></title>
+        <title><%= pageName + separator + appName %></title>
 
         <!-- ICONSCOUT CDN -->
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
@@ -15,12 +14,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
         <!-- CSS -->
-        <link rel="stylesheet" href="/css/login.css" />
         <link rel="stylesheet" href="/css/style.css" />
-
+        <link rel="stylesheet" href="/css/contact.css" />
+        <link rel="stylesheet" href="/css/login.css" />
         <style>
             body {
-                background-image: url("images/bg-texture.png");
+                background-image: url("/images/bg-texture.png");
             }
             .form-container {
                 display: none;
@@ -36,7 +35,6 @@
 
     <body>
         <%- include("../partials/navbar.ejs") %>
-        <!-- ========================= END OF NAVBAR ========================= -->
 
         <main>
             <div class="login-container">
@@ -81,10 +79,7 @@
             </div>
         </main>
 
-        <!-- ========================= END OF ADD USER ========================= -->
-
         <%- include("../partials/footer.ejs") %>
-        <!-- ========================= END OF FOOTER ========================= -->
 
         <script src="/main.js"></script>
         <script>

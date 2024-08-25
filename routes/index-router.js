@@ -52,7 +52,7 @@ router.get("/courses/course/:courseId", (request, response) => {
         if (!chosenCourse) return errorPage(response, "No chosen course!");
 
         return response.render("course.ejs", {
-            pageName: "Course",
+            pageName: `Learn ${chosenCourse.name}`,
             chosenCourse: chosenCourse,
         });
     });

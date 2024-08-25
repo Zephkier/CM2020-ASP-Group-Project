@@ -2,9 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + tabNameSeparator + appName %></title>
+        <title><%= pageName + separator + appName %></title>
 
         <!-- ICONSCOUT CDN -->
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
@@ -22,14 +21,13 @@
         <link rel="stylesheet" href="/css/contact.css" />
         <style>
             body {
-                background-image: url("images/bg-texture.png");
+                background-image: url("/images/bg-texture.png");
             }
         </style>
     </head>
 
     <body>
         <%- include("./partials/navbar.ejs") %>
-        <!-- ========================= END OF NAVBAR ========================= -->
 
         <main>
             <header>
@@ -42,7 +40,7 @@
                     <div class="header__left">
                         <h1>Grow your skills to advance your career path</h1>
                         <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends.</p>
-                        <a href="/courses" class="btn btn-primary">Sign Up</a>
+                        <a href="/user/register" class="btn btn-primary">Sign Up</a>
                         <a href="/courses" class="btn btn-primary">Learn More</a>
                     </div>
                 </div>
@@ -282,10 +280,9 @@
         </main>
 
         <%- include("./partials/footer.ejs") %>
-        <!-- ========================= END OF FOOTER ========================= -->
 
-        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="/main.js"></script>
+        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script>
             // Slides for testimonials section
             var swiper = new Swiper(".mySwiper", {
