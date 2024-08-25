@@ -32,7 +32,6 @@ CREATE TABLE profiles (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-
 CREATE TABLE courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -73,5 +72,3 @@ CREATE TABLE enrollments (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
 );
-
-

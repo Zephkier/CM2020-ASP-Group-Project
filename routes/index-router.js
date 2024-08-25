@@ -190,35 +190,9 @@ router.post("/login", (request, response) => {
             if (!userInfo) return response.render("login.ejs", { pageName: "Login", errorMessage: "Profile not found. Please complete your registration." });
             // Store user info in session
             request.session.user = userInfo;
-            // Redirect to and render profile after successful login (copy-pasted from .get("/profile"))
-            db.all(
-                `
-                    SELECT courses.name, courses.description
-                    FROM enrollments
-                    JOIN courses ON enrollments.course_id = courses.id
-                    WHERE enrollments.user_id = ?`,
-                [request.session.user.userId],
-                (err, enrolledCourses) => {
-                    if (err) {
-                        console.error("Database error:", err.message);
-                        return response.status(500).send("Database error");
-                    }
 
-                    // Ensure enrolledCourses is always defined as an array
-                    enrolledCourses = enrolledCourses || [];
-
-                    response.render("profile.ejs", {
-                        pageName: "My Profile",
-                        user: {
-                            username: request.session.user.username,
-                            bio: request.session.user.bio,
-                            introduction: request.session.user.introduction,
-                            displayName: request.session.user.displayName,
-                            enrolledCourses: enrolledCourses,
-                        },
-                    });
-                }
-            );
+            // Redirect to profile after successful login
+            return response.redirect("/profile");
         });
     });
 });
