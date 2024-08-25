@@ -18,8 +18,8 @@
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 
         <!-- CSS -->
-        <link rel="stylesheet" href="css/login.css" />
-        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="/css/login.css" />
+        <link rel="stylesheet" href="/css/style.css" />
         <style>
             body {
                 background-image: url("images/bg-texture.png");
@@ -28,7 +28,7 @@
     </head>
 
     <body>
-        <%- include("./partials/navbar.ejs") %>
+        <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="login-container">
@@ -38,7 +38,7 @@
                     <!-- Display error message if there is one -->
                     <div class="error-message"><%= errorMessage %></div>
                     <% } %>
-                    <form action="/login" method="POST" class="login-form">
+                    <form action="/user/login" method="POST" class="login-form">
                         <div class="form-group">
                             <label for="usernameOrEmail">Username or Email:</label>
                             <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
@@ -51,14 +51,15 @@
                         <button type="submit">Login</button>
                     </form>
                     <div class="login-redirect">
-                        <a href="/register">Create new account</a>
+                        <a href="/user/register">Create new account</a>
                     </div>
                 </section>
             </div>
         </main>
 
-        <%- include("./partials/footer.ejs") %>
+        <%- include("../partials/footer.ejs") %>
 
+        <script src="/main.js"></script>
         <script>
             function togglePassword() {
                 const passwordField = document.getElementById("password");
