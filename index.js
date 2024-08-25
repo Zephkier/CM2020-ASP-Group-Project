@@ -30,7 +30,7 @@ app.use((request, response, next) => {
  * Express functions:
  * -------------------------
  * app.get()/router.get() = the endpoint with prefix, if any
- * response.render()      = looks into 'views' dir for a matching file name to load
+ * response.render()      = has ("views/" + your EJS file here) as prefix, looks into 'views' dir for a matching file name to load
  * response.redirect()    = the endpoint without prefix
  *
  * =========================

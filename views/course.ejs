@@ -55,7 +55,7 @@
                             <!-- Form to handle course enrollment -->
                             <form action="/enroll" method="POST">
                                 <input type="hidden" name="courseId" value="<%= chosenCourse.id %>" />
-                                <button type="submit" class="btn btn-secondary">Buy Now</button>
+                                <button type="submit" class="btn btn-secondary">Add to Cart</button>
                             </form>
                         </div>
                     </div>
@@ -63,6 +63,7 @@
             </div>
             <!-- ========================= END OF COURSE ========================= -->
         </main>
+
         <%- include("./partials/footer.ejs") %>
         <!-- ========================= END OF FOOTER ========================= -->
 

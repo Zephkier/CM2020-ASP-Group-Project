@@ -55,11 +55,17 @@
                     </div>
                 </section>
             </div>
+
+            <div id="popup" class="popup hidden">
+                <p id="popup-message"></p>
+                <button id="popup-close" class="btn">Close</button>
+            </div>
         </main>
 
         <%- include("../partials/footer.ejs") %>
 
         <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
         <script>
             function togglePassword() {
                 const passwordField = document.getElementById("password");

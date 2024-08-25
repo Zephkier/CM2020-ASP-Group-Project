@@ -32,15 +32,15 @@
                 <!-- Profile Header and Details (eg. email, username, bio) -->
                 <div class="profile-left-section">
                     <div class="profile-header">
-                        <img src="/images/profile-pictures/<%= session.user.profilePicture %>" alt="Profile Picture" class="profile-image" />
-                        <h1 class="profile-name">Welcome, <%= session.user.displayName %></h1>
+                        <img src="/images/profile-pictures/<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                        <h1 class="profile-name">Welcome, <%= user.displayName %></h1>
                     </div>
 
                     <div class="profile-details">
                         <h2>Your Details</h2>
-                        <p><strong>Email:</strong> <%= session.user.email %></p>
-                        <p><strong>Username:</strong> <%= session.user.username %></p>
-                        <p><strong>Bio:</strong> <%= session.user.bio %></p>
+                        <p><strong>Email:</strong> <%= user.email %></p>
+                        <p><strong>Username:</strong> <%= user.username %></p>
+                        <p><strong>Bio:</strong> <%= user.bio %></p>
                         <!-- <button class="btn btn-primary" onclick="window.location.href='/user/edit-profile'">Edit Profile</button> -->
                         <button class="btn btn-primary" onclick="window.location.href='/user/edit-profile'">Edit Profile</button>
                         <form action="/user/logout" method="GET" style="margin-top: 1rem">
@@ -52,9 +52,9 @@
                 <!-- Enrolled Courses -->
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
-                    <% if (session.user.enrolledCourses && session.user.enrolledCourses.length > 0) { %>
+                    <% if (enrolledCourses && enrolledCourses.length > 0) { %>
                     <ul>
-                        <% session.user.enrolledCourses.forEach(course => { %>
+                        <% enrolledCourses.forEach(course => { %>
                         <li class="course-item">
                             <h4><%= course.name %></h4>
                             <p><%= course.description %></p>
@@ -66,10 +66,16 @@
                     <% } %>
                 </div>
             </div>
+
+            <div id="popup" class="popup hidden">
+                <p id="popup-message"></p>
+                <button id="popup-close" class="btn">Close</button>
+            </div>
         </main>
 
         <%- include("../partials/footer.ejs") %>
 
         <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
     </body>
 </html>
