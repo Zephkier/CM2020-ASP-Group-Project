@@ -1,6 +1,7 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
+const { errorPage } = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
@@ -10,8 +11,8 @@ const router = express.Router();
 // Home
 router.get("/", (request, response) => {
     db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
-        if (err) return console.error("Database error:", err.message);
-        if (!topCourses) return console.error("No courses found!");
+        if (err) return errorPage(response, "Database error!");
+        if (!topCourses) return errorPage(response, "No courses found!");
 
         return response.render("index.ejs", {
             pageName: "Home",
@@ -30,8 +31,8 @@ router.get("/about", (request, response) => {
 // Courses
 router.get("/courses", (request, response) => {
     db.all("SELECT * FROM courses", (err, allCourses) => {
-        if (err) return console.error("Database error:", err.message);
-        if (!allCourses) return console.error("No courses found!");
+        if (err) return errorPage(response, "Database error!");
+        if (!allCourses) return errorPage(response, "No courses found!");
 
         let sortOption = request.query.sort || "popular";
         if (sortOption === "popular") allCourses.sort((a, b) => b.enrollCount - a.enrollCount);
@@ -48,8 +49,8 @@ router.get("/courses", (request, response) => {
 
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
-        if (err) return console.error("Database error:", err.message);
-        if (!chosenCourse) return console.error("No chosen course!");
+        if (err) return errorPage(response, "Database error!");
+        if (!chosenCourse) return errorPage(response, "No chosen course!");
         return response.render("course.ejs", {
             pageName: "Course",
             chosenCourse: chosenCourse,
@@ -84,42 +85,36 @@ router.get("/search", (request, response) => {
 
 // Route to handle course enrollment
 router.post("/enroll", (request, response) => {
-    if (!request.session.user) {
-        return response.redirect("/login");
-    }
+    if (!request.session.user) return response.redirect("/login");
 
     const userId = request.session.user.userId;
     const courseId = request.body.courseId;
 
     // Insert into the enrollments table
-    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], function (error) {
-        if (error) {
-            console.error("Database error:", error);
-            return response.status(500).send("Database error");
-        }
-
+    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], (err) => {
+        if (err) return errorPage(response, "Database error!");
         response.redirect("/profile");
     });
 });
 
 // 'Buy now' route
 router.post("/buy-course", (request, response) => {
-    if (!request.session.user) {
-        return response.redirect("/login");
-    }
+    if (!request.session.user) return response.redirect("/login");
 
     const userId = request.session.user.userId;
     const courseId = request.body.courseId;
 
     // Insert into the enrollments table
-    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], function (error) {
-        if (error) {
-            console.error("Database error:", error);
-            return response.status(500).send("Database error");
-        }
+    db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId], (err) => {
+        if (err) return errorPage(response, "Database error!");
 
         response.redirect("/profile");
     });
+});
+
+// Handle invalid URLs via "/*"
+router.get("/*", (request, response) => {
+    return response.redirect("/");
 });
 
 module.exports = router;

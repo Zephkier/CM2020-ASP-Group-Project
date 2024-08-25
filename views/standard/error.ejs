@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + tabNameSeparator + appName %></title>
+
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+
+        <!-- GOOGLE FONTS (MONTSERRAT) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/contact.css" />
+        <link rel="stylesheet" href="/css/courses.css" />
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
+
+    <body>
+        <%- include("../partials/navbar.ejs") %>
+        <!-- ========================= END OF NAVBAR ========================= -->
+
+        <main>
+            <header>
+                <div class="container header__container">
+                    <div class="header__right">
+                        <div class="header__right-image">
+                            <img src="/images/wip.svg" />
+                        </div>
+                    </div>
+                    <div class="header__left">
+                        <h1>Oops!</h1>
+                        <p>You've landed yourself in the error page.<br />Feel free to contact and tell us what has happened:</p>
+                        <p><strong><%= errorMessage %></strong></p>
+                    </div>
+                </div>
+            </header>
+        </main>
+        <!-- ========================= END OF ERROR ========================= -->
+
+        <script src="/main.js"></script>
+    </body>
+</html>

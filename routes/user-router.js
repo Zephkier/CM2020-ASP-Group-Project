@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Note that all these URLs has "/user" prefix!
 
-// "Home"
+// Home (redirects to profile page)
 router.get("/", (request, response) => {
     return response.redirect("/user/profile");
 });
