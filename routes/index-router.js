@@ -83,8 +83,71 @@ router.get("/", (request, response) => {
 
 // About
 router.get("/about", (request, response) => {
+    let teamMembers = [
+        {
+            name: "Alice White",
+            role: "Software Developer",
+            linkToInstagram: "https://instagram.com/alicewhite",
+            linkToTwitter: "https://twitter.com/alicewhite",
+            linkToLinkedin: "https://linkedin.com/in/alicewhite",
+        },
+        {
+            name: "Sophie Johnson",
+            role: "UI/UX Designer",
+            linkToInstagram: "https://instagram.com/sophiejohnson",
+            linkToTwitter: "https://twitter.com/sophiejohnson",
+            linkToLinkedin: "https://linkedin.com/in/sophiejohnson",
+        },
+        {
+            name: "Paulie Oliver",
+            role: "Graphic Designer",
+            linkToInstagram: "https://instagram.com/paulieoliver",
+            linkToTwitter: "https://twitter.com/paulieoliver",
+            linkToLinkedin: "https://linkedin.com/in/paulieoliver",
+        },
+        {
+            name: "John Dumelo",
+            role: "Project Manager",
+            linkToInstagram: "https://instagram.com/johndumelo",
+            linkToTwitter: "https://twitter.com/johndumelo",
+            linkToLinkedin: "https://linkedin.com/in/johndumelo",
+        },
+        {
+            name: "Emily Carter",
+            role: "Business Analyst",
+            linkToInstagram: "https://instagram.com/emilycarter",
+            linkToTwitter: "https://twitter.com/emilycarter",
+            linkToLinkedin: "https://linkedin.com/in/emilycarter",
+        },
+        {
+            name: "Toni Cipriani",
+            role: "Data Analyst",
+            linkToInstagram: "https://instagram.com/tonicipriani",
+            linkToTwitter: "https://twitter.com/tonicipriani",
+            linkToLinkedin: "https://linkedin.com/in/tonicipriani",
+        },
+        {
+            name: "Victor Vance",
+            role: "HR Manager",
+            linkToInstagram: "https://instagram.com/victorvance",
+            linkToTwitter: "https://twitter.com/victorvance",
+            linkToLinkedin: "https://linkedin.com/in/victorvance",
+        },
+        {
+            name: "Ruth Shockings",
+            role: "Marketing Specialist",
+            linkToInstagram: "https://instagram.com/ruthshockings",
+            linkToTwitter: "https://twitter.com/ruthshockings",
+            linkToLinkedin: "https://linkedin.com/in/ruthshockings",
+        },
+    ];
+    teamMembers.forEach((teamMember) => {
+        teamMember.picture = teamMember.name + ".jpg";
+    });
+    teamMembers.sort((a, b) => a.name.localeCompare(b.name));
     return response.render("about.ejs", {
         pageName: "About",
+        teamMembers: teamMembers,
     });
 });
 

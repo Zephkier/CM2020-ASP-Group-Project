@@ -36,6 +36,7 @@
                     <div class="about__achievements-right">
                         <h1>About Us</h1>
                         <p>Our mission is to provide high-quality education and resources that empower individuals to achieve their goals. With a focus on practical skills and real-world applications, we aim to bridge the gap between knowledge and implementation. Join us on this journey of continuous growth and discovery, and let’s shape the future together.</p>
+
                         <div class="achievements__cards">
                             <article class="achievement__card">
                                 <span class="achievement__icon">
@@ -64,132 +65,27 @@
                     </div>
                 </div>
             </section>
-            <!-- ========================= END OF ACHIEVEMENTS ========================= -->
 
             <section class="team">
                 <h2>Meet Our Team</h2>
 
                 <div class="container team__container">
+                    <%teamMembers.forEach(teamMember => { %>
                     <article class="team__member">
-                        <div class="team__member-image"><img src="/images/team-members/tm1.jpg" /></div>
+                        <div class="team__member-image"><img src="/images/team members/<%= teamMember.picture %>" /></div>
                         <div class="team__member-info">
-                            <h4>Shatta Wale</h4>
-                            <p>Expert Tutor</p>
+                            <h4><%= teamMember.name %></h4>
+                            <p><%= teamMember.role %></p>
                         </div>
                         <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
+                            <a href="<%= teamMember.linkToInstagram %>"><i class="uil uil-instagram"></i></a>
+                            <a href="<%= teamMember.linkToTwitter %>"><i class="uil uil-twitter-alt"></i></a>
+                            <a href="<%= teamMember.linkToLinkedin %>"><i class="uil uil-linkedin-alt"></i></a>
                         </div>
                     </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm2.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Mia Jones</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm3.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Diana Ayi</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm4.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>John Dumelo</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm5.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Ruth Shockings</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm6.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Edem Quist</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm7.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Lila James</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="team__member">
-                        <div class="team__member-image">
-                            <img src="/images/team-members/tm8.jpg" />
-                        </div>
-                        <div class="team__member-info">
-                            <h4>Menz Gold</h4>
-                            <p>Expert Tutor</p>
-                        </div>
-                        <div class="team__member-socials">
-                            <a href="https://instagram.com"><i class="uil uil-instagram"></i></a>
-                            <a href="https://twitter.com"><i class="uil uil-twitter-alt"></i></a>
-                            <a href="https://linkedin.com"><i class="uil uil-linkedin-alt"></i></a>
-                        </div>
-                    </article>
+                    <%}) %>
                 </div>
             </section>
-            <!-- ========================= END OF TEAM ========================= -->
         </main>
 
         <%- include("./partials/footer.ejs") %>
