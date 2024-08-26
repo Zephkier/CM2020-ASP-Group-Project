@@ -15,7 +15,6 @@ router.get("/", (request, response) => {
 
 // Login
 router.get("/login", (request, response) => {
-    console.log(request.session); // TEST
     return response.render("user/login.ejs", {
         pageName: "Login",
         errorMessage: null,
@@ -28,7 +27,6 @@ router.post("/login", (request, response) => {
     let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
     let params = [usernameOrEmail, usernameOrEmail, password];
     db.get(query, params, (err, existingUser) => {
-        console.log(existingUser); // TEST
         if (err) return errorPage(response, "Database error!");
         if (!existingUser) return response.render("user/login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
 
@@ -38,7 +36,6 @@ router.post("/login", (request, response) => {
             ON profiles.user_id = users.id
             WHERE profiles.user_id = ?`;
         db.get(profileQuery, [existingUser.id], (err, userInfo) => {
-            console.log(request.session); // TEST
             if (err) return errorPage(response, "Database error!");
             if (!userInfo) return response.render("user/login.ejs", { pageName: "Login", errorMessage: "Profile not found. Please complete your registration." });
             request.session.user = userInfo; // Store userInfo in session object
@@ -96,7 +93,6 @@ router.post("/register", (request, response) => {
             }
 
             // Create profile for new user
-            console.log("Creating profile for new user..."); // TEST
             let query = "INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)";
             let params = [userId, username, "Hi there, this is my bio!", "Hi there, this is my introduction!", "dog.png"];
             db.run(query, params, (err) => {
@@ -118,7 +114,6 @@ router.get("/profile", isNotLoggedIn, (request, response) => {
         WHERE enrollments.user_id = ?`,
         [request.session.user.id],
         (err, enrolledCourses) => {
-            console.log(enrolledCourses); // TEST
             if (err) return errorPage(response, "Database error!");
             enrolledCourses = enrolledCourses || [];
             response.render("user/profile.ejs", {

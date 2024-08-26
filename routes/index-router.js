@@ -255,18 +255,72 @@ router.get("/cart", (request, response) => {
     });
 });
 
-// Checkout Route - Redirect to login if not logged in
-router.get("/checkout", (request, response) => {
-    if (!request.session.user) return response.redirect("/user/login");
+// Checkout: If not logged in, then store cart in "session" object, redirect to login, redirect to checkout
+router.get("/checkout", isNotLoggedIn, (request, response) => {
+    let totalPrice = 0;
+    let cart = request.session.cart || [];
 
-    const cartItems = request.session.cart || [];
-    const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
+    cart.forEach((item) => {
+        // Add "picture" property to course, if JPG doesn't exist, then use PNG
+        let jpgPath = `./public/images/courses/${item.name}.jpg`;
+        if (fs.existsSync(jpgPath)) item.picture = `${item.name}.jpg`;
+        else item.picture = `${item.name}.png`;
+
+        // Make "price" property with 2 decimal places
+        item.price = parseFloat(item.price).toFixed(2);
+
+        // Calculate "totalPrice"
+        totalPrice += parseFloat(item.price);
+    });
+
+    // Make "totalPrice" property with 2 decimal places
+    totalPrice = parseFloat(totalPrice).toFixed(2);
 
     response.render("checkout.ejs", {
         pageName: "Checkout",
-        cartItems: cartItems,
+        cart: cart,
         totalPrice: totalPrice,
         user: request.session.user, // Pass user details to the checkout page
+    });
+});
+
+// Checkout: Apple Pay method
+router.post("/checkout/applepay", (request, response) => {
+    let userId = request.session.user.id;
+    let cart = request.session.cart;
+
+    console.log(request.session); // TEST
+
+    // Check if course is already enrolled
+    cart.forEach((item) => {
+        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+        let params = [userId, item.id];
+        db.get(query, params, (err, existingEnrollment) => {
+            if (err) return errorPage(response, "Database error!");
+            if (existingEnrollment) return response.redirect("/checkout?error=already_enrolled"); // TEST
+
+            query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
+            db.run(query, params, (err) => {
+                if (err) return errorPage(response, "Database error!");
+
+                // Clear cart after successful payment
+                request.session.cart = [];
+
+                // Fetch the updated enrolled courses to update the session
+                query = `
+                    SELECT *
+                    FROM enrollments JOIN courses
+                    ON enrollments.course_id = courses.id
+                    WHERE enrollments.user_id = ?`;
+                db.all(query, [userId], (err, enrolledCourses) => {
+                    if (err) return errorPage(response, "Database error!");
+
+                    // Add property inside "session.user"
+                    request.session.user.enrolledCourses = enrolledCourses || [];
+                    response.redirect("/user/profile");
+                });
+            });
+        });
     });
 });
 
@@ -301,37 +355,7 @@ function processEnrollment(userId, cartItems) {
     return Promise.all(promises);
 }
 
-// Route to handle Apple Pay payment
-router.post("/checkout/applepay", (req, res) => {
-    const userId = req.session.user.id;
-    const cartItems = req.session.cart;
-
-    // Process the enrollments
-    processEnrollment(userId, cartItems)
-        .then(() => {
-            // Clear the cart after successful payment
-            req.session.cart = [];
-
-            // Fetch the updated enrolled courses to update the session
-            db.all("SELECT courses.name, courses.description FROM enrollments JOIN courses ON enrollments.course_id = courses.id WHERE enrollments.user_id = ?", [userId], (err, enrolledCourses) => {
-                if (err) {
-                    console.error("Database error:", err.message);
-                    return res.status(500).send("Database error");
-                }
-
-                // Update the session with the new enrolled courses
-                req.session.user.enrolledCourses = enrolledCourses || [];
-
-                // Redirect to the user's profile
-                res.redirect("/user/profile");
-            });
-        })
-        .catch((err) => {
-            res.status(500).send("Failed to process the payment.");
-        });
-});
-
-// Route to handle Credit Card payment
+// Checkout: Credit Card method
 router.post("/checkout/creditcard", (req, res) => {
     const userId = req.session.user.id;
     const { cardNumber, cardExpiry, cardCVC } = req.body;

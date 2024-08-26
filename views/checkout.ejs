@@ -29,7 +29,6 @@
                 <h1>Checkout</h1>
                 <h2>Review Your Order</h2>
 
-                <!-- User Details -->
                 <div class="user-details">
                     <h3>Your Details</h3>
                     <p><strong>Name:</strong> <%= user.displayName %></p>
@@ -37,25 +36,23 @@
                     <p><strong>Bio:</strong> <%= user.bio %></p>
                 </div>
 
-                <!-- Cart Summary -->
                 <div class="cart-summary">
                     <h3>Order Summary</h3>
-                    <% cartItems.forEach(item => { %>
+                    <%cart.forEach(item => { %>
                     <div class="cart-item">
-                        <img src="/images/courses/course<%= item.id %>.jpg" alt="<%= item.name %>" />
+                        <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
                         <div>
                             <h4><%= item.name %></h4>
                             <p>$<%= item.price %></p>
                         </div>
                     </div>
-                    <% }) %>
+                    <%}) %>
 
                     <div class="total">
                         <p>Total: $<%= totalPrice %></p>
                     </div>
                 </div>
 
-                <!-- Payment Options -->
                 <div class="payment-options">
                     <h3>Payment</h3>
 
@@ -66,8 +63,7 @@
 
                     <!-- Credit Card Form -->
                     <button class="btn btn-secondary" onclick="toggleCreditCardForm()">Pay with Credit Card</button>
-
-                    <form id="credit-card-form" action="/checkout/creditcard" method="POST" style="display: none; margin-top: 1rem">
+                    <form action="/checkout/creditcard" method="POST" id="credit-card-form" style="display: none; margin-top: 1rem">
                         <div class="form-group">
                             <label for="card-number">Card Number:</label>
                             <input type="text" id="card-number" name="cardNumber" required pattern="[0-9]{16}" title="Please enter a valid 16-digit card number." />
@@ -84,11 +80,17 @@
                     </form>
                 </div>
             </div>
+
+            <div id="popup" class="popup hidden">
+                <p id="popup-message"></p>
+                <button id="popup-close" class="btn">Close</button>
+            </div>
         </main>
 
         <%- include("./partials/footer.ejs") %>
 
         <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
         <script>
             function toggleCreditCardForm() {
                 const form = document.getElementById("credit-card-form");
