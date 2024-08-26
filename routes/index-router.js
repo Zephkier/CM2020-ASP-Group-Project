@@ -1,8 +1,16 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage, isLoggedIn, isNotLoggedIn } = require("../public/helper.js");
-const fs = require("fs"); // For courses page to decide to use JPG or PNG image
+const {
+    // Format
+    errorPage,
+    isLoggedIn,
+    isNotLoggedIn,
+    isAlreadyEnrolledIntoCourse,
+    insertEnrollment,
+} = require("../public/helper.js");
+// For courses page to decide to use JPG or PNG image
+const fs = require("fs");
 
 // Initialise router
 const router = express.Router();
@@ -284,78 +292,41 @@ router.get("/checkout", isNotLoggedIn, (request, response) => {
     });
 });
 
-// Checkout: Apple Pay method
-router.post("/checkout/applepay", (request, response) => {
-    let userId = request.session.user.id;
-    let cart = request.session.cart;
+// Checkout: Apple Pay method (same as Credit Card method)
+router.post("/checkout/applepay", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
+    // Clear cart after successful payment
+    request.session.cart = [];
 
-    // Check if course is already enrolled
-    cart.forEach((item) => {
-        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-        let params = [userId, item.id];
-        db.get(query, params, (err, existingEnrollment) => {
-            if (err) return errorPage(response, "Database error!");
-            if (existingEnrollment) return response.redirect("/checkout?error=already_enrolled");
+    // Fetch the updated enrolled courses to update the session
+    query = `
+        SELECT *
+        FROM enrollments JOIN courses
+        ON enrollments.course_id = courses.id
+        WHERE enrollments.user_id = ?`;
+    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
+        if (err) return errorPage(response, "Database error!");
 
-            query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
-            db.run(query, params, (err) => {
-                if (err) return errorPage(response, "Database error!");
-
-                // Clear cart after successful payment
-                request.session.cart = [];
-
-                // Fetch the updated enrolled courses to update the session
-                query = `
-                    SELECT *
-                    FROM enrollments JOIN courses
-                    ON enrollments.course_id = courses.id
-                    WHERE enrollments.user_id = ?`;
-                db.all(query, [userId], (err, enrolledCourses) => {
-                    if (err) return errorPage(response, "Database error!");
-
-                    // Add property inside "session.user"
-                    request.session.user.enrolledCourses = enrolledCourses || [];
-                    response.redirect("/user/profile");
-                });
-            });
-        });
+        request.session.user.enrolledCourses = enrolledCourses || []; // Add property inside "session.user"
+        response.redirect("/user/profile");
     });
 });
 
-// Checkout: Credit Card method
-router.post("/checkout/creditcard", (request, response) => {
-    let userId = request.session.user.id;
-    let { cardNumber, cardExpiry, cardCVC } = request.body;
-    let cart = request.session.cart;
+// Checkout: Credit Card method (same as Apple Pay method)
+router.post("/checkout/creditcard", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
+    // Clear cart after successful payment
+    request.session.cart = [];
 
-    cart.forEach((item) => {
-        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-        let params = [userId, item.id];
-        db.get(query, params, (err, existingEnrollment) => {
-            if (err) return errorPage(response, "Database error!");
-            if (existingEnrollment) return response.redirect("/checkout?error=already_enrolled");
+    // Fetch the updated enrolled courses to update the session
+    query = `
+            SELECT *
+            FROM enrollments JOIN courses
+            ON enrollments.course_id = courses.id
+            WHERE enrollments.user_id = ?`;
+    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
+        if (err) return errorPage(response, "Database error!");
 
-            query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
-            db.run(query, params, (err) => {
-                if (err) return errorPage(response, "Database error!");
-                // Clear cart after successful payment
-                request.session.cart = [];
-
-                // Fetch the updated enrolled courses to update the session
-                query = `
-                    SELECT *
-                    FROM enrollments JOIN courses
-                    ON enrollments.course_id = courses.id
-                    WHERE enrollments.user_id = ?`;
-                db.all(query, [userId], (err, enrolledCourses) => {
-                    if (err) return errorPage(response, "Database error!");
-
-                    // Add property inside "session.user"
-                    request.session.user.enrolledCourses = enrolledCourses || [];
-                    response.redirect("/user/profile");
-                });
-            });
-        });
+        request.session.user.enrolledCourses = enrolledCourses || []; // Add property inside "session.user"
+        response.redirect("/user/profile");
     });
 });
 
