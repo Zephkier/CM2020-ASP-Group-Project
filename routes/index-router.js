@@ -11,10 +11,72 @@ router.get("/", (request, response) => {
     db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
         if (err) return errorPage(response, "Database error!");
         if (!topCourses) return errorPage(response, "No courses found!");
-
+        let categories = [
+            { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
+            { iconscoutName: "uil uil-mobile-android", name: "Mobile App Development", description: "Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter." },
+            { iconscoutName: "uil uil-sitemap", name: "Data Structures and Algorithms", description: "Understand the core concepts of data structures and algorithms to solve complex problems efficiently." },
+            { iconscoutName: "uil uil-robot", name: "Machine Learning", description: "Explore the world of AI by learning the principles of machine learning, including supervised and unsupervised learning." },
+            { iconscoutName: "uil uil-lock-access", name: "Cybersecurity", description: "Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices." },
+            { iconscoutName: "uil uil-cloud-database-tree", name: "Cloud Computing", description: "Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud." },
+        ];
+        let faqs = [
+            { question: "How do I choose the right course for my needs?", answer: "We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice." },
+            { question: "What is the course format?", answer: "Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials." },
+            { question: "Will I receive a certificate upon completion?", answer: "Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer." },
+            { question: "Can I access the course content after completing it?", answer: "Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future." },
+            { question: "Are there any prerequisites for enrolling in a course?", answer: "Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level." },
+            { question: "How do I interact with instructors and other students?", answer: "You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities." },
+            { question: "What if I have questions during the course?", answer: "If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey." },
+            { question: "What is your refund policy?", answer: "We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details." },
+            { question: "How do I access the course materials?", answer: "Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection." },
+            { question: "Do you offer group discounts or corporate training?", answer: "Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information." },
+        ];
+        let testimonials = [
+            {
+                name: "Diana Ayi",
+                role: "Student",
+                quote: "Thanks to this platform, I was able to gain new skills in web development. The flexible learning pace helped me manage my time effectively while still working full-time.",
+            },
+            {
+                name: "Edem Quist",
+                role: "Student",
+                quote: "The quality of instruction is unmatched. I loved the hands-on projects, which really helped me apply the theory I was learning.",
+            },
+            {
+                name: "Hajia Bintu",
+                role: "Student",
+                quote: "I never thought I'd be able to code, but this platform made it possible. The beginner-friendly courses and great instructors boosted my confidence.",
+            },
+            {
+                name: "Ernest Achiever",
+                role: "Web Developer",
+                quote: "The courses here are top-notch. I completed the Full-Stack Development program and received a certificate that helped me land a new role in just a few months!",
+            },
+            {
+                name: "Sarah Mensah",
+                role: "Data Analyst",
+                quote: "The Data Science courses are fantastic! The knowledge I gained from this platform has been incredibly valuable in my current role as a Data Analyst.",
+            },
+            {
+                name: "Kwame Ofori",
+                role: "Marketing Manager",
+                quote: "The digital marketing certification I earned here has greatly improved my career prospects. The course content was up-to-date and extremely relevant to today’s market.",
+            },
+            {
+                name: "Joyce Adu",
+                role: "Educator",
+                quote: "As an instructor, I highly recommend this platform. It offers great tools for learners, and I was able to enrich my teaching materials by taking courses here myself.",
+            },
+        ];
+        testimonials.forEach((testimonial) => {
+            testimonial.picture = testimonial.name + ".jpg";
+        });
         return response.render("index.ejs", {
             pageName: "Home",
+            categories: categories,
             topCourses: topCourses,
+            faqs: faqs,
+            testimonials: testimonials,
         });
     });
 });
@@ -65,7 +127,6 @@ router.get("/contact", (request, response) => {
     });
 });
 
-//-----------------------------------------CART PAGE--------------------------------------------------------------
 // In course page, click "Add to Cart"
 router.post("/enroll", (req, res) => {
     const courseId = req.body.courseId;
@@ -115,8 +176,6 @@ router.get("/cart", (req, res) => {
     });
 });
 
-//-----------------------------------------CHECKOUT--------------------------------------------------------------
-
 // Checkout Route - Redirect to login if not logged in
 router.get("/checkout", (req, res) => {
     if (!req.session.user) return res.redirect("/user/login");
@@ -131,32 +190,6 @@ router.get("/checkout", (req, res) => {
         user: req.session.user, // Pass user details to the checkout page
     });
 });
-
-// // Payment Processing Route FIXME are we still using this?
-// router.post("/process-payment", (req, res) => {
-//     const paymentMethod = req.body.paymentMethod;
-//     const userId = req.session.user.userId;
-//     const cartItems = req.session.cart || [];
-
-//     // Simulate payment processing (replace with real payment gateway integration) // TEST
-//     console.log(`Processing payment with ${paymentMethod}...`);
-
-//     // Add courses to the user's profile after successful payment
-//     cartItems.forEach((item) => {
-//         db.run("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, item.id], (err) => {
-//             if (err) {
-//                 console.error("Database error adding course to profile:", err.message);
-//                 return res.status(500).send("Database error");
-//             }
-//         });
-//     });
-
-//     // Clear the cart after purchase
-//     req.session.cart = [];
-
-//     // Redirect to profile page after successful purchase
-//     res.redirect("/user/profile");
-// });
 
 // Function to handle enrollment processing
 function processEnrollment(userId, cartItems) {

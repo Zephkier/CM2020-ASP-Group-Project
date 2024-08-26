@@ -29,7 +29,7 @@ app.use((request, response, next) => {
  * Express functions
  * -----------------
  * app/router.get("/" + endpoint without prefixes)
- * response.render(.ejs file) looks into "views" dir by default for a matching file
+ * response.render(.ejs file) looks into "views" dir by default
  * response.redirect("/" + endpoint with prefixes included)
  *
  * --------------------------------------

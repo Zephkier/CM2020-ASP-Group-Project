@@ -40,72 +40,32 @@
                         <h1>Grow your skills to advance your career path</h1>
                         <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends.</p>
                         <a href="/user/register" class="btn btn-primary">Sign Up</a>
-                        <a href="/courses" class="btn btn-primary">Learn More</a>
+                        <a href="/courses" class="btn btn-primary">See all courses</a>
                     </div>
                 </div>
             </header>
-            <!-- ========================= END OF HEADER ========================= -->
 
             <section class="categories">
                 <div class="container categories__container">
                     <div class="categories__left">
                         <h1>Categories</h1>
                         <p>Expand your coding expertise and dive into the world of technology. Whether you're a beginner or looking to advance your skills, explore these courses designed to enhance your programming knowledge.</p>
-                        <a href="#" class="btn">Learn More</a>
+                        <a href="/courses" class="btn">See all courses</a>
                     </div>
 
                     <div class="categories__right">
+                        <%categories.forEach(category => { %>
                         <article class="category">
                             <span class="category__icon">
-                                <i class="uil uil-bitcoin-circle"></i>
+                                <i class="<%= category.iconscoutName %>"></i>
                             </span>
-                            <h5>Web Development</h5>
-                            <p>Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites.</p>
+                            <h5><%= category.name %></h5>
+                            <p><%= category.description %></p>
                         </article>
-
-                        <article class="category">
-                            <span class="category__icon">
-                                <i class="uil uil-palette"></i>
-                            </span>
-                            <h5>Mobile App Development</h5>
-                            <p>Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter.</p>
-                        </article>
-
-                        <article class="category">
-                            <span class="category__icon">
-                                <i class="uil uil-usd-circle"></i>
-                            </span>
-                            <h5>Data Structures & Algorithms</h5>
-                            <p>Understand the core concepts of data structures and algorithms to solve complex problems efficiently.</p>
-                        </article>
-
-                        <article class="category">
-                            <span class="category__icon">
-                                <i class="uil uil-megaphone"></i>
-                            </span>
-                            <h5>Machine Learning</h5>
-                            <p>Explore the world of AI by learning the principles of machine learning, including supervised and unsupervised learning.</p>
-                        </article>
-
-                        <article class="category">
-                            <span class="category__icon">
-                                <i class="uil uil-music"></i>
-                            </span>
-                            <h5>Cybersecurity</h5>
-                            <p>Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices.</p>
-                        </article>
-
-                        <article class="category">
-                            <span class="category__icon">
-                                <i class="uil uil-puzzle-piece"></i>
-                            </span>
-                            <h5>Cloud Computing</h5>
-                            <p>Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud.</p>
-                        </article>
+                        <%}) %>
                     </div>
                 </div>
             </section>
-            <!-- ========================= END OF CATEGORIES ========================= -->
 
             <section class="courses">
                 <h2>Our Popular Courses</h2>
@@ -114,7 +74,7 @@
                     <a href="/courses/course/<%= topCourse.id %>">
                         <article class="course">
                             <div class="course__image">
-                                <img src="images/course<%= topCourse.id %>.jpg" />
+                                <img src="/images/courses/course<%= topCourse.id %>.jpg" />
                             </div>
                             <div class="course__info">
                                 <h4><%= topCourse.name %></h4>
@@ -126,156 +86,43 @@
                     <%}) %>
                 </div>
             </section>
-            <!-- ========================= END OF COURSES ========================= -->
 
             <section class="faqs">
                 <h2>Frequently Asked Questions</h2>
+
                 <div class="container faqs__container">
+                    <%faqs.forEach(faq => { %>
                     <article class="faq">
                         <div class="faq__icon"><i class="uil uil-plus"></i></div>
                         <div class="question__answer">
-                            <h4>How do I choose the right course for my needs?</h4>
-                            <p>We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice.</p>
+                            <h4><%= faq.question %></h4>
+                            <p><%= faq.answer %></p>
                         </div>
                     </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>What is the course format?</h4>
-                            <p>Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>Will I receive a certificate upon completion?</h4>
-                            <p>Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>Can I access the course content after completing it?</h4>
-                            <p>Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>Are there any prerequisites for enrolling in a course?</h4>
-                            <p>Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>How do I interact with instructors and other students?</h4>
-                            <p>You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>What if I have questions during the course?</h4>
-                            <p>If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>What is your refund policy?</h4>
-                            <p>We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>How do I access the course materials?</h4>
-                            <p>Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection.</p>
-                        </div>
-                    </article>
-                    <article class="faq">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4>Do you offer group discounts or corporate training?</h4>
-                            <p>Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information.</p>
-                        </div>
-                    </article>
+                    <%}) %>
                 </div>
             </section>
-            <!-- ========================= END OF FAQs ========================= -->
 
             <section class="container testimonials__container mySwiper">
                 <h2>Students' Testimonials</h2>
                 <div class="swiper-wrapper">
+                    <%testimonials.forEach(testimonial => { %>
                     <article class="testimonial swiper-slide">
                         <div class="avatar">
-                            <img src="images/avatar1.jpg" />
+                            <img src="/images/testimonials/<%= testimonial.picture %>" />
                         </div>
                         <div class="testimonial__info">
-                            <h5>Diana Ayi</h5>
-                            <small>Student</small>
+                            <h5><%= testimonial.name %></h5>
+                            <small><%= testimonial.role %></small>
                         </div>
                         <div class="testimonial__body">
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi corporis officiis sint dolore amet voluptatibus perspiciatis animi facere? Sed, rerum. Rem eveniet aut illo!</p>
+                            <p><%= testimonial.quote %></p>
                         </div>
                     </article>
-
-                    <article class="testimonial swiper-slide">
-                        <div class="avatar">
-                            <img src="images/avatar2.jpg" />
-                        </div>
-                        <div class="testimonial__info">
-                            <h5>Ernest Achiever</h5>
-                            <small>Web Developer</small>
-                        </div>
-                        <div class="testimonial__body">
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi corporis officiis sint dolore amet voluptatibus perspiciatis animi facere? Sed, rerum. Rem eveniet aut illo!</p>
-                        </div>
-                    </article>
-
-                    <article class="testimonial swiper-slide">
-                        <div class="avatar">
-                            <img src="images/avatar3.jpg" />
-                        </div>
-                        <div class="testimonial__info">
-                            <h5>Edem Quist</h5>
-                            <small>Student</small>
-                        </div>
-                        <div class="testimonial__body">
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi corporis officiis sint dolore amet voluptatibus perspiciatis animi facere? Sed, rerum. Rem eveniet aut illo!</p>
-                        </div>
-                    </article>
-
-                    <article class="testimonial swiper-slide">
-                        <div class="avatar">
-                            <img src="images/avatar4.jpg" />
-                        </div>
-                        <div class="testimonial__info">
-                            <h5>Hajia Bintu</h5>
-                            <small>Student</small>
-                        </div>
-                        <div class="testimonial__body">
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi corporis officiis sint dolore amet voluptatibus perspiciatis animi facere? Sed, rerum. Rem eveniet aut illo!</p>
-                        </div>
-                    </article>
-
-                    <article class="testimonial swiper-slide">
-                        <div class="avatar">
-                            <img src="images/avatar5.jpg" />
-                        </div>
-                        <div class="testimonial__info">
-                            <h5>Jane Doe</h5>
-                            <small>Student</small>
-                        </div>
-                        <div class="testimonial__body">
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi corporis officiis sint dolore amet voluptatibus perspiciatis animi facere? Sed, rerum. Rem eveniet aut illo!</p>
-                        </div>
-                    </article>
+                    <%}) %>
                 </div>
                 <div class="swiper-pagination"></div>
             </section>
-            <!-- ========================= END OF TESTIMONIALS ========================= -->
         </main>
 
         <%- include("./partials/footer.ejs") %>
@@ -284,7 +131,7 @@
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script>
             // Slides for testimonials section
-            var swiper = new Swiper(".mySwiper", {
+            let swiper = new Swiper(".mySwiper", {
                 slidesPerView: 1,
                 spaceBetween: 30,
                 pagination: {
@@ -293,9 +140,7 @@
                 },
                 // When window width is >= 600px
                 breakpoints: {
-                    600: {
-                        slidesPerView: 2,
-                    },
+                    600: { slidesPerView: 2 },
                 },
             });
         </script>
