@@ -194,6 +194,9 @@ router.get("/courses/course/:courseId", (request, response) => {
         if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
         else course.picture = `${course.name}.png`;
 
+        // Make "price" property with 2 decimal places
+        course.price = course.price.toFixed(2);
+
         return response.render("course.ejs", {
             pageName: `Learn ${course.name}`,
             course: course,
