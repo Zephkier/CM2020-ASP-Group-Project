@@ -229,11 +229,24 @@ router.post("/enroll", (request, response) => {
 
 // Cart
 router.get("/cart", (request, response) => {
-    const cart = request.session.cart || [];
-    const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+    let totalPrice = 0;
+    let cart = request.session.cart || [];
 
-    // // Make "price" property with 2 decimal places
-    // course.price = course.price.toFixed(2);
+    cart.forEach((item) => {
+        // Add "picture" property to course, if JPG doesn't exist, then use PNG
+        let jpgPath = `./public/images/courses/${item.name}.jpg`;
+        if (fs.existsSync(jpgPath)) item.picture = `${item.name}.jpg`;
+        else item.picture = `${item.name}.png`;
+
+        // Make "price" property with 2 decimal places
+        item.price = parseFloat(item.price).toFixed(2);
+
+        // Calculate "totalPrice"
+        totalPrice += parseFloat(item.price);
+    });
+
+    // Make "totalPrice" property with 2 decimal places
+    totalPrice = parseFloat(totalPrice).toFixed(2);
 
     response.render("cart.ejs", {
         pageName: "Cart",

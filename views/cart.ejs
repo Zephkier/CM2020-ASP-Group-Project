@@ -33,7 +33,7 @@
 
                 <%if (cart.length > 0) { cart.forEach(item => { %>
                 <div class="cart-item">
-                    <img src="/images/courses/course<%= item.id %>.jpg" alt="<%= item.name %>" />
+                    <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
                     <div>
                         <h4><%= item.name %></h4>
                         <p><%= item.description %></p>
