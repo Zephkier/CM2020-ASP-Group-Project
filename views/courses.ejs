@@ -27,7 +27,6 @@
         <%- include("./partials/navbar.ejs") %>
 
         <main>
-            
             <section class="courses">
                 <form action="/courses" method="GET" id="sortForm" class="container">
                     <label for="sort">Sort by:</label>
@@ -39,11 +38,11 @@
                 </form>
 
                 <div class="container courses__container">
-                    <%allCourses.forEach(course => { %>
+                    <%courses.forEach(course => { %>
                         <a href="/courses/course/<%= course.id %>">
                             <article class="course">
                                 <div class="course__image">
-                                    <img src="/images/courses/course<%= course.id %>.jpg" />
+                                    <img src="/images/courses/<%= course.picture %>" />
                                 </div>
                                 <div class="course__info">
                                     <h4>Learn <%= course.name %></h4>
@@ -56,8 +55,6 @@
                     
                 </div>
             </section>
-            <!-- ========================= END OF COURSES ========================= -->
-
         </main>
         
         <%- include("./partials/footer.ejs") %>

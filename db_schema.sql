@@ -61,7 +61,7 @@ INSERT INTO courses (name, description, price, enrollCount) VALUES ('JavaScript'
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('PHP', 'Develop server-side applications with PHP.', 60.50, 2314);
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('Python', 'Explore Python for web development, data science, and more.', 90.50, 753);
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('C++', 'Enhance your programming skills with C++.', 80.50, 124);
-INSERT INTO courses (name, description, price, enrollCount) VALUES ('C#', 'Build robust applications using C# and .NET framework.', 50.50, 69);
+INSERT INTO courses (name, description, price, enrollCount) VALUES ('C Sharp', 'Build robust applications using C# and .NET framework.', 50.50, 69);
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('Java', 'Write cross-platform applications with Java.', 70.50, 6432);
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('Ruby', 'Create dynamic web applications with Ruby on Rails.', 60.50, 7573);
 INSERT INTO courses (name, description, price, enrollCount) VALUES ('Go', 'Build efficient and scalable systems with Go.', 50.50, 3622);

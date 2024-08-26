@@ -2,6 +2,7 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 const { errorPage, isLoggedIn, isNotLoggedIn } = require("../public/helper.js");
+const fs = require("fs"); // For courses page to decide to use JPG or PNG image
 
 // Initialise router
 const router = express.Router();
@@ -71,6 +72,7 @@ router.get("/", (request, response) => {
         testimonials.forEach((testimonial) => {
             testimonial.picture = testimonial.name + ".jpg";
         });
+
         return response.render("index.ejs", {
             pageName: "Home",
             categories: categories,
@@ -145,6 +147,7 @@ router.get("/about", (request, response) => {
         teamMember.picture = teamMember.name + ".jpg";
     });
     teamMembers.sort((a, b) => a.name.localeCompare(b.name));
+
     return response.render("about.ejs", {
         pageName: "About",
         teamMembers: teamMembers,
@@ -153,18 +156,24 @@ router.get("/about", (request, response) => {
 
 // Courses
 router.get("/courses", (request, response) => {
-    db.all("SELECT * FROM courses", (err, allCourses) => {
+    db.all("SELECT * FROM courses", (err, courses) => {
         if (err) return errorPage(response, "Database error!");
-        if (!allCourses) return errorPage(response, "No courses found!");
+        if (!courses) return errorPage(response, "No courses found!");
 
         let sortOption = request.query.sort || "popular";
-        if (sortOption === "popular") allCourses.sort((a, b) => b.enrollCount - a.enrollCount);
-        else if (sortOption === "asc") allCourses.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortOption === "desc") allCourses.sort((a, b) => b.name.localeCompare(a.name));
+        if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount);
+        else if (sortOption === "asc") courses.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
+
+        courses.forEach((course) => {
+            let jpgPath = `./public/images/courses/${course.name}.jpg`;
+            if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
+            else course.picture = `${course.name}.png`;
+        });
 
         return response.render("courses.ejs", {
             pageName: "Courses",
-            allCourses: allCourses,
+            courses: courses,
             sort: sortOption,
         });
     });
