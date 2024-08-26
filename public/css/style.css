@@ -205,7 +205,7 @@ nav button {
     border: none;
     outline: none;
     flex-grow: 1; /* Allow the input to take up remaining space */
-    font-size: 1em;
+    font-size: 1rem;
 }
 
 input,

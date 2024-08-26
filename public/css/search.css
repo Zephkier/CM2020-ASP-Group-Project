@@ -1,0 +1,20 @@
+.search-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    max-width: 1200px;      
+    width: 100%;           
+    margin: 2rem auto;         
+    padding: 2rem;   
+}
+
+.search-container p {
+    font-size: 3rem;
+    margin: 0;             
+    line-height: 1.2;       
+}
+
+.search-container h1 {
+    font-size: 3rem;       
+    margin-top: 1rem;      
+}
