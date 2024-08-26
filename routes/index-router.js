@@ -165,6 +165,7 @@ router.get("/courses", (request, response) => {
         else if (sortOption === "asc") courses.sort((a, b) => a.name.localeCompare(b.name));
         else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
 
+        // Add "picture" property to each course, if JPG doesn't exist, then use PNG
         courses.forEach((course) => {
             let jpgPath = `./public/images/courses/${course.name}.jpg`;
             if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
@@ -179,69 +180,53 @@ router.get("/courses", (request, response) => {
     });
 });
 
-// Individual Course
+// Courses: Upon choosing a course
 router.get("/courses/course/:courseId", (request, response) => {
-    db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, chosenCourse) => {
+    db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
         if (err) return errorPage(response, "Database error!");
-        if (!chosenCourse) return errorPage(response, "No chosen course!");
+        if (!course) return errorPage(response, "No chosen course to view!");
+
+        // Add "picture" property to course, if JPG doesn't exist, then use PNG
+        let jpgPath = `./public/images/courses/${course.name}.jpg`;
+        if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
+        else course.picture = `${course.name}.png`;
 
         return response.render("course.ejs", {
-            pageName: `Learn ${chosenCourse.name}`,
-            chosenCourse: chosenCourse,
+            pageName: `Learn ${course.name}`,
+            course: course,
         });
     });
 });
 
-// Contact
-router.get("/contact", (request, response) => {
-    return response.render("contact.ejs", {
-        pageName: "Contact",
+// Courses: Upon choosing a course, then clicking "Add to Cart" (aka enroll)
+router.post("/enroll", (request, response) => {
+    let courseId = request.body.courseId;
+
+    // If "session.cart" object does not exist, then create one (this also prevents object from refreshing upon every enroll)
+    if (!request.session.cart) request.session.cart = [];
+
+    // Check if course is already in cart
+    let cart = request.session.cart;
+    let courseExists = cart.find((item) => item.id == courseId);
+    if (courseExists) return response.redirect("/cart?error=already_in_cart");
+
+    // If course is not in cart, then "cart.push()" and redirect to cart page
+    db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
+        if (err) return errorPage(response, "Database error!");
+        if (!course) return errorPage(response, "No chosen course to add to cart!");
+
+        cart.push(course);
+        request.session.cart = cart; // Update "session.cart" object
+        return response.redirect("/cart");
     });
 });
 
-// In course page, click "Add to Cart"
-router.post("/enroll", (req, res) => {
-    const courseId = req.body.courseId;
-
-    // Add cart object to session object
-    req.session.cart = [];
-    const cart = req.session.cart;
-    const existingItem = cart.find((item) => item.id === courseId);
-
-    if (!existingItem) {
-        // Retrieve course details from the database
-        db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
-            if (err) {
-                console.error("Database error:", err.message);
-                return res.status(500).send("Database error");
-            }
-
-            if (course) {
-                cart.push({
-                    id: course.id,
-                    name: course.name,
-                    description: course.description,
-                    price: course.price,
-                });
-
-                req.session.cart = cart; // Update the session cart
-                return res.redirect("/cart"); // Redirect to the cart page
-            } else {
-                return res.status(404).send("Course not found");
-            }
-        });
-    } else {
-        return res.redirect("/cart"); // If the course is already in the cart, just redirect to the cart
-    }
-});
-
-// Route to display the cart page
-router.get("/cart", (req, res) => {
-    console.log(req.session); // TEST
-    const cartItems = req.session.cart || [];
+// Cart
+router.get("/cart", (request, response) => {
+    const cartItems = request.session.cart || [];
     const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
 
-    res.render("cart.ejs", {
+    response.render("cart.ejs", {
         pageName: "Cart",
         cartItems: cartItems,
         totalPrice: totalPrice,
@@ -249,17 +234,17 @@ router.get("/cart", (req, res) => {
 });
 
 // Checkout Route - Redirect to login if not logged in
-router.get("/checkout", (req, res) => {
-    if (!req.session.user) return res.redirect("/user/login");
+router.get("/checkout", (request, response) => {
+    if (!request.session.user) return response.redirect("/user/login");
 
-    const cartItems = req.session.cart || [];
+    const cartItems = request.session.cart || [];
     const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
 
-    res.render("checkout.ejs", {
+    response.render("checkout.ejs", {
         pageName: "Checkout",
         cartItems: cartItems,
         totalPrice: totalPrice,
-        user: req.session.user, // Pass user details to the checkout page
+        user: request.session.user, // Pass user details to the checkout page
     });
 });
 
@@ -355,7 +340,13 @@ router.post("/checkout/creditcard", (req, res) => {
         });
 });
 
-//-----------------------------------------SEARCH--------------------------------------------------------------
+// Contact
+router.get("/contact", (request, response) => {
+    return response.render("contact.ejs", {
+        pageName: "Contact",
+    });
+});
+
 // Search
 router.get("/search", (request, response) => {
     const query = request.query.q;

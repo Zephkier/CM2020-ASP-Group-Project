@@ -2,9 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + tabNameSeparator + appName %></title>
+        <title><%= pageName + separator + appName %></title>
 
         <!-- ICONSCOUT CDN -->
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
@@ -24,8 +23,7 @@
     </head>
 
     <body>
-        <%- include("../partials/navbar.ejs") %>
-        <!-- ========================= END OF NAVBAR ========================= -->
+        <%- include("./partials/navbar.ejs") %>
 
         <main>
             <header>
@@ -37,13 +35,16 @@
                     </div>
                     <div class="header__left">
                         <h1>Oops!</h1>
-                        <p>You've landed yourself in the error page.<br />Feel free to contact and tell us what has happened:</p>
-                        <p><strong><%= errorMessage %></strong></p>
+                        <p>You've landed yourself in the error page.</p>
+                        <p>
+                            Feel free to contact us and inform what happened:<br />
+                            <strong><%= errorMessage %></strong>
+                        </p>
+                        <a href="/contact" class="btn btn-primary">Contact</a>
                     </div>
                 </div>
             </header>
         </main>
-        <!-- ========================= END OF ERROR ========================= -->
 
         <script src="/main.js"></script>
     </body>

@@ -1,5 +1,5 @@
 function errorPage(response, errorMessage) {
-    response.render("standard/error.ejs", { errorMessage: errorMessage });
+    response.render("_error.ejs", { errorMessage: errorMessage });
 }
 
 function isLoggedIn(request, response, next) {

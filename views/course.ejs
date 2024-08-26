@@ -36,29 +36,28 @@
             <div class="container">
                 <div class="course-detail">
                     <div class="course-detail__image">
-                        <img src="/images/courses/course<%= chosenCourse.id %>.jpg" alt="Course Image" />
+                        <img src="/images/courses/<%= course.picture %>" alt="Course Image" />
                     </div>
+
                     <div class="course-detail__info">
-                        <h1>Learn <%= chosenCourse.name %>!</h1>
-                        <p><%= chosenCourse.description %></p>
+                        <h1>Learn <%= course.name %>!</h1>
+                        <p><%= course.description %></p>
                         <h2><strong>What you'll learn:</strong></h2>
                         <ul>
-                            <li>Topic 1: Introduction to <%= chosenCourse.name %></li>
-                            <li>Topic 2: Advanced techniques in <%= chosenCourse.name %></li>
-                            <li>Topic 3: Real-world applications</li>
+                            <li>Topic 1: <%= course.name %> Introduction</li>
+                            <li>Topic 2: <%= course.name %> Advanced Techniques</li>
+                            <li>Topic 3: Real-world Applications</li>
                         </ul>
 
                         <div class="course-detail__actions">
-                            <!-- Form to handle course enrollment -->
                             <form action="/enroll" method="POST">
-                                <input type="hidden" name="courseId" value="<%= chosenCourse.id %>" />
+                                <input type="hidden" name="courseId" value="<%= course.id %>" />
                                 <button type="submit" class="btn btn-secondary">Add to Cart</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- ========================= END OF COURSE ========================= -->
         </main>
 
         <%- include("./partials/footer.ejs") %>
