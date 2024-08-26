@@ -143,6 +143,10 @@ nav {
     align-items: center;
 }
 
+.nav__container a h4 {
+    font-size: 1.5rem;
+}
+
 nav button {
     display: none;
 }
@@ -323,7 +327,7 @@ header {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    text-align: center; 
+    text-align: center;
 }
 
 .courses__container {
@@ -331,8 +335,8 @@ header {
     grid-template-columns: repeat(3, 1fr);
     /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
     gap: 5rem;
-    max-width: 1500px;      
-    width: 100%;  
+    max-width: 1500px;
+    width: 100%;
 }
 
 .course {
