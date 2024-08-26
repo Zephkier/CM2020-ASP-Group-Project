@@ -165,11 +165,14 @@ router.get("/courses", (request, response) => {
         else if (sortOption === "asc") courses.sort((a, b) => a.name.localeCompare(b.name));
         else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
 
-        // Add "picture" property to each course, if JPG doesn't exist, then use PNG
         courses.forEach((course) => {
+            // Add "picture" property to each course, if JPG doesn't exist, then use PNG
             let jpgPath = `./public/images/courses/${course.name}.jpg`;
             if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
             else course.picture = `${course.name}.png`;
+
+            // Make "price" property with 2 decimal places
+            course.price = course.price.toFixed(2);
         });
 
         return response.render("courses.ejs", {
@@ -223,12 +226,15 @@ router.post("/enroll", (request, response) => {
 
 // Cart
 router.get("/cart", (request, response) => {
-    const cartItems = request.session.cart || [];
-    const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
+    const cart = request.session.cart || [];
+    const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+
+    // // Make "price" property with 2 decimal places
+    // course.price = course.price.toFixed(2);
 
     response.render("cart.ejs", {
         pageName: "Cart",
-        cartItems: cartItems,
+        cart: cart,
         totalPrice: totalPrice,
     });
 });

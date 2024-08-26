@@ -47,7 +47,10 @@
                                 <div class="course__info">
                                     <h4>Learn <%= course.name %></h4>
                                     <p><%= course.description %></p>
-                                    <p class="course__enroll">Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %></p>
+                                    <p class="course__enroll">
+                                        Price: $<%= course.price %><br>
+                                        Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
+                                    </p>
                                 </div>
                             </article>
                         </a>
