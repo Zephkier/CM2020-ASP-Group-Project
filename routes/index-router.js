@@ -16,7 +16,7 @@ const router = express.Router();
 // Home
 router.get("/", (request, response) => {
     db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving top few courses!");
         if (!topCourses) return errorPage(response, "No courses found!");
         let categories = [
             { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
@@ -163,7 +163,7 @@ router.get("/about", (request, response) => {
 // Courses
 router.get("/courses", (request, response) => {
     db.all("SELECT * FROM courses", (err, courses) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving course information!");
         if (!courses) return errorPage(response, "No courses found!");
 
         let sortOption = request.query.sort || "popular";
@@ -186,7 +186,7 @@ router.get("/courses", (request, response) => {
 // Courses: Upon choosing a course
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving chosen course information!");
         if (!course) return errorPage(response, "No chosen course to view!");
 
         setPictureAndPriceProperties(course);
@@ -212,7 +212,7 @@ router.post("/enroll", (request, response) => {
 
     // If course is not in cart, then "cart.push()" and redirect to cart page
     db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving chosen course information!");
         if (!course) return errorPage(response, "No chosen course to add to cart!");
 
         // Push into "cart", update "session.cart" object with latest "cart"
@@ -236,37 +236,37 @@ router.get("/cart", (request, response) => {
     // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
-    response.render("cart.ejs", {
+    return response.render("cart.ejs", {
         pageName: "Cart",
         cart: cart,
         totalPrice: totalPrice,
     });
 });
 
-// Route to remove an item from the cart
-router.post("/cart/remove", (req, res) => {
-    const courseId = req.body.courseId;
-    let cart = req.session.cart || [];
+router.post("/cart/remove", (request, response) => {
+    const courseId = request.body.courseId;
+    let cart = request.session.cart || [];
 
     // Filter out the item with the provided courseId
-    cart = cart.filter(item => item.id !== parseInt(courseId, 10));
+    cart = cart.filter((item) => item.id !== parseInt(courseId, 10));
 
     // Update the session cart
-    req.session.cart = cart;
+    request.session.cart = cart;
 
     // Redirect back to the cart page
-    res.redirect("/cart");
+    return response.redirect("/cart");
 });
-
 
 // Checkout: Ensure user is logged in
 router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
 
+    // Do not enter page if cart is empty
+    if (cart.length == 0) return response.redirect("/cart?error=empty_checkout");
+
     cart.forEach((item) => {
         setPictureAndPriceProperties(item);
-
         // Calculate "totalPrice"
         totalPrice += parseFloat(item.price);
     });
@@ -274,7 +274,7 @@ router.get("/checkout", isLoggedIn, (request, response) => {
     // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
-    response.render("checkout.ejs", {
+    return response.render("checkout.ejs", {
         pageName: "Checkout",
         cart: cart,
         totalPrice: totalPrice,

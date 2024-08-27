@@ -78,11 +78,10 @@ router.post("/login", db_isExistingUser, (request, response) => {
 // Profile
 router.get("/profile", isLoggedIn, (request, response) => {
     let query = `
-        SELECT courses.name, courses.description, courses.picture
-        FROM enrollments 
-        JOIN courses ON enrollments.course_id = courses.id
+        SELECT courses.id, courses.name, courses.description
+        FROM enrollments JOIN courses
+        ON enrollments.course_id = courses.id
         WHERE enrollments.user_id = ?`;
-    
     db.all(query, [request.session.user.id], (err, enrolledCourses) => {
         if (err) return errorPage(response, "Database error!");
         if (!enrolledCourses) return errorPage(response, "Unable to load your enrolled courses!");
@@ -95,7 +94,6 @@ router.get("/profile", isLoggedIn, (request, response) => {
         });
     });
 });
-
 
 
 // TODO change endpoint
