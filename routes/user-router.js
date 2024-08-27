@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Note that all these URLs has "/user" prefix!
 
-// Home (redirects to profile page)
+// Home: Aka profile page
 router.get("/", (request, response) => {
     return response.redirect("/user/profile");
 });
@@ -21,37 +21,105 @@ router.get("/login", (request, response) => {
     });
 });
 
-router.post("/login", (request, response) => {
-    // Ensure user exists in the database
-    const { usernameOrEmail, password } = request.body;
+// TODO move to helper.js
+/**
+ * Ensure user **has** existing login credentials in database, then allowed to proceed.
+ *
+ * @returns
+ * - If user **has** existing credentials in database,
+ * then store user's `id` into `request.idThatIsLoggingIn`, and proceed.
+ *
+ * - If user **does not have** existing credentials in database,
+ * then redirect to login page with error message.
+ */
+function db_isExistingUser(request, response, next) {
     let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
-    let params = [usernameOrEmail, usernameOrEmail, password];
+    let params = [request.body.usernameOrEmail, request.body.usernameOrEmail, request.body.password];
     db.get(query, params, (err, existingUser) => {
         if (err) return errorPage(response, "Database error!");
-        if (!existingUser) return response.render("user/login.ejs", { pageName: "Login", errorMessage: "Invalid login credentials" });
+        if (!existingUser)
+            return response.render("user/login.ejs", {
+                pageName: "Login",
+                errorMessage: "Invalid login credentials",
+            });
+        request.idThatIsLoggingIn = existingUser.id;
+        return next();
+    });
+}
 
-        let profileQuery = `
-            SELECT *
-            FROM profiles JOIN users
-            ON profiles.user_id = users.id
-            WHERE profiles.user_id = ?`;
-        db.get(profileQuery, [existingUser.id], (err, userInfo) => {
-            if (err) return errorPage(response, "Database error!");
-            if (!userInfo) return response.render("user/login.ejs", { pageName: "Login", errorMessage: "Profile not found. Please complete your registration." });
-            request.session.user = userInfo; // Store userInfo in session object
-            if (request.session.cart) return response.redirect("/checkout");
-            return response.redirect("/user/profile");
+router.post("/login", db_isExistingUser, (request, response) => {
+    let query = `
+        SELECT *
+        FROM profiles JOIN users
+        ON profiles.user_id = users.id
+        WHERE profiles.user_id = ?`;
+    db.get(query, [request.idThatIsLoggingIn], (err, userProfileInfo) => {
+        // Delete/Clear the property (for security reasons, if any)
+        delete request.idThatIsLoggingIn;
+        if (err) return errorPage(response, "Database error!");
+        if (!userProfileInfo)
+            return response.render("user/login.ejs", {
+                pageName: "Login",
+                errorMessage: "Profile not found. Please complete your registration.",
+            });
+
+        // Store query result
+        request.session.user = userProfileInfo;
+
+        // This is for when not-logged-in users checkout their cart
+        // Thus, upon login, they are redirected to checkout page
+        if (request.session.cart) return response.redirect("/checkout");
+
+        // Under normal circumstances, redirect to profile page
+        return response.redirect("/user/profile");
+    });
+});
+
+// Profile
+router.get("/profile", isLoggedIn, (request, response) => {
+    let query = `
+        SELECT courses.name, courses.description
+        FROM enrollments JOIN courses
+        ON enrollments.course_id = courses.id
+        WHERE enrollments.user_id = ?`;
+    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
+        if (err) return errorPage(response, "Database error!");
+        if (!enrolledCourses) return errorPage(response, "Unable to load your enrolled courses!");
+
+        enrolledCourses = enrolledCourses || [];
+        return response.render("user/profile.ejs", {
+            pageName: "My Profile",
+            user: request.session.user,
+            enrolledCourses: enrolledCourses,
         });
     });
 });
 
-// Logout
-router.get("/logout", (request, response) => {
-    request.session.destroy();
-    return response.redirect("/");
+// TODO change endpoint
+router.get("/edit-profile", (request, response) => {
+    return response.render("user/edit-profile.ejs", {
+        pageName: "Edit Profile",
+    });
 });
 
-// Register - If user is already logged in (but tries to go to "/user/register"), then it redirects to profile with "error=" in URL
+// TODO change endpoint
+router.post("/update-profile", (request, response) => {
+    let query = `
+        UPDATE profiles
+        SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
+        WHERE user_id = ?`;
+    let { displayName, bio, introduction, profilePicture } = request.body;
+    db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.userId], (err) => {
+        if (err) return errorPage(response, "Database error!");
+        request.session.user.displayName = displayName;
+        request.session.user.bio = bio;
+        request.session.user.introduction = introduction;
+        request.session.user.profilePicture = profilePicture;
+        return response.redirect("/user/profile");
+    });
+});
+
+// Register: Ensure user is not logged in
 router.get("/register", isNotLoggedIn, (request, response) => {
     return response.render("user/register.ejs", {
         pageName: "Register",
@@ -59,7 +127,7 @@ router.get("/register", isNotLoggedIn, (request, response) => {
 });
 
 router.post("/register", (request, response) => {
-    const { role, username, email, password, major, year, department, title } = request.body;
+    let { role, username, email, password, major, year, department, title } = request.body;
 
     // Check if the email already exists
     db.get("SELECT * FROM users WHERE email = ?", [email], (err, existingUser) => {
@@ -76,7 +144,7 @@ router.post("/register", (request, response) => {
             // db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], (err) => { // FIXME cannot use this syntax
             if (err) return errorPage(response, "Database error!");
 
-            const userId = this.lastID;
+            let userId = this.lastID;
 
             if (role === "student") {
                 let query = "INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)";
@@ -103,52 +171,10 @@ router.post("/register", (request, response) => {
     });
 });
 
-// Profile
-router.get("/profile", isLoggedIn, (request, response) => {
-    // Fetch user profile information and enrolled courses
-    db.all(
-        `
-        SELECT courses.name, courses.description
-        FROM enrollments JOIN courses
-        ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = ?`,
-        [request.session.user.id],
-        (err, enrolledCourses) => {
-            if (err) return errorPage(response, "Database error!");
-            enrolledCourses = enrolledCourses || [];
-            response.render("user/profile.ejs", {
-                pageName: "My Profile",
-                user: request.session.user,
-                enrolledCourses: enrolledCourses,
-            });
-        }
-    );
-});
-
-router.get("/edit-profile", (request, response) => {
-    response.render("user/edit-profile.ejs", {
-        pageName: "Edit Profile",
-    });
-});
-
-router.post("/update-profile", (request, response) => {
-    const userId = request.session.user.userId;
-    const { displayName, bio, introduction, profilePicture } = request.body;
-
-    // Update the user's profile in the database
-    const updateQuery = `
-        UPDATE profiles
-        SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
-        WHERE user_id = ?`;
-    db.run(updateQuery, [displayName, bio, introduction, profilePicture, userId], (err) => {
-        if (err) return errorPage(response, "Database error!");
-        // Update the session data with the new values
-        request.session.user.displayName = displayName;
-        request.session.user.bio = bio;
-        request.session.user.introduction = introduction;
-        request.session.user.profilePicture = profilePicture;
-        response.redirect("/user/profile");
-    });
+// Logout
+router.get("/logout", (request, response) => {
+    request.session.destroy();
+    return response.redirect("/");
 });
 
 module.exports = router;

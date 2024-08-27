@@ -10,7 +10,9 @@ function errorPage(response, errorMessage) {
  *
  * _(eg. Checks for `request.session.user`)_
  *
- * @returns If logged in, then proceed with code file. Else, redirect to login page.
+ * @returns
+ * - If user **is** logged in, then proceed.
+ * - If user **is not** logged in, then redirect to login page.
  */
 function isLoggedIn(request, response, next) {
     if (request.session.user) return next();
@@ -23,7 +25,9 @@ function isLoggedIn(request, response, next) {
  *
  * _(eg. Checks for `!request.session.user`)_
  *
- * @returns If not logged in, then proceed with code file. Else, redirect to profile page.
+ * @returns
+ * - If user **is not** logged in, then proceed.
+ * - If user **is** logged in, then redirect to profile page.
  */
 function isNotLoggedIn(request, response, next) {
     if (!request.session.user) return next();
@@ -66,10 +70,14 @@ function setPictureAndPriceProperties(course) {
  * Ensure user is checking-out cart that contains courses that are **new to them**,
  * then allowed to proceed.
  *
- * If cart contains any courses that user **is already enrolled into**,
- * then user cannot checkout, and is redirected to checkout page with error message.
+ * @returns
+ * - If cart contains courses that **is/are new to the user**,
+ * then proceed.
+ *
+ * - If cart contains courses that user **is already enrolled into**,
+ * then cannot checkout, and redirect to checkout page with error message.
  */
-function isNewCoursesOnly(request, response, next) {
+function db_isNewCoursesOnly(request, response, next) {
     request.session.cart.forEach((item) => {
         let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
         let params = [request.session.user.id, item.id];
@@ -99,6 +107,6 @@ module.exports = {
     isLoggedIn,
     returnFilenameWithType,
     setPictureAndPriceProperties,
-    isNewCoursesOnly,
+    db_isNewCoursesOnly,
     db_insertIntoEnrollments,
 };

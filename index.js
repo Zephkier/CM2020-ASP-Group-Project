@@ -18,6 +18,7 @@ app.use((request, response, next) => {
     response.locals.pageName = "You forgot to set 'pageName' in this page's .ejs file!";
     response.locals.separator = " | ";
     response.locals.appName = "Bright Learning Academy";
+    // TODO Unsure what this is, but i recall being used in some EJS file
     response.locals.session = request.session;
     next();
 });

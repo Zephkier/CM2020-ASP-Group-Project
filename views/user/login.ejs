@@ -33,10 +33,11 @@
             <div class="login-container">
                 <section class="form-section">
                     <h2>Login to Your Account</h2>
+
                     <% if (errorMessage) { %>
-                    <!-- Display error message if there is one -->
                     <div class="error-message"><%= errorMessage %></div>
                     <% } %>
+
                     <form action="/user/login" method="POST" class="login-form">
                         <div class="form-group">
                             <label for="usernameOrEmail">Username or Email:</label>
@@ -49,6 +50,7 @@
                         </div>
                         <button type="submit">Login</button>
                     </form>
+
                     <div class="login-redirect">
                         <a href="/user/register">Create new account</a>
                     </div>
