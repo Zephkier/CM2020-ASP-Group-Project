@@ -55,8 +55,8 @@
 
 .profile-details h2 {
     margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    color: #007bff;
+    font-size: 1.7rem;
+    color: white;
     text-decoration: underline;
 }
 
@@ -64,6 +64,9 @@
     margin: 1.5rem 0;
     font-size: 1.3rem;
     color: #e1e1e1; 
+    background-color: #4c6886;
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 .profile-buttons {
@@ -109,6 +112,7 @@
     margin-top: 2rem;
     font-size: 1.7rem;
     color: #e1e1e1;
+    background-color: #4c6886;
 }
 
 .course-item {
