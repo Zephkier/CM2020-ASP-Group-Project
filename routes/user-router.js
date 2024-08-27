@@ -27,7 +27,7 @@ router.get("/login", (request, response) => {
  *
  * @returns
  * - If user **has** existing credentials in database,
- * then store user's `id` into `request.idThatIsLoggingIn`, and proceed.
+ * then store `users` table fields into `request.session.user`, and proceed.
  *
  * - If user **does not have** existing credentials in database,
  * then redirect to login page with error message.
@@ -36,62 +36,68 @@ function db_isExistingUser(request, response, next) {
     let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
     let params = [request.body.usernameOrEmail, request.body.usernameOrEmail, request.body.password];
     db.get(query, params, (err, existingUser) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error 1!");
         if (!existingUser)
             return response.render("user/login.ejs", {
                 pageName: "Login",
                 errorMessage: "Invalid login credentials",
             });
-        request.idThatIsLoggingIn = existingUser.id;
+        request.session.user = existingUser;
         return next();
     });
 }
 
-router.post("/login", db_isExistingUser, (request, response) => {
+// TODO move to helper.js
+function db_getUserInfoForProfile(request, response, next) {
     let query = `
         SELECT *
         FROM profiles JOIN users
         ON profiles.user_id = users.id
         WHERE profiles.user_id = ?`;
-    db.get(query, [request.idThatIsLoggingIn], (err, userProfileInfo) => {
-        // Delete/Clear the property (for security reasons, if any)
-        delete request.idThatIsLoggingIn;
-        if (err) return errorPage(response, "Database error!");
+    db.get(query, [request.session.user.id], (err, userProfileInfo) => {
+        if (err) return errorPage(response, "Database error 2!");
         if (!userProfileInfo)
             return response.render("user/login.ejs", {
                 pageName: "Login",
                 errorMessage: "Profile not found. Please complete your registration.",
             });
 
-        // Store query result
         request.session.user = userProfileInfo;
-
-        // This is for when not-logged-in users checkout their cart
-        // Thus, upon login, they are redirected to checkout page
-        if (request.session.cart) return response.redirect("/checkout");
-
-        // Under normal circumstances, redirect to profile page
-        return response.redirect("/user/profile");
+        return next();
     });
+}
+
+router.post("/login", db_isExistingUser, db_getUserInfoForProfile, (request, response) => {
+    // This is for when not-logged-in users checkout their cart
+    // Thus, upon login, they are redirected to checkout page
+    if (request.session.cart) return response.redirect("/checkout");
+
+    // Under normal circumstances, redirect to profile page
+    return response.redirect("/user/profile");
 });
 
-// Profile
-router.get("/profile", isLoggedIn, (request, response) => {
+// TODO move to helper.js
+function db_getEnrolledCoursesForProfile(request, response, next) {
     let query = `
         SELECT courses.name, courses.description
         FROM enrollments JOIN courses
         ON enrollments.course_id = courses.id
         WHERE enrollments.user_id = ?`;
     db.all(query, [request.session.user.id], (err, enrolledCourses) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error 3!");
         if (!enrolledCourses) return errorPage(response, "Unable to load your enrolled courses!");
+        request.session.user.enrolledCourses = enrolledCourses || [];
+        next();
+    });
+}
 
-        enrolledCourses = enrolledCourses || [];
-        return response.render("user/profile.ejs", {
-            pageName: "My Profile",
-            user: request.session.user,
-            enrolledCourses: enrolledCourses,
-        });
+// Profile
+router.get("/profile", isLoggedIn, db_getEnrolledCoursesForProfile, (request, response) => {
+    console.log(request.session);
+    return response.render("user/profile.ejs", {
+        pageName: "My Profile",
+        user: request.session.user,
+        enrolledCourses: request.session.user.enrolledCourses,
     });
 });
 
@@ -110,7 +116,7 @@ router.post("/update-profile", (request, response) => {
         WHERE user_id = ?`;
     let { displayName, bio, introduction, profilePicture } = request.body;
     db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.userId], (err) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error 4!");
         request.session.user.displayName = displayName;
         request.session.user.bio = bio;
         request.session.user.introduction = introduction;
@@ -123,49 +129,93 @@ router.post("/update-profile", (request, response) => {
 router.get("/register", isNotLoggedIn, (request, response) => {
     return response.render("user/register.ejs", {
         pageName: "Register",
+        errors: {},
+        formInputStored: {
+            major: "Not enrolled",
+            year: "0",
+            department: "No department",
+            title: "No title",
+        },
     });
 });
 
-router.post("/register", (request, response) => {
+// TODO move to helper.js
+function db_isUnique_usernameAndEmail(request, response, next) {
+    let errors = {};
+
+    db.get("SELECT * FROM users WHERE username = ?", [request.body.username], (err, existingUsername) => {
+        if (err) return errorPage(response, "Database error 5!");
+        if (existingUsername) errors.username = "This username has been registered.";
+
+        db.get("SELECT * FROM users WHERE email = ?", [request.body.email], (err, existingEmail) => {
+            if (err) return errorPage(response, "Database error 6!");
+            if (existingEmail) errors.email = "This email has been registered.";
+
+            // If "errors" have no properties/keys, then proceed
+            if (Object.keys(errors).length == 0) return next();
+
+            // If "errors" has properties/keys, then re-render register page
+            return response.render("user/register.ejs", {
+                pageName: "Register",
+                errors: errors,
+                formInputStored: request.body,
+            });
+        });
+    });
+}
+
+router.post("/register", db_isUnique_usernameAndEmail, (request, response, next) => {
     let { role, username, email, password, major, year, department, title } = request.body;
 
-    // Check if the email already exists
-    db.get("SELECT * FROM users WHERE email = ?", [email], (err, existingUser) => {
-        if (err) return errorPage(response, "Database error!");
-        if (existingUser) {
-            return response.render("register.ejs", {
-                pageName: "Register",
-                errors: { email: "This email is already registered." },
-                formData: { username, email, major, year, department, title },
-            });
-        }
-        // Proceed with registration if email does not exist
-        db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], function (err) {
-            // db.run("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)", [email, username, password, role], (err) => { // FIXME cannot use this syntax
-            if (err) return errorPage(response, "Database error!");
+    /**
+     * Upon ensuring unique username and email:
+     * 1. Insert into "users" table
+     * 2. Get latest "users.id" for step 3 and 4
+     * 3. Insert into "students" or "educators" table
+     * 4. Insert into "profiles" table
+     * 5. Redirect to login page
+     */
 
-            let userId = this.lastID;
+    // 1. Insert into "users" table
+    let query = "INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)";
+    let params = [email, username, password, role];
+    db.run(query, params, (err) => {
+        if (err) return errorPage(response, "Database error 7!");
 
+        // 2. Get latest "users.id" for following inserts
+        query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
+        params = [username, email, password];
+        db.get(query, params, (err, existingUser) => {
+            if (err) return errorPage(response, "Database error 8!");
+            if (!existingUser) return errorPage(response, "Something went terribly wrong!");
+
+            // 3. Insert into "students" or "educators" table
             if (role === "student") {
-                let query = "INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)";
-                let params = [userId, major || "Not enrolled", year || 0];
-                db.run(query, params, (err) => {
-                    if (err) return errorPage(response, "Database error!");
-                });
+                query = "INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)";
+                param = [existingUser.id, major, year];
             } else if (role === "educator") {
-                let query = "INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)";
-                let params = [userId, department || "No department", title || "No title"];
-                db.run(query, params, (err) => {
-                    if (err) return errorPage(response, "Database error!");
-                });
+                query = "INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)";
+                param = [existingUser.id, department, title];
             }
+            db.run(query, param, (err) => {
+                if (err) return errorPage(response, "Database error during role-specific insert!");
 
-            // Create profile for new user
-            let query = "INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)";
-            let params = [userId, username, "Hi there, this is my bio!", "Hi there, this is my introduction!", "dog.png"];
-            db.run(query, params, (err) => {
-                if (err) return errorPage(response, "Database error!");
-                return response.redirect("/user/login");
+                // 4. Insert into "profiles" table
+                query = "INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)";
+                params = [
+                    // Format
+                    existingUser.id,
+                    username,
+                    `Hi there, I'm ${existingUser.username} and this is my bio!`,
+                    `Hi there, I'm ${existingUser.username} and this is my introduction!`,
+                    "dog.png",
+                ];
+                db.run(query, params, (err) => {
+                    if (err) return errorPage(response, "Database error during profile insert!");
+
+                    // 5. Redirect to login page
+                    return response.redirect("/user/login");
+                });
             });
         });
     });
