@@ -26,6 +26,7 @@ router.get("/", (request, response) => {
 router.get("/login", (request, response) => {
     return response.render("user/login.ejs", {
         pageName: "Login",
+        usernameOrEmailStored: null,
         errorMessage: null,
     });
 });

@@ -118,6 +118,7 @@ function db_isExistingUser(request, response, next) {
         if (!existingUser)
             return response.render("user/login.ejs", {
                 pageName: "Login",
+                usernameOrEmailStored: request.body.usernameOrEmail,
                 errorMessage: "Invalid login credentials",
             });
         request.session.user = existingUser;
