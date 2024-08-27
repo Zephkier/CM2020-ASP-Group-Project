@@ -236,32 +236,34 @@ router.get("/cart", (request, response) => {
     // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
-    response.render("cart.ejs", {
+    return response.render("cart.ejs", {
         pageName: "Cart",
         cart: cart,
         totalPrice: totalPrice,
     });
 });
 
-// Route to remove an item from the cart
-router.post("/cart/remove", (req, res) => {
-    const courseId = req.body.courseId;
-    let cart = req.session.cart || [];
+router.post("/cart/remove", (request, response) => {
+    const courseId = request.body.courseId;
+    let cart = request.session.cart || [];
 
     // Filter out the item with the provided courseId
     cart = cart.filter((item) => item.id !== parseInt(courseId, 10));
 
     // Update the session cart
-    req.session.cart = cart;
+    request.session.cart = cart;
 
     // Redirect back to the cart page
-    res.redirect("/cart");
+    return response.redirect("/cart");
 });
 
 // Checkout: Ensure user is logged in
 router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
+
+    // Do not enter page if cart is empty
+    if (cart.length == 0) return response.redirect("/cart?error=empty_checkout");
 
     cart.forEach((item) => {
         setPictureAndPriceProperties(item);
@@ -272,7 +274,7 @@ router.get("/checkout", isLoggedIn, (request, response) => {
     // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
-    response.render("checkout.ejs", {
+    return response.render("checkout.ejs", {
         pageName: "Checkout",
         cart: cart,
         totalPrice: totalPrice,
