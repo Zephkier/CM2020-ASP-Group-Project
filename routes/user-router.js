@@ -63,7 +63,7 @@ router.post("/profile/update", (request, response) => {
         SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
         WHERE user_id = ?`;
     let { displayName, bio, introduction, profilePicture } = request.body;
-    db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.userId], (err) => {
+    db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.id], (err) => {
         if (err) return errorPage(response, "Database error 4!");
         request.session.user.displayName = displayName;
         request.session.user.bio = bio;
