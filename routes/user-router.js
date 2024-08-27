@@ -49,15 +49,14 @@ router.get("/profile", isLoggedIn, db_getEnrolledCoursesForProfile, (request, re
     });
 });
 
-// TODO change endpoint
-router.get("/edit-profile", (request, response) => {
+router.get("/profile/edit", (request, response) => {
     return response.render("user/edit-profile.ejs", {
         pageName: "Edit Profile",
+        user: request.session.user,
     });
 });
 
-// TODO change endpoint
-router.post("/update-profile", (request, response) => {
+router.post("/profile/update", (request, response) => {
     let query = `
         UPDATE profiles
         SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
