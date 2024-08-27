@@ -249,7 +249,7 @@ router.post("/cart/remove", (req, res) => {
     let cart = req.session.cart || [];
 
     // Filter out the item with the provided courseId
-    cart = cart.filter(item => item.id !== parseInt(courseId, 10));
+    cart = cart.filter((item) => item.id !== parseInt(courseId, 10));
 
     // Update the session cart
     req.session.cart = cart;
@@ -258,7 +258,6 @@ router.post("/cart/remove", (req, res) => {
     res.redirect("/cart");
 });
 
-
 // Checkout: Ensure user is logged in
 router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;
@@ -266,7 +265,6 @@ router.get("/checkout", isLoggedIn, (request, response) => {
 
     cart.forEach((item) => {
         setPictureAndPriceProperties(item);
-
         // Calculate "totalPrice"
         totalPrice += parseFloat(item.price);
     });

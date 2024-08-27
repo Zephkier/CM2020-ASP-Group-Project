@@ -1,7 +1,16 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage, isNotLoggedIn, isLoggedIn } = require("../public/helper.js");
+const {
+    // Format
+    errorPage,
+    isNotLoggedIn,
+    isLoggedIn,
+    db_isExistingUser,
+    db_getUserInfoForProfile,
+    db_getEnrolledCoursesForProfile,
+    db_isUnique_usernameAndEmail,
+} = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
@@ -21,52 +30,6 @@ router.get("/login", (request, response) => {
     });
 });
 
-// TODO move to helper.js
-/**
- * Ensure user **has** existing login credentials in database, then allowed to proceed.
- *
- * @returns
- * - If user **has** existing credentials in database,
- * then store `users` table fields into `request.session.user`, and proceed.
- *
- * - If user **does not have** existing credentials in database,
- * then redirect to login page with error message.
- */
-function db_isExistingUser(request, response, next) {
-    let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
-    let params = [request.body.usernameOrEmail, request.body.usernameOrEmail, request.body.password];
-    db.get(query, params, (err, existingUser) => {
-        if (err) return errorPage(response, "Database error 1!");
-        if (!existingUser)
-            return response.render("user/login.ejs", {
-                pageName: "Login",
-                errorMessage: "Invalid login credentials",
-            });
-        request.session.user = existingUser;
-        return next();
-    });
-}
-
-// TODO move to helper.js
-function db_getUserInfoForProfile(request, response, next) {
-    let query = `
-        SELECT *
-        FROM profiles JOIN users
-        ON profiles.user_id = users.id
-        WHERE profiles.user_id = ?`;
-    db.get(query, [request.session.user.id], (err, userProfileInfo) => {
-        if (err) return errorPage(response, "Database error 2!");
-        if (!userProfileInfo)
-            return response.render("user/login.ejs", {
-                pageName: "Login",
-                errorMessage: "Profile not found. Please complete your registration.",
-            });
-
-        request.session.user = userProfileInfo;
-        return next();
-    });
-}
-
 router.post("/login", db_isExistingUser, db_getUserInfoForProfile, (request, response) => {
     // This is for when not-logged-in users checkout their cart
     // Thus, upon login, they are redirected to checkout page
@@ -75,21 +38,6 @@ router.post("/login", db_isExistingUser, db_getUserInfoForProfile, (request, res
     // Under normal circumstances, redirect to profile page
     return response.redirect("/user/profile");
 });
-
-// TODO move to helper.js
-function db_getEnrolledCoursesForProfile(request, response, next) {
-    let query = `
-        SELECT courses.name, courses.description
-        FROM enrollments JOIN courses
-        ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = ?`;
-    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
-        if (err) return errorPage(response, "Database error 3!");
-        if (!enrolledCourses) return errorPage(response, "Unable to load your enrolled courses!");
-        request.session.user.enrolledCourses = enrolledCourses || [];
-        next();
-    });
-}
 
 // Profile
 router.get("/profile", isLoggedIn, db_getEnrolledCoursesForProfile, (request, response) => {
@@ -138,31 +86,6 @@ router.get("/register", isNotLoggedIn, (request, response) => {
         },
     });
 });
-
-// TODO move to helper.js
-function db_isUnique_usernameAndEmail(request, response, next) {
-    let errors = {};
-
-    db.get("SELECT * FROM users WHERE username = ?", [request.body.username], (err, existingUsername) => {
-        if (err) return errorPage(response, "Database error 5!");
-        if (existingUsername) errors.username = "This username has been registered.";
-
-        db.get("SELECT * FROM users WHERE email = ?", [request.body.email], (err, existingEmail) => {
-            if (err) return errorPage(response, "Database error 6!");
-            if (existingEmail) errors.email = "This email has been registered.";
-
-            // If "errors" have no properties/keys, then proceed
-            if (Object.keys(errors).length == 0) return next();
-
-            // If "errors" has properties/keys, then re-render register page
-            return response.render("user/register.ejs", {
-                pageName: "Register",
-                errors: errors,
-                formInputStored: request.body,
-            });
-        });
-    });
-}
 
 router.post("/register", db_isUnique_usernameAndEmail, (request, response, next) => {
     let { role, username, email, password, major, year, department, title } = request.body;
