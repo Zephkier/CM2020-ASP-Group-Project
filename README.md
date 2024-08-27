@@ -1,19 +1,17 @@
 # Agile Software Project (ASP) - Bright Learning Academy Setup
 
-## Follow the steps below to set up and run the Agile Software Project (ASP) on your local machine.
+## Follow these steps to set up and run the Agile Software Project (ASP) on your local machine:
 
-1. **Install Dependencies**
-To install the necessary dependencies, run the following command:
-```npm install``
+Within the terminal...
 
-2. **Build the database**
-Build the database according to your operating system:
-For Unix-based systems (Linux, macOS):
-```npm run build-db```
+1.  **Install dependencies used in project**
+    Run: `npm install`<br><br>
 
-For Windows:
-```npm run build-db-win```
+2.  **Build backend database**
+    If you're on Mac, Linux or Unix-based system, then run: `npm run build-db`
+    If you're on Windows, then run: `npm run build-db-win`<br>
+    A file called `database.db` should appear in the directory.<br><br>
 
-3. **Start the application**
-To start the application, use the following command:
-```npm run start```
+3.  **Start application**
+    Run: `npm run start`
+    There should be a `localhost` link to access the project.
