@@ -5,6 +5,8 @@
     align-items: center;    
     width: 100%;
     height: 100%;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
 }
 
 /* Form section styling */
@@ -20,7 +22,6 @@
 
 /* Form header */
 .form-section h2 {
-    font-size: 3rem;
     margin-bottom: 2.5rem;
     text-align: center;
 }
@@ -45,7 +46,6 @@
 .form-group label {
     display: block;
     margin-bottom: 1rem;
-    font-size: 1.5rem;
     font-weight: 600;
 }
 
@@ -55,8 +55,7 @@
     padding: 0.8rem;
     border: none;
     border-radius: 8px;
-    font-size: 1.6rem;
-    background-color: #424890; /* Match input background */
+    background-color: #424890; 
     color: #fff;
 }
 
@@ -65,26 +64,24 @@
     margin-top: 0.5rem;
     display: inline-block;
     cursor: pointer;
-    color: #f7c94b;
-    font-size: 1.3rem;
+    color: #aec7ff;
 }
 
 /* Login button */
 button[type="submit"] {
     width: 100%;
     padding: 1rem;
-    background-color: #00bf8e; /* Use a nice contrasting color */
+    background-color: #007bff;; 
     color: white;
-    font-size: 1.6rem;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover {
-    background-color: #009b75;
+    background-color: #0056b3;
 }
 
 /* Redirect link */
@@ -96,7 +93,6 @@ button[type="submit"]:hover {
 .login-redirect a {
     color: #f7c94b;
     text-decoration: none;
-    font-size: 1.3rem;
     font-weight: bold;
 }
 
@@ -108,18 +104,18 @@ button[type="submit"]:hover {
 
 /* Button Styles */
 button {
-    background-color: #01b177;
+    background-color: #007bff;; 
     color: #fff;
     padding: 1.4rem 4rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 1.2rem;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #009b75;
+    background-color: #0056b3;
 }
 
 button + button {

@@ -2,107 +2,115 @@
 .profile-container {
     display: flex;
     justify-content: space-between;
-    padding: 4rem; 
+    padding: 4rem;
     width: 100%;
     height: 100%;
     gap: 3rem;
 }
 
 .profile-left-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
     flex: 1;
-    max-width: 45%; 
-    padding: 4rem; 
-    border-radius: 10px; 
-    text-align: center; 
+    max-width: 45%;
+    padding: 0;
+}
+
+.profile-card {
+    background: var(--color-bg1); /* Keeping the dark background */
+    padding: 3rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
 }
 
 .profile-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
+    position: relative;
     margin-bottom: 2rem;
-    width: 100%;
+}
+
+.profile-header {
+    text-align: center; /* Ensure the header content is centered */
 }
 
 .profile-header img {
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
-    border: 4px solid #007bff;
+    border: 3px solid #007bff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 auto 1rem auto; /* Center horizontally and add bottom margin */
+    display: block; /* Make the image a block-level element */
 }
 
-.profile-header h1 {
-    margin-top: 1rem;
-    font-size: 2.3rem;
-    color: #e1e1e1;
-    text-align: center; 
+
+.profile-header .profile-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #e1e1e1; /* Light text color for better contrast */
+}
+
+.profile-header .profile-role {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-top: 0.5rem;
 }
 
 .profile-details {
-    background: var(--color-bg1);
-    padding: 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
     text-align: left;
 }
 
 .profile-details h2 {
+    font-size: 1.5rem;
+    color: #007bff;
     margin-bottom: 1.5rem;
-    font-size: 1.7rem;
-    color: white;
 }
 
-.profile-details p {
-    margin: 1.5rem 0;
-    color: #e1e1e1; 
-    background-color: #4c6886;
-    padding: 1rem;
-    border-radius: 10px;
-}
-
-.profile-buttons {
+.details-row {
     display: flex;
-    justify-content: center; 
-    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #e1e1e1;
 }
 
-.profile-details button {
-    margin-top: 1.5rem;
-    padding: 0.75rem 2rem;
+.details-row i {
+    margin-right: 0.5rem;
+    color: #007bff;
+}
+
+.profile-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.profile-actions button {
+    padding: 0.75rem 1.5rem;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: background-color 0.3s; 
+    font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
-.profile-details button:hover {
+.profile-actions button:hover {
     background-color: #0056b3;
 }
 
 .enrolled-courses {
-    background: var(--color-bg1);
+    background: var(--color-bg1); /* Keeping the dark background */
     padding: 2.5rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     width: 50%;
     margin-left: 2rem;
-    margin-right: 4rem;
 }
 
 .enrolled-courses h2 {
     margin-bottom: 1.5rem;
     font-size: 1.7rem;
-    color: #e1e1e1;
+    color: #e1e1e1; /* Light text color for better contrast */
 }
 
 .enrolled-courses p {
@@ -115,6 +123,9 @@
 }
 
 .course-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 10px;
@@ -123,18 +134,32 @@
 }
 
 .course-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.course-info {
+    flex: 1;
+    margin-right: 1rem;
+}
+
 .course-item h4 {
-    margin-left: 1rem;
-    color: white; 
-    font-size: 1.5rem;
+    margin: 0;
+    color: #e1e1e1;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .course-item p {
     margin: 0;
-    color:#e1e1e1;
+    color: #e1e1e1;
     font-size: 1rem;
+}
+
+.course-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #007bff;
 }
