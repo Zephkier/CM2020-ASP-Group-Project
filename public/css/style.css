@@ -726,7 +726,7 @@ footer ul li a:hover {
     border: 0.25em solid var(--color-warning);
     background-color: var(--color-danger);
     box-shadow: 0 0 2em 1em var(--color-bg);
-    padding: 2em;
+    padding: 1.5em;
     font-size: larger;
     z-index: 2;
     display: flex;
@@ -736,4 +736,7 @@ footer ul li a:hover {
 }
 .popup.hidden {
     display: none;
+}
+#popup-close {
+    margin-top: 1em;
 }

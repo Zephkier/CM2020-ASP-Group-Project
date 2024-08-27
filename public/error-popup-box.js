@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (error == "already_enrolled") message = "You are already enrolled into the course!<br>No payment was made.<br>Your cart has <b>remained unchanged</b>.";
 
         // Redirect to /user/profile
-        if (error == "already_logged_in") message = "You are <b>already</b> logged in!<br>You cannot register again,";
+        if (error == "already_logged_in") message = "You are <b>already</b> logged in!<br>You cannot register again.";
 
         // Redirect to /user/login
         if (error == "not_logged_in") message = "You must login first!";
