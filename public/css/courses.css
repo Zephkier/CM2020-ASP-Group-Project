@@ -43,6 +43,7 @@
     align-items: center; 
     flex-grow: 1;
     text-align: center; 
+    margin-bottom: 2rem;
 }
 
 .course__info h4 {
@@ -50,7 +51,7 @@
 }
 
 .course__description {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     margin-bottom: 5rem; 
     display: flex;
     justify-content: center;
@@ -60,7 +61,7 @@
 }
 
 .course__enroll {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     display: flex;
     justify-content: center; 
