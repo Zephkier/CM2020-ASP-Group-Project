@@ -5,14 +5,29 @@ function errorPage(response, errorMessage) {
     response.render("_error.ejs", { errorMessage: errorMessage });
 }
 
+/**
+ * Ensure user **IS** logged in, then allowed to proceed.
+ *
+ * _(eg. Checks for `request.session.user`)_
+ *
+ * @returns If logged in, then proceed with code file. Else, redirect to login page.
+ */
 function isLoggedIn(request, response, next) {
-    if (request.session.user) return response.redirect("/user/profile?error=already_logged_in");
-    next();
+    if (request.session.user) return next();
+    return response.redirect("/user/login?error=not_logged_in");
 }
 
-function ensureLoggedIn(request, response, next) {
-    if (!request.session.user) return response.redirect("/user/login?error=not_logged_in");
-    next();
+/**
+ *
+ * Ensure user **IS NOT** logged in, then allowed to proceed.
+ *
+ * _(eg. Checks for `!request.session.user`)_
+ *
+ * @returns If not logged in, then proceed with code file. Else, redirect to profile page.
+ */
+function isNotLoggedIn(request, response, next) {
+    if (!request.session.user) return next();
+    return response.redirect("/user/profile?error=already_logged_in");
 }
 
 /**
@@ -47,25 +62,32 @@ function setPictureAndPriceProperties(course) {
     course.price = parseFloat(course.price).toFixed(2);
 }
 
-function isAlreadyEnrolledIntoCourse(request, response, next) {
+/**
+ * Ensure user is checking-out cart that contains courses that are **new to them**,
+ * then allowed to proceed.
+ *
+ * If cart contains any courses that user **is already enrolled into**,
+ * then user cannot checkout, and is redirected to checkout page with error message.
+ */
+function isNewCoursesOnly(request, response, next) {
     request.session.cart.forEach((item) => {
         let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
         let params = [request.session.user.id, item.id];
         db.get(query, params, (err, existingEnrollment) => {
             if (err) return errorPage(response, "Database error!");
             if (existingEnrollment) return response.redirect("/checkout?error=already_enrolled");
-            next();
+            return next();
         });
     });
 }
 
-function insertEnrollment(request, response, next) {
+function db_insertIntoEnrollments(request, response, next) {
     request.session.cart.forEach((item) => {
         let query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
         let params = [request.session.user.id, item.id];
         db.get(query, params, (err) => {
             if (err) return errorPage(response, "Database error!");
-            next();
+            return next();
         });
     });
 }
@@ -73,10 +95,10 @@ function insertEnrollment(request, response, next) {
 // Export module containing the following so external files can access it
 module.exports = {
     errorPage,
+    isNotLoggedIn,
     isLoggedIn,
-    ensureLoggedIn,
     returnFilenameWithType,
     setPictureAndPriceProperties,
-    isAlreadyEnrolledIntoCourse,
-    insertEnrollment,
+    isNewCoursesOnly,
+    db_insertIntoEnrollments,
 };

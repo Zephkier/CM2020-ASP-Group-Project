@@ -1,7 +1,7 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage, isLoggedIn, ensureLoggedIn } = require("../public/helper.js");
+const { errorPage, isNotLoggedIn, isLoggedIn } = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
@@ -52,7 +52,7 @@ router.get("/logout", (request, response) => {
 });
 
 // Register - If user is already logged in (but tries to go to "/user/register"), then it redirects to profile with "error=" in URL
-router.get("/register", isLoggedIn, (request, response) => {
+router.get("/register", isNotLoggedIn, (request, response) => {
     return response.render("user/register.ejs", {
         pageName: "Register",
     });
@@ -104,7 +104,7 @@ router.post("/register", (request, response) => {
 });
 
 // Profile
-router.get("/profile", ensureLoggedIn, (request, response) => {
+router.get("/profile", isLoggedIn, (request, response) => {
     // Fetch user profile information and enrolled courses
     db.all(
         `

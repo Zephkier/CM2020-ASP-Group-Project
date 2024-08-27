@@ -4,10 +4,10 @@ const { db } = require("../public/db.js");
 const {
     // Format
     errorPage,
-    ensureLoggedIn,
+    isLoggedIn,
     setPictureAndPriceProperties,
-    isAlreadyEnrolledIntoCourse,
-    insertEnrollment,
+    isNewCoursesOnly,
+    db_insertIntoEnrollments,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -215,8 +215,9 @@ router.post("/enroll", (request, response) => {
         if (err) return errorPage(response, "Database error!");
         if (!course) return errorPage(response, "No chosen course to add to cart!");
 
+        // Push into "cart", update "session.cart" object with latest "cart"
         cart.push(course);
-        request.session.cart = cart; // Update "session.cart" object
+        request.session.cart = cart;
         return response.redirect("/cart");
     });
 });
@@ -242,8 +243,8 @@ router.get("/cart", (request, response) => {
     });
 });
 
-// Checkout: If user is not logged in, then store cart in "session" object, redirect to login and then back to checkout
-router.get("/checkout", ensureLoggedIn, (request, response) => {
+// Checkout: Ensure user is logged in
+router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
 
@@ -265,20 +266,30 @@ router.get("/checkout", ensureLoggedIn, (request, response) => {
     });
 });
 
-// Checkout: Apple Pay method (same as Credit Card method)
-router.post("/checkout/applepay", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
-    // Out of scope: Pretend there's code here to handle payments
+// Checkout: Payment and database update (same as Credit Card method)
+router.post("/checkout/applepay", isNewCoursesOnly, (request, response, next) => {
+    // 1. Ensure cart contains new courses only
 
-    // After successful payment, clear cart and redirect to (updated) profile
+    // 2. Out of scope: Handle payment, and ensure it is successful
+
+    // 3. Update database
+    db_insertIntoEnrollments(request, response, next);
+
+    // 4. Clear cart, and redirect to (updated) profile
     request.session.cart = [];
     response.redirect("/user/profile");
 });
 
-// Checkout: Credit Card method (same as Apple Pay method)
-router.post("/checkout/creditcard", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
-    // Out of scope: Pretend there's code here to handle payments
+// Checkout: Payment and database update (same as Apple Pay method)
+router.post("/checkout/creditcard", isNewCoursesOnly, (request, response) => {
+    // 1. Ensure cart contains new courses only
 
-    // After successful payment, clear cart and redirect to (updated) profile
+    // 2. Out of scope: Handle payment, and ensure it is successful
+
+    // 3. Update database
+    db_insertIntoEnrollments(request, response, next);
+
+    // 4. Clear cart, and redirect to (updated) profile
     request.session.cart = [];
     response.redirect("/user/profile");
 });
