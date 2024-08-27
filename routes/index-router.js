@@ -16,7 +16,7 @@ const router = express.Router();
 // Home
 router.get("/", (request, response) => {
     db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving top few courses!");
         if (!topCourses) return errorPage(response, "No courses found!");
         let categories = [
             { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
@@ -163,7 +163,7 @@ router.get("/about", (request, response) => {
 // Courses
 router.get("/courses", (request, response) => {
     db.all("SELECT * FROM courses", (err, courses) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving course information!");
         if (!courses) return errorPage(response, "No courses found!");
 
         let sortOption = request.query.sort || "popular";
@@ -186,7 +186,7 @@ router.get("/courses", (request, response) => {
 // Courses: Upon choosing a course
 router.get("/courses/course/:courseId", (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving chosen course information!");
         if (!course) return errorPage(response, "No chosen course to view!");
 
         setPictureAndPriceProperties(course);
@@ -212,7 +212,7 @@ router.post("/enroll", (request, response) => {
 
     // If course is not in cart, then "cart.push()" and redirect to cart page
     db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
-        if (err) return errorPage(response, "Database error!");
+        if (err) return errorPage(response, "Database error when retrieving chosen course information!");
         if (!course) return errorPage(response, "No chosen course to add to cart!");
 
         // Push into "cart", update "session.cart" object with latest "cart"
