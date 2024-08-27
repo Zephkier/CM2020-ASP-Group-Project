@@ -4,13 +4,11 @@ const { db } = require("../public/db.js");
 const {
     // Format
     errorPage,
-    isLoggedIn,
-    isNotLoggedIn,
+    ensureLoggedIn,
+    setPictureAndPriceProperties,
     isAlreadyEnrolledIntoCourse,
     insertEnrollment,
 } = require("../public/helper.js");
-// For courses page to decide to use JPG or PNG image
-const fs = require("fs");
 
 // Initialise router
 const router = express.Router();
@@ -174,13 +172,7 @@ router.get("/courses", (request, response) => {
         else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
 
         courses.forEach((course) => {
-            // Add "picture" property to each course, if JPG doesn't exist, then use PNG
-            let jpgPath = `./public/images/courses/${course.name}.jpg`;
-            if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
-            else course.picture = `${course.name}.png`;
-
-            // Make "price" property with 2 decimal places
-            course.price = course.price.toFixed(2);
+            setPictureAndPriceProperties(course);
         });
 
         return response.render("courses.ejs", {
@@ -197,13 +189,7 @@ router.get("/courses/course/:courseId", (request, response) => {
         if (err) return errorPage(response, "Database error!");
         if (!course) return errorPage(response, "No chosen course to view!");
 
-        // Add "picture" property to course, if JPG doesn't exist, then use PNG
-        let jpgPath = `./public/images/courses/${course.name}.jpg`;
-        if (fs.existsSync(jpgPath)) course.picture = `${course.name}.jpg`;
-        else course.picture = `${course.name}.png`;
-
-        // Make "price" property with 2 decimal places
-        course.price = course.price.toFixed(2);
+        setPictureAndPriceProperties(course);
 
         return response.render("course.ejs", {
             pageName: `Learn ${course.name}`,
@@ -241,19 +227,12 @@ router.get("/cart", (request, response) => {
     let cart = request.session.cart || [];
 
     cart.forEach((item) => {
-        // Add "picture" property to course, if JPG doesn't exist, then use PNG
-        let jpgPath = `./public/images/courses/${item.name}.jpg`;
-        if (fs.existsSync(jpgPath)) item.picture = `${item.name}.jpg`;
-        else item.picture = `${item.name}.png`;
-
-        // Make "price" property with 2 decimal places
-        item.price = parseFloat(item.price).toFixed(2);
-
+        setPictureAndPriceProperties(item);
         // Calculate "totalPrice"
         totalPrice += parseFloat(item.price);
     });
 
-    // Make "totalPrice" property with 2 decimal places
+    // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
     response.render("cart.ejs", {
@@ -263,71 +242,45 @@ router.get("/cart", (request, response) => {
     });
 });
 
-// Checkout: If not logged in, then store cart in "session" object, redirect to login, redirect to checkout
-router.get("/checkout", isNotLoggedIn, (request, response) => {
+// Checkout: If user is not logged in, then store cart in "session" object, redirect to login and then back to checkout
+router.get("/checkout", ensureLoggedIn, (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
 
     cart.forEach((item) => {
-        // Add "picture" property to course, if JPG doesn't exist, then use PNG
-        let jpgPath = `./public/images/courses/${item.name}.jpg`;
-        if (fs.existsSync(jpgPath)) item.picture = `${item.name}.jpg`;
-        else item.picture = `${item.name}.png`;
-
-        // Make "price" property with 2 decimal places
-        item.price = parseFloat(item.price).toFixed(2);
+        setPictureAndPriceProperties(item);
 
         // Calculate "totalPrice"
         totalPrice += parseFloat(item.price);
     });
 
-    // Make "totalPrice" property with 2 decimal places
+    // Set ".totalPrice" property to 2 decimal places to properly display price
     totalPrice = parseFloat(totalPrice).toFixed(2);
 
     response.render("checkout.ejs", {
         pageName: "Checkout",
         cart: cart,
         totalPrice: totalPrice,
-        user: request.session.user, // Pass user details to the checkout page
+        user: request.session.user,
     });
 });
 
 // Checkout: Apple Pay method (same as Credit Card method)
 router.post("/checkout/applepay", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
-    // Clear cart after successful payment
+    // Out of scope: Pretend there's code here to handle payments
+
+    // After successful payment, clear cart and redirect to (updated) profile
     request.session.cart = [];
-
-    // Fetch the updated enrolled courses to update the session
-    query = `
-        SELECT *
-        FROM enrollments JOIN courses
-        ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = ?`;
-    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
-        if (err) return errorPage(response, "Database error!");
-
-        request.session.user.enrolledCourses = enrolledCourses || []; // Add property inside "session.user"
-        response.redirect("/user/profile");
-    });
+    response.redirect("/user/profile");
 });
 
 // Checkout: Credit Card method (same as Apple Pay method)
 router.post("/checkout/creditcard", isAlreadyEnrolledIntoCourse, insertEnrollment, (request, response) => {
-    // Clear cart after successful payment
+    // Out of scope: Pretend there's code here to handle payments
+
+    // After successful payment, clear cart and redirect to (updated) profile
     request.session.cart = [];
-
-    // Fetch the updated enrolled courses to update the session
-    query = `
-            SELECT *
-            FROM enrollments JOIN courses
-            ON enrollments.course_id = courses.id
-            WHERE enrollments.user_id = ?`;
-    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
-        if (err) return errorPage(response, "Database error!");
-
-        request.session.user.enrolledCourses = enrolledCourses || []; // Add property inside "session.user"
-        response.redirect("/user/profile");
-    });
+    response.redirect("/user/profile");
 });
 
 // Contact

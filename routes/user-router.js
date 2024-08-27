@@ -1,7 +1,7 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage, isLoggedIn, isNotLoggedIn } = require("../public/helper.js");
+const { errorPage, isLoggedIn, ensureLoggedIn } = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
@@ -104,7 +104,7 @@ router.post("/register", (request, response) => {
 });
 
 // Profile
-router.get("/profile", isNotLoggedIn, (request, response) => {
+router.get("/profile", ensureLoggedIn, (request, response) => {
     // Fetch user profile information and enrolled courses
     db.all(
         `
