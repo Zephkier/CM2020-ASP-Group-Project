@@ -243,6 +243,22 @@ router.get("/cart", (request, response) => {
     });
 });
 
+// Route to remove an item from the cart
+router.post("/cart/remove", (req, res) => {
+    const courseId = req.body.courseId;
+    let cart = req.session.cart || [];
+
+    // Filter out the item with the provided courseId
+    cart = cart.filter(item => item.id !== parseInt(courseId, 10));
+
+    // Update the session cart
+    req.session.cart = cart;
+
+    // Redirect back to the cart page
+    res.redirect("/cart");
+});
+
+
 // Checkout: Ensure user is logged in
 router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;

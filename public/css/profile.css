@@ -57,12 +57,10 @@
     margin-bottom: 1.5rem;
     font-size: 1.7rem;
     color: white;
-    text-decoration: underline;
 }
 
 .profile-details p {
     margin: 1.5rem 0;
-    font-size: 1.3rem;
     color: #e1e1e1; 
     background-color: #4c6886;
     padding: 1rem;
@@ -105,7 +103,6 @@
     margin-bottom: 1.5rem;
     font-size: 1.7rem;
     color: #e1e1e1;
-    text-decoration: underline;
 }
 
 .enrolled-courses p {

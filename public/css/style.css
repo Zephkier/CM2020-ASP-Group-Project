@@ -158,7 +158,7 @@ nav button {
 }
 
 .nav__menu a {
-    font-size: 1.3rem;
+    font-size: .8rem;
     transition: var(--transition);
 }
 
@@ -268,7 +268,6 @@ header {
 
 .categories__left p {
     margin: 1rem 0 3rem;
-    font-size: 1.3rem;
 }
 
 .categories__right {
@@ -316,10 +315,6 @@ header {
     font-size: 1.6rem;
 }
 
-.category p {
-    font-size: 1.2rem;
-}
-
 /* =================== POPULAR COURSES ===================== */
 .courses {
     margin-top: 3rem;
@@ -360,7 +355,6 @@ header {
 
 .course__info p {
     margin: 1.2rem 0 2rem;
-    font-size: 1.2rem;
 }
 
 .course__enroll {
