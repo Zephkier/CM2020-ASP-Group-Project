@@ -211,4 +211,9 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
     response.redirect("/user/profile");
 });
 
+// Handle invalid URLs (eg. "/courses/*")
+router.get("/*", (request, response) => {
+    return response.redirect("/courses?error=invalid_url");
+});
+
 module.exports = router;
