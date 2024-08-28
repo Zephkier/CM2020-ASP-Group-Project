@@ -18,6 +18,7 @@ router.get("/login", (request, response) => {
     return response.render("user/login.ejs", {
         pageName: "Login",
         errorMessage: null,
+        usernameOrEmailStored: null,
     });
 });
 
@@ -33,14 +34,16 @@ router.get("/login", (request, response) => {
  * then redirect to login page with error message.
  */
 function db_isExistingUser(request, response, next) {
+    let userOrEmail = request.body.usernameOrEmail;
     let query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
-    let params = [request.body.usernameOrEmail, request.body.usernameOrEmail, request.body.password];
+    let params = [userOrEmail, userOrEmail, request.body.password];
     db.get(query, params, (err, existingUser) => {
         if (err) return errorPage(response, "Database error!");
         if (!existingUser)
             return response.render("user/login.ejs", {
                 pageName: "Login",
                 errorMessage: "Invalid login credentials",
+                usernameOrEmailStored: userOrEmail,
             });
         request.idThatIsLoggingIn = existingUser.id;
         return next();
@@ -61,6 +64,7 @@ router.post("/login", db_isExistingUser, (request, response) => {
             return response.render("user/login.ejs", {
                 pageName: "Login",
                 errorMessage: "Profile not found. Please complete your registration.",
+                usernameOrEmailStored: request.body.usernameOrEmail,
             });
 
         // Store query result
@@ -94,7 +98,6 @@ router.get("/profile", isLoggedIn, (request, response) => {
         });
     });
 });
-
 
 // TODO change endpoint
 router.get("/edit-profile", (request, response) => {
