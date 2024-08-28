@@ -25,6 +25,8 @@ router.get("/", (request, response) => {
 
 // Login
 router.get("/login", (request, response) => {
+    if (request.session.user) return response.redirect("/user/profile?error=already_logged_in");
+
     return response.render("user/login.ejs", {
         pageName: "Login",
         usernameOrEmailStored: null,
@@ -152,6 +154,11 @@ router.post("/register", db_isUnique_usernameAndEmail, (request, response) => {
 router.get("/logout", (request, response) => {
     request.session.destroy();
     return response.redirect("/");
+});
+
+// Handle invalid URLs (eg. "/user/*")
+router.get("/*", (request, response) => {
+    return response.redirect("/user/profile?error=invalid_url");
 });
 
 module.exports = router;

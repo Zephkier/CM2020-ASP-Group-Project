@@ -5,18 +5,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (error) {
         let message = null;
 
-        // Redirect to /cart
-        if (error.includes("already_in_cart")) message = `The "${error.split("_")[0]}" course is already in your cart!<br>Your cart has <b>remained unchanged</b>.`;
-        if (error == "empty_checkout") message = "You cannot checkout an <b>empty</b> cart!";
-
-        // Redirect to /checkout
-        if (error == "already_enrolled") message = "You are already enrolled into the course!<br>No payment was made.<br>Your cart has <b>remained unchanged</b>.";
-
         // Redirect to /user/profile
-        if (error == "already_logged_in") message = "You are <b>already</b> logged in!<br>You cannot register again.";
+        if (error == "already_logged_in") message = "You are <b>already</b> logged in!";
+        if (error == "invalid_url") message = "Invalid URL!";
 
         // Redirect to /user/login
         if (error == "not_logged_in") message = "You must login first!";
+
+        // Redirect to /courses
+        if (error == "invalid_url") message = "Invalid URL!";
+
+        // Redirect to /courses/cart
+        if (error.includes("already_in_cart")) message = `The "${error.split("_")[0]}" course is already in your cart!<br>Your cart has <b>remained unchanged</b>.`;
+        if (error == "empty_checkout") message = "You cannot checkout an <b>empty</b> cart!";
+
+        // Redirect to /courses/checkout
+        if (error == "already_enrolled") message = "You are already enrolled into the course!<br>No payment was made.<br>Your cart has <b>remained unchanged</b>.";
 
         if (message) {
             document.getElementById("popup-message").innerHTML = message; // Set <p>'s text to message
