@@ -108,9 +108,7 @@ router.get("/edit-profile", (request, response) => {
 
 // TODO change endpoint
 
-///user/profile/update
 router.post("/update-profile", (request, response) => {
-    console.log("rrhh");
     let query = `
         UPDATE profiles
         SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?

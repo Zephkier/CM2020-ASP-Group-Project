@@ -72,7 +72,13 @@
                                 <h4><%= course.name %></h4>
                                 <p><%= course.description %></p>
                             </div>
-                            <img src="/images/courses/course<%= course.name %>" alt="<%= course.name %>" class="course-image" />
+                            <% 
+                                const pngPath = `/images/courses/${course.name}.png`;
+                                const jpgPath = `/images/courses/${course.name}.jpg`;
+                            %>
+                            <img src="<%= pngPath %>" alt="<%= course.name %>" class="course-image" onerror="this.onerror=null;this.src='<%= jpgPath %>';">
+
+                            <!-- <img src="/images/courses/<%= course.name %>.png" alt="<%= course.name %>" class="course-image" /> -->
                         </li>
                         <% }) %>
                     </ul>
