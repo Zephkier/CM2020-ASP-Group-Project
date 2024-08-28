@@ -18,6 +18,7 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/courses.css" />
         <style>
             body {
                 background-image: url("/images/bg-texture.png");
@@ -74,12 +75,16 @@
                     <a href="/courses/course/<%= topCourse.id %>">
                         <article class="course">
                             <div class="course__image">
-                                <img src="/images/courses/course<%= topCourse.id %>.jpg" />
+                                <img src="/images/courses/<%= topCourse.picture %>" />
                             </div>
                             <div class="course__info">
-                                <h4><%= topCourse.name %></h4>
-                                <p><%= topCourse.description %></p>
-                                <p class="course__enroll">Students enrolled: <%= topCourse.enrollCount.toLocaleString().replace(",", ", ") %></p>
+                                <h4>Learn <%= topCourse.name %></h4>
+                                <p class="course__description"><%= topCourse.description %></p>
+                                <p class="course__enroll">
+                                    <%if (topCourse.isEnrolled) { %> You are enrolled!<br />
+                                    <%} else { %> Price: $<%= topCourse.price %><br />
+                                    <%} %> Students enrolled: <%= topCourse.enrollCount.toLocaleString().replace(",", ", ") %>
+                                </p>
                             </div>
                         </article>
                     </a>

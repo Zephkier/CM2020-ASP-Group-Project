@@ -1,7 +1,7 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage } = require("../public/helper.js");
+const { errorPage, setPictureAndPriceProperties } = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
@@ -70,6 +70,9 @@ router.get("/", (request, response) => {
         ];
         testimonials.forEach((testimonial) => {
             testimonial.picture = testimonial.name + ".jpg";
+        });
+        topCourses.forEach((topCourse) => {
+            setPictureAndPriceProperties(topCourse);
         });
 
         return response.render("index.ejs", {
