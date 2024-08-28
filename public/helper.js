@@ -106,6 +106,19 @@ function db_insertIntoEnrollments(request, response, next) {
 }
 
 /**
+ * Query to `UPDATE courses` table's `enrollCount`.
+ */
+function db_updateEnrollCount(request, response, next) {
+    request.session.cart.forEach((item) => {
+        let query = "UPDATE courses SET enrollCount = enrollCount + 1 WHERE id = ?";
+        db.run(query, [item.id], (err) => {
+            if (err) return errorPage(response, "Database error when updating enrollment count!");
+            return next();
+        });
+    });
+}
+
+/**
  * Query to `SELECT *` from `users` table.
  *
  * - If user **has** existing login credentials in database,
@@ -224,6 +237,7 @@ module.exports = {
     setPictureAndPriceProperties,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
+    db_updateEnrollCount,
     db_isExistingUser,
     db_forProfile_getProfileInfo,
     db_forProfile_getEnrolledCourses,

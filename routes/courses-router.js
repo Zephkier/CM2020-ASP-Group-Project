@@ -8,6 +8,7 @@ const {
     setPictureAndPriceProperties,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
+    db_updateEnrollCount,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -190,6 +191,8 @@ router.post("/checkout/applepay", db_isNewCoursesOnly, (request, response, next)
 
     // 3. Update database, delete/clear cart, redirect to updated profile page
     db_insertIntoEnrollments(request, response, next);
+    db_updateEnrollCount(request, response, next);
+
     delete request.session.cart;
     response.redirect("/user/profile");
 });
@@ -202,6 +205,8 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 
     // 3. Update database, delete/clear cart, redirect to updated profile page
     db_insertIntoEnrollments(request, response, next);
+    db_updateEnrollCount(request, response, next);
+
     delete request.session.cart;
     response.redirect("/user/profile");
 });
