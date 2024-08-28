@@ -16,25 +16,53 @@ const router = express.Router();
 // Note that all these URLs has "/courses" prefix!
 
 // Home (Courses)
-router.get("/", (request, response) => {
-    db.all("SELECT * FROM courses", (err, courses) => {
-        if (err) return errorPage(response, "Database error when retrieving course information!");
-        if (!courses) return errorPage(response, "No courses found!");
+router.get("/", async (request, response) => {
+    // Promise to complete query, then store in "courses"
+    let promisedCourses = await new Promise((resolve, reject) => {
+        db.all("SELECT * FROM courses", (err, courses) => {
+            if (err) return reject("Error retrieving courses from the database!");
+            if (!courses) return reject("No courses found!");
+            resolve(courses);
+        });
+    });
 
-        let sortOption = request.query.sort || "popular";
-        if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount);
-        else if (sortOption === "asc") courses.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
+    let sortOption = request.query.sort || "popular";
+    if (sortOption === "popular") promisedCourses.sort((a, b) => b.enrollCount - a.enrollCount);
+    else if (sortOption === "asc") promisedCourses.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortOption === "desc") promisedCourses.sort((a, b) => b.name.localeCompare(a.name));
 
-        courses.forEach((course) => {
+    /**
+     * Promise to:
+     * 1. setPictureAndPriceProperties() of each course
+     * 2. Complete query for ".isEnrolled" property to differentiate price to display price itself or "Already Enrolled"
+     *
+     * Then store in "enrollmentPromises"
+     */
+    let promisedProperties = promisedCourses.map((course) => {
+        return new Promise((resolve, reject) => {
             setPictureAndPriceProperties(course);
+            if (request.session.user) {
+                let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+                let params = [request.session.user.id, course.id];
+                db.get(query, params, (err, existingEnrollment) => {
+                    if (err) reject("Error checking enrollment for a course!");
+                    if (existingEnrollment) course.isEnrolled = true;
+                    else course.isEnrolled = false;
+                    resolve();
+                });
+            } else {
+                course.isEnrolled = false;
+                resolve();
+            }
         });
+    });
 
-        return response.render("courses/courses.ejs", {
-            pageName: "Courses",
-            courses: courses,
-            sort: sortOption,
-        });
+    // Wait for all promises to complete
+    await Promise.all(promisedProperties);
+    return response.render("courses/courses.ejs", {
+        pageName: "Courses",
+        courses: promisedCourses,
+        sort: sortOption,
     });
 });
 
@@ -46,7 +74,7 @@ router.get("/course/:courseId", (request, response) => {
 
         setPictureAndPriceProperties(course);
 
-        // If user is logged in, then query "enrollments" table to check if user is enrolled into it or not, and give new property as such
+        // If user is logged in, then differentiate button to display "Add to Cart" or "Already Enrolled"
         if (request.session.user) {
             let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
             let params = [request.session.user.id, request.params.courseId];

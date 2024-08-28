@@ -48,7 +48,11 @@
                                     <h4>Learn <%= course.name %></h4>
                                     <p class="course__description"><%= course.description %></p>
                                     <p class="course__enroll">
+                                        <%if (course.isEnrolled) { %>
+                                        You are enrolled!<br>
+                                        <%} else { %>
                                         Price: $<%= course.price %><br>
+                                        <%} %>
                                         Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
                                     </p>
                                 </div>
