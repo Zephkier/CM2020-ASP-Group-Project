@@ -50,14 +50,27 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, (request, r
         setPictureAndPriceProperties(enrolledCourse);
     });
 
-    return response.render("user/profile.ejs", {
-        pageName: "My Profile",
-        user: request.session.user,
-    });
+    // Check user role and render appropriate profile page
+    if (request.session.user.role === "student") {
+        // Render student profile
+        return response.render("user/profile.ejs", {
+            pageName: "Student Profile",
+            user: request.session.user,
+        });
+    } else if (request.session.user.role === "educator") {
+        // Render educator profile
+        return response.render("user/educator_profile.ejs", {
+            pageName: "Educator Profile",
+            user: request.session.user,
+        });
+    } else {
+        // Handle unexpected roles
+        return errorPage(response, "Role not recognized!");
+    }
 });
 
 router.get("/profile/edit", (request, response) => {
-    return response.render("user/edit-profile.ejs", {
+    return response.render("user/profile-edit.ejs", {
         pageName: "Edit Profile",
         user: request.session.user,
     });
@@ -154,6 +167,47 @@ router.post("/register", db_isUnique_usernameAndEmail, (request, response) => {
 router.get("/logout", (request, response) => {
     request.session.destroy();
     return response.redirect("/");
+});
+
+// -------------Adding new course (educator)---------------
+
+// Fetch teaching courses for an educator
+function db_forProfile_getTeachingCourses(educatorId, callback) {
+    let query = `
+        SELECT courses.id, courses.name, courses.description, courses.picture
+        FROM courses
+        JOIN educators ON educators.id = courses.id
+        WHERE educators.user_id = ?`;
+
+    db.all(query, [educatorId], (err, courses) => {
+        if (err) return callback(err);
+        callback(null, courses || []);
+    });
+}
+
+// Route to show form to add a new course
+router.get('/add-course', isLoggedIn, (req, res) => {
+    res.render('user/add_course.ejs', {
+        pageName: 'Add New Course',
+        appName: 'Educator Platform',
+        user: req.session.user
+    });
+});
+
+// Route to handle form submission to add a new course
+router.post('/add-course', isLoggedIn, (req, res) => {
+    const { name, description, price, enrollCount, video_url } = req.body;
+    const creator = req.session.user.username;
+
+    const query = `
+        INSERT INTO courses (name, description, price, enrollCount, video_url, creator)
+        VALUES (?, ?, ?, 0, ?, ?)`;
+    const params = [name, description, parseFloat(price), video_url, creator];
+
+    db.run(query, params, (err) => {
+        if (err) return errorPage(res, 'Database error while adding the course!');
+        res.redirect('/user/profile'); // Redirect to the educator's profile page
+    });
 });
 
 // Handle invalid URLs (eg. "/user/*")

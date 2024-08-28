@@ -67,7 +67,7 @@
                     <%if (user.enrolledCourses.length > 0) { %>
                     <ul>
                         <%user.enrolledCourses.forEach(course => { %>
-                        <a href="/courses/course/<%= course.id %>" class="course-link">
+                        <a href="/courses/course/<%= course.id %>/learn" class="course-link">
                             <li class="course-item">
                                 <div class="course-info">
                                     <h4><%= course.name %></h4>

@@ -98,12 +98,13 @@
     background-color: #0056b3;
 }
 
-.enrolled-courses {
+.enrolled-courses , .educator-section{
     background: var(--color-bg1); 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     width: 50%;
     margin-left: 2rem;
     padding: 30px;
+    border-radius: 10px;
 }
 
 .enrolled-courses h2 {
@@ -114,7 +115,6 @@
 
 .enrolled-courses p {
     margin-top: 2rem;
-    font-size: 1.3rem;
     color: #e1e1e1;
     background-color: #4c6886;
     border-radius: 10px;

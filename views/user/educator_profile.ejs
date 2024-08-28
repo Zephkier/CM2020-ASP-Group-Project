@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageName + separator + appName %></title>
+
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+
+    <!-- GOOGLE FONTS (MONTSERRAT) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/profile.css" />
+    <style>
+        body {
+            background-image: url("/images/bg-texture.png");
+        }
+    </style>
+</head>
+
+<body>
+    <%- include("../partials/navbar.ejs") %>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <!-- Profile Header and Details -->
+            <div class="profile-left-section">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="/images/profile-pictures/<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                        <h1 class="profile-name"><%= user.displayName %></h1>
+                        <p class="profile-role">Educator</p>
+                    </div>
+
+                    <div class="profile-details">
+                        <h2>Your Details</h2>
+                        <div class="details-row">
+                            <i class="uil uil-user"></i>
+                            <p><strong>Username:</strong> <%= user.username %></p>
+                        </div>
+                        <div class="details-row">
+                            <i class="uil uil-envelope"></i>
+                            <p><strong>Email:</strong> <%= user.email %></p>
+                        </div>
+                        <div class="details-row">
+                            <i class="uil uil-file-alt"></i>
+                            <p><strong>Bio:</strong> <%= user.bio %></p>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="window.location.href='/user/profile/edit'">Edit Profile</button>
+                            <form action="/user/logout" method="GET" style="margin-top: 1rem">
+                                <button type="submit" class="btn btn-secondary">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educator Section -->
+            <div class="educator-section">
+                <h2>Your Dashboard</h2>
+                <p>Welcome to your educator dashboard! More features will be added here soon.</p>
+
+            <!-- Button to Add Courses -->
+            <button class="btn btn-primary" onclick="window.location.href='/user/add-course'">Add New Course</button>
+
+            </div>
+        </div>
+
+        <div id="popup" class="popup hidden">
+            <p id="popup-message"></p>
+            <button id="popup-close" class="btn">Close</button>
+        </div>
+    </main>
+
+    <%- include("../partials/footer.ejs") %>
+
+    <script src="/main.js"></script>
+    <script src="/error-popup-box.js"></script>
+</body>
+</html>

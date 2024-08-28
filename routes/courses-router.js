@@ -124,6 +124,63 @@ router.post("/course/:courseId/enroll", (request, response) => {
     });
 });
 
+// TODO Courses: In profile page, select course to learn
+router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
+    let query = `
+        SELECT *
+        FROM courses
+        WHERE courses.id = ?`;
+    let params = [req.params.courseId]
+    db.get(query, params, (err, course) => {
+        if (err) return errorPage(res, "Database error!");
+        if (!course) return errorPage(res, "Course not found!");
+
+        query = `
+            SELECT *
+            FROM notes
+            WHERE course_id = ? AND user_id = ?`;
+        params = [req.params.courseId, req.session.user.id];
+        db.get(query, params, (err, notes) => {
+            if (err) return errorPage(res, "Database error!");
+            course.notes = notes;
+            return res.render("courses/course_detail.ejs", {
+                pageName: `Learn: ${course.name}`,
+                course: course,
+                user: req.session.user,
+            });
+        });
+    });
+});
+
+// TODO Courses: Save notes
+router.post("/course/:courseId/notes", isLoggedIn, (req, res) => {
+    let userId = req.session.user.id;
+    let courseId = req.params.courseId;
+    let content = req.body.content;
+
+    // Query to check if note already exists for the user and course
+    let query = "SELECT * FROM notes WHERE user_id = ? AND course_id = ?";
+    db.get(query, [userId, courseId], (err, existingNote) => {
+        if (err) return errorPage(res, "Database error!");
+
+        if (existingNote) {
+            // Update the existing note
+            let updateQuery = "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+            db.run(updateQuery, [content, existingNote.id], (err) => {
+                if (err) return errorPage(res, "Database error updating note!");
+                res.redirect(`/courses/course/${courseId}/learn`);
+            });
+        } else {
+            // Insert a new note
+            let insertQuery = "INSERT INTO notes (user_id, course_id, content) VALUES (?, ?, ?)";
+            db.run(insertQuery, [userId, courseId, content], (err) => {
+                if (err) return errorPage(res, "Database error saving note!");
+                res.redirect(`/courses/course/${courseId}/learn`);
+            });
+        }
+    });
+});
+
 // Cart
 router.get("/cart", (request, response) => {
     let totalPrice = 0;

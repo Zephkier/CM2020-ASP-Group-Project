@@ -37,6 +37,10 @@ app.use((request, response, next) => {
  * app/router.get("/" + endpoint without prefixes)
  * response.render(HTML/EJS file) looks into "views" dir by default
  * response.redirect("/" + endpoint with prefixes included)
+ * 
+ * db.get() returns {}    = query to get ONE row of results
+ * db.all() returns [{},] = query to get MANY rows of results
+ * db.run() returns NIL   = query to insert/update/delete only, nothing is returned
  *
  * --------------------------------------
  * HTML/EJS forms, accessibility, <a> tag

@@ -1,0 +1,94 @@
+.course-detail-container {
+    max-width: 1500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #0d1f2d;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.course-detail-container h1 {
+    font-size: 2.5rem;
+    color: #e1e1e1;
+    margin-bottom: 10px;
+}
+
+.course-detail-container p {
+    font-size: 1.1rem;
+    color: #cfcfcf;
+    margin-bottom: 20px;
+}
+
+.video-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+iframe {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+}
+
+.notes-section {
+    margin-top: 30px;
+}
+
+.notes-section h2 {
+    font-size: 1.8rem;
+    color: #e1e1e1;
+    margin-bottom: 10px;
+}
+
+.notes-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notes-section textarea {
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #f0f0f0;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.notes-section .btn-primary {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notes-section .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.saved-notes {
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #444;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.saved-notes h3 {
+    font-size: 1.5rem;
+    color: #e1e1e1;
+    margin-bottom: 10px;
+}
+
+.saved-notes p {
+    color: #cfcfcf;
+    font-size: 1.1rem;
+}
