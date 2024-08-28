@@ -85,7 +85,7 @@ function db_isNewCoursesOnly(request, response, next) {
         let params = [request.session.user.id, item.id];
         db.get(query, params, (err, existingEnrollment) => {
             if (err) return errorPage(response, "Database error when retrieving enrollment information!");
-            if (existingEnrollment) return response.redirect("/checkout?error=already_enrolled");
+            if (existingEnrollment) return response.redirect("/courses/checkout?error=already_enrolled");
             return next();
         });
     });
@@ -218,8 +218,8 @@ function db_isUnique_usernameAndEmail(request, response, next) {
 // Export module containing the following so external files can access it
 module.exports = {
     errorPage,
-    isNotLoggedIn,
     isLoggedIn,
+    isNotLoggedIn,
     returnFilenameWithType,
     setPictureAndPriceProperties,
     db_isNewCoursesOnly,

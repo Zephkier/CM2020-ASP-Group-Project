@@ -5,6 +5,7 @@ const session = require("express-session");
 
 const indexRouter = require("./routes/index-router.js");
 const userRouter = require("./routes/user-router.js");
+const coursesRouter = require("./routes/courses-router.js");
 
 const port = 3000;
 const app = express();
@@ -60,6 +61,7 @@ app.use((request, response, next) => {
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/courses", coursesRouter);
 
 // Handle invalid URLs via '/*' (likewise, uncomment this once everything above (the routers) is done)
 // app.get("/*", (request, response) => {

@@ -25,7 +25,7 @@
     </head>
 
     <body>
-        <%- include("./partials/navbar.ejs") %>
+        <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="checkout-container">
@@ -39,8 +39,8 @@
                         <p><%= item.description %></p>
                         <p>$<%= item.price %></p>
                         <!-- Remove Button -->
-                        <form action="/cart/remove" method="POST" style="display:inline;">
-                            <input type="hidden" name="courseId" value="<%= item.id %>">
+                        <form action="/courses/cart/remove" method="POST" style="display: inline">
+                            <input type="hidden" name="courseId" value="<%= item.id %>" />
                             <button type="submit" class="btn btn-secondary">Remove</button>
                         </form>
                     </div>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="checkout-actions">
-                    <form action="/checkout" method="GET">
+                    <form action="/courses/checkout" method="GET">
                         <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
                     </form>
                 </div>
@@ -67,7 +67,7 @@
             </div>
         </main>
 
-        <%- include("./partials/footer.ejs") %>
+        <%- include("../partials/footer.ejs") %>
 
         <script src="/main.js"></script>
         <script src="/error-popup-box.js"></script>

@@ -4,8 +4,8 @@ const { db } = require("../public/db.js");
 const {
     // Format
     errorPage,
-    isNotLoggedIn,
     isLoggedIn,
+    isNotLoggedIn,
     setPictureAndPriceProperties,
     db_isExistingUser,
     db_forProfile_getProfileInfo,
@@ -35,7 +35,7 @@ router.get("/login", (request, response) => {
 router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request, response) => {
     // This is for when not-logged-in users checkout their cart
     // Thus, upon login, redirect to checkout page
-    if (request.session.cart) return response.redirect("/checkout");
+    if (request.session.cart) return response.redirect("/courses/checkout");
 
     // But under normal circumstances (eg. login normally), redirect to profile page
     return response.redirect("/user/profile");

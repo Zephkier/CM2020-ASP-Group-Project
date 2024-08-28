@@ -23,7 +23,7 @@
         </style>
     </head>
     <body>
-        <%- include("./partials/navbar.ejs") %>
+        <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="checkout-container">
@@ -58,13 +58,13 @@
                     <h3>Payment</h3>
 
                     <!-- Apple Pay Form -->
-                    <form action="/checkout/applepay" method="POST">
+                    <form action="/courses/checkout/applepay" method="POST">
                         <button type="submit" class="btn btn-primary">Pay with Apple Pay</button>
                     </form>
 
                     <!-- Credit Card Form -->
                     <button class="btn btn-secondary" onclick="toggleCreditCardForm()">Pay with Credit Card</button>
-                    <form action="/checkout/creditcard" method="POST" id="credit-card-form" style="display: none; margin-top: 1rem">
+                    <form action="/courses/checkout/creditcard" method="POST" id="credit-card-form" style="display: none; margin-top: 1rem">
                         <div class="form-group">
                             <label for="card-number">Card Number:</label>
                             <input type="text" id="card-number" name="cardNumber" required pattern="[0-9]{16}" title="Please enter a valid 16-digit card number." />
@@ -88,7 +88,7 @@
             </div>
         </main>
 
-        <%- include("./partials/footer.ejs") %>
+        <%- include("../partials/footer.ejs") %>
 
         <script src="/main.js"></script>
         <script src="/error-popup-box.js"></script>

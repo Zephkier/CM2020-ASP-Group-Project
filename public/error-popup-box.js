@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let message = null;
 
         // Redirect to /cart
-        if (error == "already_in_cart") message = "Selected course is <b>already</b> in your cart!<br>Your cart has <b>remained unchanged</b>.";
+        if (error.includes("already_in_cart")) message = `The "${error.split("_")[0]}" course is already in your cart!<br>Your cart has <b>remained unchanged</b>.`;
         if (error == "empty_checkout") message = "You cannot checkout an <b>empty</b> cart!";
 
         // Redirect to /checkout
