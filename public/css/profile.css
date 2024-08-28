@@ -15,7 +15,7 @@
 }
 
 .profile-card {
-    background: var(--color-bg1); /* Keeping the dark background */
+    background: var(--color-bg1); 
     padding: 3rem 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -28,7 +28,7 @@
 }
 
 .profile-header {
-    text-align: center; /* Ensure the header content is centered */
+    text-align: center; 
 }
 
 .profile-header img {
@@ -38,15 +38,15 @@
     object-fit: cover;
     border: 3px solid #007bff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin: 0 auto 1rem auto; /* Center horizontally and add bottom margin */
-    display: block; /* Make the image a block-level element */
+    margin: 0 auto 1rem auto; 
+    display: block; 
 }
 
 
 .profile-header .profile-name {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #e1e1e1; /* Light text color for better contrast */
+    color: #e1e1e1; 
 }
 
 .profile-header .profile-role {
@@ -99,18 +99,17 @@
 }
 
 .enrolled-courses {
-    background: var(--color-bg1); /* Keeping the dark background */
-    padding: 2.5rem;
-    border-radius: 10px;
+    background: var(--color-bg1); 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     width: 50%;
     margin-left: 2rem;
+    padding: 30px;
 }
 
 .enrolled-courses h2 {
     margin-bottom: 1.5rem;
     font-size: 1.7rem;
-    color: #e1e1e1; /* Light text color for better contrast */
+    color: #e1e1e1; 
 }
 
 .enrolled-courses p {
@@ -159,7 +158,6 @@
 .course-image {
     width: 80px;
     height: 80px;
-    border-radius: 10px;
+    border-radius: 5px;
     object-fit: cover;
-    border: 2px solid #007bff;
 }
