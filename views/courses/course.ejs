@@ -52,7 +52,11 @@
                         <div class="course-detail__actions">
                             <form action="/courses/course/<%= course.id %>/enroll" method="POST">
                                 <input type="hidden" name="courseId" value="<%= course.id %>" />
+                                <%if (course.isEnrolled) { %>
+                                <button type="submit" class="btn btn-secondary" disabled>You are enrolled!</button>
+                                <%} else { %>
                                 <button type="submit" class="btn btn-secondary">Add to Cart ($<%= course.price %>)</button>
+                                <%} %>
                             </form>
                         </div>
                     </div>

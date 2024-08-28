@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Note that all these URLs has "/courses" prefix!
 
-// Courses
+// Home (Courses)
 router.get("/", (request, response) => {
     db.all("SELECT * FROM courses", (err, courses) => {
         if (err) return errorPage(response, "Database error when retrieving course information!");
@@ -46,10 +46,28 @@ router.get("/course/:courseId", (request, response) => {
 
         setPictureAndPriceProperties(course);
 
-        return response.render("courses/course.ejs", {
-            pageName: `Learn ${course.name}`,
-            course: course,
-        });
+        // If user is logged in, then query "enrollments" table to check if user is enrolled into it or not, and give new property as such
+        if (request.session.user) {
+            let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+            let params = [request.session.user.id, request.params.courseId];
+            db.get(query, params, (err, existingEnrollment) => {
+                if (err) return errorPage(response, "Database error when retrieving enrollment information!");
+                if (existingEnrollment) course.isEnrolled = true;
+                else course.isEnrolled = false;
+                // Unfortunately, have to "return response.render()" the same thing twice
+                return response.render("courses/course.ejs", {
+                    pageName: `Learn ${course.name}`,
+                    course: course,
+                });
+            });
+        } else {
+            // Must use "else" statement
+            // Unfortunately, have to "return response.render()" the same thing twice
+            return response.render("courses/course.ejs", {
+                pageName: `Learn ${course.name}`,
+                course: course,
+            });
+        }
     });
 });
 
