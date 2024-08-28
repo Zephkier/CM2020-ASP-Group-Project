@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName %> - <%= appName %></title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/course_detail.css" />
+    </head>
+    <body>
+        <%- include("../partials/navbar.ejs") %>
+
+        <main class="course-main">
+            <section class="course-content">
+                <h1><%= course.name %></h1>
+                <p><%= course.description %></p>
+
+                <!-- YouTube video embed -->
+                <div class="video-container">
+                    <% if (course.youtube_url) { %>
+                    <iframe width="100%" height="400" src="<%= course.youtube_url %>" 
+                        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                    <% } else { %>
+                    <p>No video available for this course.</p>
+                    <% } %>
+                </div>
+
+                <!-- Note-taking section -->
+                <div class="note-taking">
+                    <h2>Take Notes</h2>
+                    <form action="/courses/course/<%= course.id %>/notes" method="POST">
+                        <textarea name="noteContent" rows="10" cols="50"><%= course.note || "" %></textarea>
+                        <button type="submit" class="btn btn-primary">Save Notes</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <%- include("../partials/footer.ejs") %>
+
+        <script src="/main.js"></script>
+    </body>
+</html>
