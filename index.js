@@ -14,11 +14,15 @@ app.use(express.static(__dirname + "/public")); // Set location of static files 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: "secretKey", saveUninitialized: false, resave: false })); // Call session first, then routers
 app.use((request, response, next) => {
-    // Set default local variables, then call next() to proceed with rest of code file (this is mainly for .ejs file's <title>)
-    response.locals.pageName = "You forgot to set 'pageName' in this page's .ejs file!";
+    // Set default local variables, then call next() to proceed with rest of code file
+    // Thus, no need to pass (the following) variables to every route
+
+    // For EJS file's <title>
+    response.locals.pageName = "You forgot to set 'pageName' in this page's EJS file!";
     response.locals.separator = " | ";
     response.locals.appName = "Bright Learning Academy";
-    // TODO Unsure what this is, but i recall being used in some EJS file
+
+    // For navbar.ejs
     response.locals.session = request.session;
     next();
 });
@@ -30,7 +34,7 @@ app.use((request, response, next) => {
  * Express functions
  * -----------------
  * app/router.get("/" + endpoint without prefixes)
- * response.render(.ejs file) looks into "views" dir by default
+ * response.render(HTML/EJS file) looks into "views" dir by default
  * response.redirect("/" + endpoint with prefixes included)
  *
  * --------------------------------------
