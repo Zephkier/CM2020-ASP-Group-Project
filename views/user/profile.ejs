@@ -52,7 +52,7 @@
                                 <p><strong>Bio:</strong> <%= user.bio %></p>
                             </div>
                             <div class="profile-actions">
-                                <button class="btn btn-primary" onclick="window.location.href='/user/edit-profile'">Edit Profile</button>
+                                <button class="btn btn-primary" onclick="window.location.href='/user/profile/edit'">Edit Profile</button>
                                 <form action="/user/logout" method="GET" style="margin-top: 1rem">
                                     <button type="submit" class="btn btn-secondary">Logout</button>
                                 </form>
@@ -64,23 +64,17 @@
                 <!-- Enrolled Courses -->
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
-                    <%if (enrolledCourses && enrolledCourses.length > 0) { %>
+                    <%if (user.enrolledCourses.length > 0) { %>
                     <ul>
-                        <% enrolledCourses.forEach(course => { %>
+                        <%user.enrolledCourses.forEach(course => { %>
                         <li class="course-item">
                             <div class="course-info">
                                 <h4><%= course.name %></h4>
                                 <p><%= course.description %></p>
                             </div>
-                            <% 
-                                const pngPath = `/images/courses/${course.name}.png`;
-                                const jpgPath = `/images/courses/${course.name}.jpg`;
-                            %>
-                            <img src="<%= pngPath %>" alt="<%= course.name %>" class="course-image" onerror="this.onerror=null;this.src='<%= jpgPath %>';">
-
-                            <!-- <img src="/images/courses/<%= course.name %>.png" alt="<%= course.name %>" class="course-image" /> -->
+                            <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
                         </li>
-                        <% }) %>
+                        <%}) %>
                     </ul>
                     <%} else { %>
                     <p>You have not enrolled in any courses yet.</p>

@@ -73,8 +73,10 @@
 
                             <!-- Select role to display extra role-specificfields -->
                             <h3 class="login-redirect">Register as...</h3>
-                            <button type="button" onclick="showForm('student')">Student</button>
-                            <button type="button" onclick="showForm('educator')">Educator</button>
+                            <div class="role-buttons">
+                                <button type="button" onclick="showForm('student')">Student</button>
+                                <button type="button" onclick="showForm('educator')">Educator</button>
+                            </div>
 
                             <!-- Extra role-specific fields -->
                             <div id="extra-fields"></div>

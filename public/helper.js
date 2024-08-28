@@ -1,18 +1,20 @@
 const { db } = require("./db.js"); // For any database queries
 const fs = require("fs"); // For "returnFilenameWithType()"
 
+/**
+ * Redirect to `_error.ejs` file with custom error message.
+ *
+ * @param {string} errorMessage The message to inform user. For security reasons, do not reveal explicit details!
+ */
 function errorPage(response, errorMessage) {
     response.render("_error.ejs", { errorMessage: errorMessage });
 }
 
 /**
- * Ensure user **IS** logged in, then allowed to proceed.
+ * Checks for `request.session.user` *(aka. if user is logged in)*.
  *
- * _(eg. Checks for `request.session.user`)_
- *
- * @returns
  * - If user **is** logged in, then proceed.
- * - If user **is not** logged in, then redirect to login page.
+ * - If user **is not** logged in, then redirect to login page with error message.
  */
 function isLoggedIn(request, response, next) {
     if (request.session.user) return next();
@@ -21,13 +23,10 @@ function isLoggedIn(request, response, next) {
 
 /**
  *
- * Ensure user **IS NOT** logged in, then allowed to proceed.
+ * Checks for `!request.session.user` *(aka. if user is not logged in)*.
  *
- * _(eg. Checks for `!request.session.user`)_
- *
- * @returns
  * - If user **is not** logged in, then proceed.
- * - If user **is** logged in, then redirect to profile page.
+ * - If user **is** logged in, then redirect to profile page with error message.
  */
 function isNotLoggedIn(request, response, next) {
     if (!request.session.user) return next();
@@ -53,7 +52,7 @@ function returnFilenameWithType(pathToPicture, filename) {
  * `.picture` property:
  * - Contains filename with its type at the end.
  *   - _eg. `C Sharp.jpg`_
- * - Added to the object.
+ * - Is added to the object.
  *
  * `.price` property:
  * - Set to 2 decimal places to properly display price.
@@ -67,15 +66,18 @@ function setPictureAndPriceProperties(course) {
 }
 
 /**
- * Ensure user is checking-out cart that contains courses that are **new to them**,
- * then allowed to proceed.
+ * Query to `SELECT *` from `enrollments` table.
  *
- * @returns
- * - If cart contains courses that **is/are new to the user**,
+ * For each item (aka. course) within `request.session.cart`:
+ *
+ * - If item **does not exist** in `enrollments` table,
+ * then it means that the user **is enrolling into a new** item (aka. course),
  * then proceed.
  *
- * - If cart contains courses that user **is already enrolled into**,
- * then cannot checkout, and redirect to checkout page with error message.
+ * - If item **exists** in `enrollments` table,
+ * then it means that the user **is enrolling into an existing** item (aka. course),
+ * then do not allow checkout,
+ * then redirect to checkout page with error message.
  */
 function db_isNewCoursesOnly(request, response, next) {
     request.session.cart.forEach((item) => {
@@ -89,6 +91,9 @@ function db_isNewCoursesOnly(request, response, next) {
     });
 }
 
+/**
+ * Query to `INSERT INTO enrollments` table.
+ */
 function db_insertIntoEnrollments(request, response, next) {
     request.session.cart.forEach((item) => {
         let query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
@@ -101,13 +106,12 @@ function db_insertIntoEnrollments(request, response, next) {
 }
 
 /**
- * Ensure user **has** existing login credentials in database, then allowed to proceed.
+ * Query to `SELECT *` from `users` table.
  *
- * @returns
- * - If user **has** existing credentials in database,
- * then store `users` table fields into `request.session.user`, and proceed.
+ * - If user **has** existing login credentials in database,
+ * then store result in `request.session.user` and proceed.
  *
- * - If user **does not have** existing credentials in database,
+ * - If user **does not have** existing login credentials in database,
  * then redirect to login page with error message.
  */
 function db_isExistingUser(request, response, next) {
@@ -127,16 +131,15 @@ function db_isExistingUser(request, response, next) {
 }
 
 /**
- * Get user's bio, profile picture and others **for profile page**.
+ * Query to `SELECT *` when joining `users` and `profiles` tables.
  *
- * @returns
- * - If user **has** profile info,
- * then store in `request.session.user` and proceed.
+ * - If user **has** `profiles.user_id`,
+ * then store result in `request.session.user` and proceed.
  *
- * - If user **does not have** profile info,
+ * - If user **does not have** `profiles.user_id`,
  * then redirect to login page with error message.
  */
-function db_getUserInfoForProfile(request, response, next) {
+function db_forProfile_getProfileInfo(request, response, next) {
     let query = `
         SELECT *
         FROM profiles JOIN users
@@ -147,7 +150,8 @@ function db_getUserInfoForProfile(request, response, next) {
         if (!userProfileInfo)
             return response.render("user/login.ejs", {
                 pageName: "Login",
-                errorMessage: "Profile not found. Please complete your registration.",
+                // "Contact support" because if registered, then profile should have been created too
+                errorMessage: "Profile not found. Please contact support.",
             });
         request.session.user = userProfileInfo;
         return next();
@@ -155,18 +159,19 @@ function db_getUserInfoForProfile(request, response, next) {
 }
 
 /**
- * Get user's enrolled courses **for profile page**.
+ * Query to `SELECT *` when joining `enrollments` and `courses` tables.
  *
- * @returns
- * - If user **has** enrolled courses info,
- * then store in `request.session.user.enrolledCourses` and proceed.
+ * - If user **has** `enrollments.user_id`,
+ * then store result in `request.session.user.enrolledCourses` and proceed.
  *
- * - If user **does not have** enrolled courses info,
+ *   - If user is not enrolled into any courses, then `[]` is stored.
+ *
+ * - If user **does not have** `enrollments.user_id`,
  * then redirect to error page as database query failed.
  */
-function db_getEnrolledCoursesForProfile(request, response, next) {
+function db_forProfile_getEnrolledCourses(request, response, next) {
     let query = `
-        SELECT courses.name, courses.description
+        SELECT *
         FROM enrollments JOIN courses
         ON enrollments.course_id = courses.id
         WHERE enrollments.user_id = ?`;
@@ -179,23 +184,27 @@ function db_getEnrolledCoursesForProfile(request, response, next) {
 }
 
 /**
- * Ensures both `username` and `email` are unique in database, then allowed to proceed.
+ * Query `users` table to ensure both `username` and `email` are unique.
  *
- * @returns
- * - If both unique, then proceed.
+ * - If **both** are unique, then proceed.
  *
- * - If either are not unique, then redirect to register page with error message.
+ * - If **either** are not unique,
+ * then `errors.username` and/or `errors.email` is created,
+ * then redirect to register page with error message.
  */
 function db_isUnique_usernameAndEmail(request, response, next) {
     let errors = {};
     db.get("SELECT * FROM users WHERE username = ?", [request.body.username], (err, existingUsername) => {
         if (err) return errorPage(response, "Database error when ensuring username is unique!");
         if (existingUsername) errors.username = "This username has been registered.";
+
         db.get("SELECT * FROM users WHERE email = ?", [request.body.email], (err, existingEmail) => {
             if (err) return errorPage(response, "Database error when ensuring email is unique!");
             if (existingEmail) errors.email = "This email has been registered.";
+
             // If "errors" have no properties/keys, then proceed
             if (Object.keys(errors).length == 0) return next();
+
             // If "errors" has properties/keys, then re-render register page
             return response.render("user/register.ejs", {
                 pageName: "Register",
@@ -216,7 +225,7 @@ module.exports = {
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_isExistingUser,
-    db_getUserInfoForProfile,
-    db_getEnrolledCoursesForProfile,
+    db_forProfile_getProfileInfo,
+    db_forProfile_getEnrolledCourses,
     db_isUnique_usernameAndEmail,
 };

@@ -1,8 +1,8 @@
 /* ----------- Login Page CSS ------------- */
-.login-container{
+.login-container {
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
     width: 100%;
     height: 100%;
     padding-top: 5rem;
@@ -55,7 +55,7 @@
     padding: 0.8rem;
     border: none;
     border-radius: 8px;
-    background-color: #424890; 
+    background-color: #424890;
     color: #fff;
 }
 
@@ -71,7 +71,7 @@
 button[type="submit"] {
     width: 100%;
     padding: 1rem;
-    background-color: #007bff;; 
+    background-color: #007bff;
     color: white;
     font-weight: bold;
     border: none;
@@ -104,7 +104,7 @@ button[type="submit"]:hover {
 
 /* Button Styles */
 button {
-    background-color: #007bff;; 
+    background-color: #007bff;
     color: #fff;
     padding: 1.4rem 4rem;
     border: none;
@@ -118,7 +118,9 @@ button:hover {
     background-color: #0056b3;
 }
 
-button + button {
-    margin-left: 8rem;
-    margin-bottom: 2rem;
+/* Register Page's "Student" and "Educator" buttons */
+.role-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1rem 0;
 }

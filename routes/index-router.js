@@ -262,7 +262,7 @@ router.get("/checkout", isLoggedIn, (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
 
-    // Do not enter page if cart is empty
+    // If cart is empty, then user cannot access checkout page
     if (cart.length == 0) return response.redirect("/cart?error=empty_checkout");
 
     cart.forEach((item) => {
