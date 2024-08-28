@@ -67,13 +67,15 @@
                     <%if (user.enrolledCourses.length > 0) { %>
                     <ul>
                         <%user.enrolledCourses.forEach(course => { %>
-                        <li class="course-item">
-                            <div class="course-info">
-                                <h4><%= course.name %></h4>
-                                <p><%= course.description %></p>
-                            </div>
-                            <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
-                        </li>
+                        <a href="/courses/course/<%= course.id %>" class="course-link">
+                            <li class="course-item">
+                                <div class="course-info">
+                                    <h4><%= course.name %></h4>
+                                    <p><%= course.description %></p>
+                                </div>
+                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                            </li>
+                        </a>
                         <%}) %>
                     </ul>
                     <%} else { %>
