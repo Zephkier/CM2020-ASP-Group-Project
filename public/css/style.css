@@ -464,7 +464,7 @@ header {
 /* =================== FOOTER ===================== */
 footer {
     background: var(--color-bg1);
-    padding-top: 5rem;
+    padding: 0.5rem;
     font-size: 0.9rem;
     position: relative;
     bottom: 0;
@@ -474,20 +474,40 @@ footer {
 .footer__container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5rem;
+    gap: 2rem;
+    width: 80%;
 }
 
 .footer__container > div h4 {
-    margin-bottom: 1.2rem;
-    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
 }
 
 .footer__1 p {
-    margin: 0 0 1.5rem;
+    margin: 0 0 0.5rem;
+    max-width: 100%;
+}
+
+.footer__1,
+.footer__2,
+.footer__3,
+.footer__4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 450px;
+    text-align: center;
+    /* border: 5px red solid; */
+    padding-left: 5rem;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
 }
 
 footer ul li {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
 }
 
 footer ul li a:hover {
@@ -496,9 +516,10 @@ footer ul li a:hover {
 
 .footer__socials {
     display: flex;
+    justify-content: center;
     gap: 1rem;
-    font-size: 1.2rem;
-    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    margin-top: 1rem;
 }
 
 .footer__copyright {
