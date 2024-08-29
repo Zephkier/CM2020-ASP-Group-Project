@@ -48,27 +48,28 @@ CREATE TABLE courses (
     price DECIMAL(10, 2) NOT NULL,
     enrollCount INTEGER NOT NULL,
     video_url TEXT NOT NULL,
-    creator TEXT NOT NULL
+    creator TEXT NOT NULL,
+    picture TEXT NOT NULL
 );
 
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('HTML', 'Master the basics of web development with HTML.', 40.50, 10, 'https://www.youtube.com/watch?v=qz0aGYrrlhU', 'Alex Johnson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('CSS', 'Style your websites with modern CSS techniques.', 50.50, 10, 'https://www.youtube.com/watch?v=wRNinF7YQqQ', 'Morgan Taylor');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('JavaScript', 'Get hands-on with JavaScript to build interactive web pages.', 70.50, 10, 'https://www.youtube.com/watch?v=W6NZfCO5SIk', 'Riley Brown');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('PHP', 'Develop server-side applications with PHP.', 60.50, 10, 'https://www.youtube.com/watch?v=KBT2gmAfav4', 'Jordan White');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Python', 'Explore Python for web development, data science, and more.', 90.50, 750, 'https://www.youtube.com/watch?v=kqtD5dpn9C8', 'Skyler Harris');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('C++', 'Enhance your programming skills with C++.', 80.50, 120, 'https://www.youtube.com/watch?v=ZzaPdXTrSb8', 'Jamie Smith');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('C Sharp', 'Build robust applications using C# and .NET framework.', 50.50, 70, 'https://www.youtube.com/watch?v=gfkTfcpWqAY', 'Quinn Anderson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Java', 'Write cross-platform applications with Java.', 70.50, 6430, 'https://www.youtube.com/watch?v=eIrMbAQSU34', 'Taylor Jackson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Ruby', 'Create dynamic web applications with Ruby on Rails.', 60.50, 7570, 'https://www.youtube.com/watch?v=t_ispmWmdjY', 'Avery Thomas');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Go', 'Build efficient and scalable systems with Go.', 50.50, 3620, 'https://www.youtube.com/watch?v=446E-r0rXHI', 'Casey Martin');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Kotlin', 'Develop modern Android apps with Kotlin.', 80.50, 6240, 'https://www.youtube.com/watch?v=F9UC9DY-vIU', 'Riley Brown');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Swift', 'Create iOS apps using Swift.', 90.50, 730, 'https://www.youtube.com/watch?v=comQ1-x2a1Q', 'Alex Johnson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Rust', 'Build safe and fast systems with Rust.', 110.50, 11230, 'https://www.youtube.com/watch?v=MsocPEZBd-M', 'Morgan Taylor');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Dart', 'Develop cross-platform mobile apps with Dart and Flutter.', 70.50, 2230, 'https://www.youtube.com/watch?v=Ej_Pcr4uC2Q', 'Jamie Smith');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('R', 'Perform statistical analysis and data visualization with R.', 60.50, 1540, 'https://www.youtube.com/watch?v=_V8eKsto3Ug', 'Skyler Harris');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Lua', 'Integrate Lua scripting in your applications.', 80.50, 8340, 'https://www.youtube.com/watch?v=iMacxZQMPXs', 'Quinn Anderson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Haskell', 'Dive into functional programming with Haskell.', 70.50, 120, 'https://www.youtube.com/watch?v=02_H3LjqMr8', 'Taylor Jackson');
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator) VALUES ('Elixir', 'Build scalable and maintainable applications with Elixir.', 90.50, 1560, 'https://www.youtube.com/watch?v=-lgtb-YSUWE', 'Avery Thomas');
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('HTML', 'Master the basics of web development with HTML.', 40.50, 10, 'https://www.youtube.com/watch?v=qz0aGYrrlhU', 'Alex Johnson','HTML.jpg');
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('CSS', 'Style your websites with modern CSS techniques.', 50.50, 10, 'https://www.youtube.com/watch?v=wRNinF7YQqQ', 'Morgan Taylor','CSS.jpg');
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('JavaScript', 'Get hands-on with JavaScript to build interactive web pages.', 70.50, 10, 'https://www.youtube.com/watch?v=W6NZfCO5SIk', 'Riley Brown','JavaScript.jpg');
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('PHP', 'Develop server-side applications with PHP.', 60.50, 10, 'https://www.youtube.com/watch?v=KBT2gmAfav4', 'Jordan White', 'PHP.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Python', 'Explore Python for web development, data science, and more.', 90.50, 750, 'https://www.youtube.com/watch?v=kqtD5dpn9C8', 'Skyler Harris','Python.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('C++', 'Enhance your programming skills with C++.', 80.50, 120, 'https://www.youtube.com/watch?v=ZzaPdXTrSb8', 'Jamie Smith','C++.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('C Sharp', 'Build robust applications using C# and .NET framework.', 50.50, 70, 'https://www.youtube.com/watch?v=gfkTfcpWqAY', 'Quinn Anderson','C Sharp.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Java', 'Write cross-platform applications with Java.', 70.50, 6430, 'https://www.youtube.com/watch?v=eIrMbAQSU34', 'Taylor Jackson','Java.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Ruby', 'Create dynamic web applications with Ruby on Rails.', 60.50, 7570, 'https://www.youtube.com/watch?v=t_ispmWmdjY', 'Avery Thomas','Ruby.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Go', 'Build efficient and scalable systems with Go.', 50.50, 3620, 'https://www.youtube.com/watch?v=446E-r0rXHI', 'Casey Martin','Go.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Kotlin', 'Develop modern Android apps with Kotlin.', 80.50, 6240, 'https://www.youtube.com/watch?v=F9UC9DY-vIU', 'Riley Brown','Kotlin.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Swift', 'Create iOS apps using Swift.', 90.50, 730, 'https://www.youtube.com/watch?v=comQ1-x2a1Q', 'Alex Johnson','Swift.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Rust', 'Build safe and fast systems with Rust.', 110.50, 11230, 'https://www.youtube.com/watch?v=MsocPEZBd-M', 'Morgan Taylor','Rust.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Dart', 'Develop cross-platform mobile apps with Dart and Flutter.', 70.50, 2230, 'https://www.youtube.com/watch?v=Ej_Pcr4uC2Q', 'Jamie Smith','Dart.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('R', 'Perform statistical analysis and data visualization with R.', 60.50, 1540, 'https://www.youtube.com/watch?v=_V8eKsto3Ug', 'Skyler Harris','R.jpg'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Lua', 'Integrate Lua scripting in your applications.', 80.50, 8340, 'https://www.youtube.com/watch?v=iMacxZQMPXs', 'Quinn Anderson','Lua.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Haskell', 'Dive into functional programming with Haskell.', 70.50, 120, 'https://www.youtube.com/watch?v=02_H3LjqMr8', 'Taylor Jackson','Haskell.png'); 
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picturen) VALUES ('Elixir', 'Build scalable and maintainable applications with Elixir.', 90.50, 1560, 'https://www.youtube.com/watch?v=-lgtb-YSUWE', 'Avery Thomas','Elixir.jpg');
 
 CREATE TABLE enrollments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

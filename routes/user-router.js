@@ -1,5 +1,6 @@
 // Import and setup modules
 const express = require("express");
+const multer = require("multer");
 const { db } = require("../public/db.js");
 const {
     // Format
@@ -185,28 +186,41 @@ function db_forProfile_getTeachingCourses(educatorId, callback) {
     });
 }
 
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./public/images/courses/");
+    },
+    filename: function (req, file, cb) {
+        const ext = file.mimetype.split("/")[1];
+        cb(null, `${req.body.name}.${ext}`);
+    }
+});
+const upload = multer({ storage: storage });
+
 // Route to show form to add a new course
-router.get('/add-course', isLoggedIn, (req, res) => {
-    res.render('user/add_course.ejs', {
-        pageName: 'Add New Course',
-        appName: 'Educator Platform',
-        user: req.session.user
+router.get("/add-course", isLoggedIn, (req, res) => {
+    res.render("user/add_course.ejs", {
+        pageName: "Add New Course",
+        appName: "Educator Platform",
+        user: req.session.user,
     });
 });
 
 // Route to handle form submission to add a new course
-router.post('/add-course', isLoggedIn, (req, res) => {
-    const { name, description, price, enrollCount, video_url } = req.body;
+router.post("/add-course", isLoggedIn, upload.single('picture'), (req, res) => {
+    const { name, description, price, video_url } = req.body;
     const creator = req.session.user.username;
+    const picture = req.file ? req.file.filename : null;  // Get the uploaded file name
 
     const query = `
-        INSERT INTO courses (name, description, price, enrollCount, video_url, creator)
-        VALUES (?, ?, ?, 0, ?, ?)`;
-    const params = [name, description, parseFloat(price), video_url, creator];
+        INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture)
+        VALUES (?, ?, ?, 0, ?, ?, ?)`;
+    const params = [name, description, parseFloat(price), video_url, creator, picture];
 
     db.run(query, params, (err) => {
-        if (err) return errorPage(res, 'Database error while adding the course!');
-        res.redirect('/user/profile'); // Redirect to the educator's profile page
+        if (err) return errorPage(res, "Database error while adding the course!");
+        res.redirect("/user/profile"); // Redirect to the educator's profile page
     });
 });
 

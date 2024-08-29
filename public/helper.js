@@ -43,9 +43,10 @@ function isNotLoggedIn(request, response, next) {
  * @returns The filename with either `.jpg` or `.png` at the end.
  */
 function returnFilenameWithType(pathToPicture, filename) {
+    if (fs.existsSync(`${pathToPicture}${filename}`)) return filename;
     if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
     if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
-    return `File does not exist at: ${pathToPicture}`;
+    return `default_image.jpg`;
 }
 
 /**
@@ -61,7 +62,9 @@ function returnFilenameWithType(pathToPicture, filename) {
  * @param {object} course The object after querying database.
  */
 function setPictureAndPriceProperties(course) {
-    course.picture = returnFilenameWithType("./public/images/courses/", course.name);
+    if (!course.picture) {
+        course.picture = returnFilenameWithType("./public/images/courses/", course.name);
+    }
     course.price = parseFloat(course.price).toFixed(2);
 }
 
