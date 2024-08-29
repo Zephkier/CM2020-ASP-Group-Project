@@ -29,6 +29,10 @@
     font-weight: bold;    
 }
 
+.form-group textarea {
+    resize: vertical;
+}
+
 .profile-picture-options {
     display: flex;
     gap: 1.3rem;
@@ -64,7 +68,8 @@ textarea {
     color: var(--color-white);
     font-size: 1rem;
     margin-left: 1rem;
-    border-radius: 0.8rem;
+    border-radius: 0.8rem;    
+    vertical-align: middle;
 }
 
 .btn {
