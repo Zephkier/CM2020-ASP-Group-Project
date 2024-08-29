@@ -57,13 +57,17 @@
                 <div class="payment-options">
                     <h3>Payment</h3>
 
-                    <!-- Apple Pay Form -->
-                    <form action="/courses/checkout/applepay" method="POST">
-                        <button type="submit" class="btn btn-primary">Pay with Apple Pay</button>
-                    </form>
+                    <div class="btn-container">
+                        <!-- Apple Pay Button -->
+                        <form action="/courses/checkout/applepay" method="POST">
+                            <button type="submit" class="btn btn-primary">Pay with Apple Pay</button>
+                        </form>
+
+                        <!-- Credit Card Button -->
+                        <button class="btn btn-secondary" onclick="toggleCreditCardForm()">Pay with Credit Card</button>
+                      </div>
 
                     <!-- Credit Card Form -->
-                    <button class="btn btn-secondary" onclick="toggleCreditCardForm()">Pay with Credit Card</button>
                     <form action="/courses/checkout/creditcard" method="POST" id="credit-card-form" style="display: none; margin-top: 1rem">
                         <div class="form-group">
                             <label for="card-number">Card Number:</label>

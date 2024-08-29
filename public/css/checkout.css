@@ -6,7 +6,6 @@
     margin: 2rem auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
 }
 
 .checkout-container h1, .checkout-container h2 {
@@ -15,12 +14,13 @@
 }
 
 .checkout-container h1 {
-    font-size: 3rem;
-    color: #007bff;
+    font-size: 1.6rem;
+    color: white;
+    text-decoration: underline;
 }
 
 .checkout-container h2 {
-    font-size: 2.5rem;
+    font-size: 1.4rem;
     color: var(--color-white);
 }
 
@@ -33,7 +33,7 @@
 }
 
 .user-details h3, .cart-summary h3, .payment-options h3 {
-    font-size: 2rem;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
     color: var(--color-white);
 }
@@ -44,12 +44,12 @@
 }
 
 .user-details p, .cart-summary p {
-    font-size: 1.6rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 2;
 }
 
 .user-details p{
-    color:black;
+    color: white;
     margin-left: 7rem;
 }
 
@@ -75,34 +75,48 @@
 }
 
 .cart-item h4 {
-    font-size: 1.8rem;
+    font-size: 1rem;
     margin: 0;
-    color: var(--color-black);
+    color: white;
 }
 
 .cart-item p {
-    font-size: 1.6rem;
+    font-size: 1rem;
     margin: 0.5rem 0 0;
 }
 
 .total {
-    font-size: 2rem;
-    margin-top: 2rem;
-    padding: 1rem;
-    padding-right: 4rem;
-    background-color: var(--color-bg2);
-    border-radius: 5px;
     text-align: right;
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    background-color: var(--color-bg2);;
+    padding: 0.8rem;
+    padding-right: 4rem; 
+    border-radius: 5px;
+
 }
 
 .payment-options {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.payment-options h3 {
+    margin-bottom: 1rem; 
+}
+
+.payment-options .btn-container {
+    display: flex;
+    gap: 1rem; 
+    justify-content: center; 
 }
 
 .payment-options .btn {
     display: inline-block;
     padding: 1rem 2rem;
-    font-size: 1.8rem;
+    font-size: 1rem;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -133,14 +147,14 @@
 
 .form-group label {
     display: block;
-    font-size: 1.4rem;
+    font-size: 1rem;
     margin-bottom: 0.5rem;
 }
 
 .form-group input {
     width: 100%;
     padding: 0.8rem;
-    font-size: 1.6rem;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
@@ -149,4 +163,5 @@
     background-color: var(--color-bg2);
     padding: 2rem;
     border-radius: 5px;
+    width: 100%;
 }
