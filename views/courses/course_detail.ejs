@@ -35,22 +35,25 @@
                         allowfullscreen>
                     </iframe>
                 </div>
+            <!-- Notes Section -->
+            <div class="notes-section">
+                <h2>Your Notes</h2>
+                <form action="/courses/course/<%= course.id %>/notes" method="POST">
+                    <!-- Use a conditional operator to check if notes exist before accessing content -->
+                    <textarea name="content" rows="4" placeholder="Add your notes here..."><%= course.notes && course.notes.content ? course.notes.content : '' %></textarea>
+                    <button type="submit" class="btn btn-primary">Save Note</button>
+                </form>
 
-                <!-- Notes Section -->
-                <div class="notes-section">
-                    <h2>Your Notes</h2>
-                    <form action="/courses/course/<%= course.id %>/notes" method="POST">
-                        <textarea name="content" rows="4" placeholder="Add your notes here..."><%= course.notes.content %></textarea>
-                        <button type="submit" class="btn btn-primary">Save Note</button>
-                    </form>
-
-                    <% if (course.note) { %>
-                    <div class="saved-notes">
-                        <h3>Saved Note:</h3>
-                        <p><%= course.notes.content %></p>
-                    </div>
-                    <% } %>
+                <% if (course.notes && course.notes.content) { %>
+                <div class="saved-notes">
+                    <h3>Saved Note:</h3>
+                    <p><%= course.notes.content %></p>
                 </div>
+                <% } else { %>
+                <p>No notes added yet. Start by adding your notes!</p>
+                <% } %>
+            </div>
+
             </div>
         </main>
 
