@@ -29,14 +29,15 @@
         <main>
             <div class="form-container">
                 <h2>Add New Course</h2>
-                <form action="/educator/add/course" method="POST" enctype="multipart/form-data">
+                <% let endpoint; formInputStored.id ? (endpoint = "/educator/update/course/" + formInputStored.id) : (endpoint = "/educator/update/course"); %>
+                <form action="<%= endpoint %>" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Course Name:</label>
                         <input type="text" id="name" name="name" value="<%= formInputStored.name %>" required />
                     </div>
                     <div class="form-group">
                         <label for="description">Course Description:</label>
-                        <textarea id="description" name="description" rows="4" value="<%= formInputStored.description %>" required></textarea>
+                        <textarea id="description" name="description" rows="4" required><%= formInputStored.description %></textarea>
                     </div>
                     <div class="form-group">
                         <label for="price">Price:</label>
@@ -50,10 +51,10 @@
                         <label for="picture">Course Photo:</label>
                         <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" value="<%= formInputStored.picture %>" required />
                     </div>
-                    <%if (formInputStored) { %>
-                    <button type="submit">Add Course</button>
+                    <%if (formInputStored.id) { %>
+                    <button type="submit" name="button" value="update">Update Course</button>
                     <%} else { %>
-                    <button type="submit">Update Course</button>
+                    <button type="submit" name="button" value="add">Add Course</button>
                     <%} %>
                 </form>
             </div>

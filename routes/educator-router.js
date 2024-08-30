@@ -8,6 +8,17 @@ const {
     isLoggedIn,
 } = require("../public/helper.js");
 
+// Configure multer for file uploads
+let storage = multer.diskStorage({
+    destination: function (request, file, cb) {
+        cb(null, "./public/images/courses/");
+    },
+    filename: function (request, file, cb) {
+        cb(null, `${request.body.name}.${file.mimetype.split("/")[1]}`);
+    },
+});
+let upload = multer({ storage: storage });
+
 // Initialise router
 const router = express.Router();
 
@@ -18,23 +29,10 @@ router.get("/", (request, response) => {
     return response.redirect("/user/profile");
 });
 
-// Configure multer for file uploads
-let storage = multer.diskStorage({
-    destination: function (request, file, cb) {
-        cb(null, "./public/images/courses/");
-    },
-    filename: function (request, file, cb) {
-        let ext = file.mimetype.split("/")[1];
-        cb(null, `${request.body.name}.${ext}`);
-    },
-});
-
-let upload = multer({ storage: storage });
-
 // Add course
 router.get("/add/course", isLoggedIn, (request, response) => {
     return response.render("educator/course-edit.ejs", {
-        pageName: "Add New Course",
+        pageName: "Add Course",
         user: request.session.user,
         formInputStored: {},
     });
@@ -53,19 +51,33 @@ router.get("/edit/course/:courseId", isLoggedIn, (request, response) => {
     });
 });
 
-// Submit form
-router.post("/add/course", isLoggedIn, upload.single("picture"), (request, response) => {
+// Submit form for both "add" (without "/:courseId") and "edit" (with "/:courseId"), thus "?" at the end indicates that it is optional
+router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (request, response) => {
     let { name, description, price, video_url } = request.body;
     let picture = request.file ? request.file.filename : null; // Get the uploaded file name
 
-    let query = `
-        INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture)
-        VALUES (?, ?, ?, ?, 0, ?, ?)`;
-    let params = [request.session.user.id, name, description, parseFloat(price), video_url, picture];
-    db.run(query, params, (err) => {
-        if (err) return errorPage(response, "Error adding/updating course!");
-        return response.redirect("/user/profile");
-    });
+    if (request.body.button == "add") {
+        let query = `
+            INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture)
+            VALUES (?, ?, ?, ?, 0, ?, ?)`;
+        let params = [request.session.user.id, name, description, parseFloat(price), video_url, picture];
+        db.run(query, params, (err) => {
+            if (err) return errorPage(response, "Error adding course!");
+            return response.redirect("/user/profile");
+        });
+    }
+
+    if (request.body.button == "update") {
+        let query = `
+            UPDATE courses
+            SET name = ?, description = ?, price = CAST(? AS DECIMAL (10, 2)), video_url = ?, picture = ?
+            WHERE id = ?`;
+        let params = [name, description, parseFloat(price), video_url, picture, request.params.courseId];
+        db.run(query, params, (err) => {
+            if (err) return errorPage(response, "Error updating course!");
+            return response.redirect("/user/profile");
+        });
+    }
 });
 
 // Handle invalid URLs (eg. "/user/*")
