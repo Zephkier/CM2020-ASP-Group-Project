@@ -126,24 +126,25 @@ router.post("/course/:courseId/enroll", (request, response) => {
 
 // TODO Courses: In profile page, select course to learn
 router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
-    let query = `
-        SELECT *
-        FROM courses
-        WHERE courses.id = ?`;
-    let params = [req.params.courseId]
-    db.get(query, params, (err, course) => {
-        if (err) return errorPage(res, "Database error!");
+    const courseId = req.params.courseId;
+    const userId = req.session.user.id;
+
+    // Fetch course details
+    db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
+        if (err) return errorPage(res, "Database error when retrieving course details!");
         if (!course) return errorPage(res, "Course not found!");
 
-        query = `
-            SELECT *
-            FROM notes
-            WHERE course_id = ? AND user_id = ?`;
-        params = [req.params.courseId, req.session.user.id];
-        db.get(query, params, (err, notes) => {
-            if (err) return errorPage(res, "Database error!");
-            course.notes = notes;
-            return res.render("courses/course_detail.ejs", {
+        setPictureAndPriceProperties(course);
+
+        // Fetch notes related to the course for the current user
+        db.get("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
+            if (err) return errorPage(res, "Database error when retrieving notes!");
+
+            // Assign an empty object if no notes are found
+            course.notes = notes || { content: "" }; // Default to an empty string if notes do not exist
+
+            // Render the course detail page with the course and notes data
+            res.render("courses/course_detail.ejs", {
                 pageName: `Learn: ${course.name}`,
                 course: course,
                 user: req.session.user,
@@ -272,35 +273,5 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 router.get("/*", (request, response) => {
     return response.redirect("/courses?error=invalid_url");
 });
-
-// Route to display course details and user notes
-router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
-    const courseId = req.params.courseId;
-    const userId = req.session.user.id;
-
-    // Fetch course details
-    db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
-        if (err) return errorPage(res, "Database error when retrieving course details!");
-        if (!course) return errorPage(res, "Course not found!");
-
-        setPictureAndPriceProperties(course);
-
-        // Fetch notes related to the course for the current user
-        db.get("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
-            if (err) return errorPage(res, "Database error when retrieving notes!");
-
-            // Assign an empty object if no notes are found
-            course.notes = notes || { content: '' }; // Default to an empty string if notes do not exist
-
-            // Render the course detail page with the course and notes data
-            res.render("courses/course_detail.ejs", {
-                pageName: `Learn: ${course.name}`,
-                course: course,
-                user: req.session.user,
-            });
-        });
-    });
-});
-
 
 module.exports = router;

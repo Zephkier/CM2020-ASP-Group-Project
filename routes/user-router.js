@@ -44,30 +44,36 @@ router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request,
     return response.redirect("/user/profile");
 });
 
+// TODO move to helper.js
+// Get educator's created courses, new `request.session.user.createdCourses` object is created
+function db_forProfile_getCreatedCourses(request, response, next) {
+    let query = `
+        SELECT *
+        FROM courses JOIN educators
+        ON courses.creator_id = educators.user_id
+        WHERE educators.user_id = ?`;
+    db.all(query, [request.session.user.id], (err, createdCourses) => {
+        if (err) return errorPage(response, "Database error when retrieving your created courses!");
+        if (!createdCourses) return errorPage(response, "Something went wrong! Unable to load your created courses.");
+        request.session.user.createdCourses = createdCourses || [];
+        return next();
+    });
+}
+
 // Profile
-router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, (request, response) => {
-    // Add ".picture" property so it can be displayed
+router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (request, response) => {
+    if (request.session.user.role != "student" && request.session.user.role != "educator") {
+        return errorPage(response, 'You have no "role", unable to display profile!');
+    }
+
     request.session.user.enrolledCourses.forEach((enrolledCourse) => {
         setPictureAndPriceProperties(enrolledCourse);
     });
 
-    // Check user role and render appropriate profile page
-    if (request.session.user.role === "student") {
-        // Render student profile
-        return response.render("user/profile.ejs", {
-            pageName: "Student Profile",
-            user: request.session.user,
-        });
-    } else if (request.session.user.role === "educator") {
-        // Render educator profile
-        return response.render("user/educator_profile.ejs", {
-            pageName: "Educator Profile",
-            user: request.session.user,
-        });
-    } else {
-        // Handle unexpected roles
-        return errorPage(response, "Role not recognized!");
-    }
+    return response.render("user/profile.ejs", {
+        pageName: "Profile",
+        user: request.session.user,
+    });
 });
 
 router.get("/profile/edit", (request, response) => {
@@ -170,57 +176,40 @@ router.get("/logout", (request, response) => {
     return response.redirect("/");
 });
 
-// -------------Adding new course (educator)---------------
-
-// Fetch teaching courses for an educator
-function db_forProfile_getTeachingCourses(educatorId, callback) {
-    let query = `
-        SELECT courses.id, courses.name, courses.description, courses.picture
-        FROM courses
-        JOIN educators ON educators.id = courses.id
-        WHERE educators.user_id = ?`;
-
-    db.all(query, [educatorId], (err, courses) => {
-        if (err) return callback(err);
-        callback(null, courses || []);
-    });
-}
-
+// TODO move to helper.js
 // Configure multer for file uploads
-const storage = multer.diskStorage({
+let storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "./public/images/courses/");
     },
     filename: function (req, file, cb) {
-        const ext = file.mimetype.split("/")[1];
+        let ext = file.mimetype.split("/")[1];
         cb(null, `${req.body.name}.${ext}`);
-    }
+    },
 });
-const upload = multer({ storage: storage });
+
+let upload = multer({ storage: storage });
 
 // Route to show form to add a new course
 router.get("/add-course", isLoggedIn, (req, res) => {
     res.render("user/add_course.ejs", {
         pageName: "Add New Course",
-        appName: "Educator Platform",
         user: req.session.user,
     });
 });
 
 // Route to handle form submission to add a new course
-router.post("/add-course", isLoggedIn, upload.single('picture'), (req, res) => {
-    const { name, description, price, video_url } = req.body;
-    const creator = req.session.user.username;
-    const picture = req.file ? req.file.filename : null;  // Get the uploaded file name
+router.post("/add-course", isLoggedIn, upload.single("picture"), (req, res) => {
+    let { name, description, price, video_url } = req.body;
+    let picture = req.file ? req.file.filename : null; // Get the uploaded file name
 
-    const query = `
-        INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture)
-        VALUES (?, ?, ?, 0, ?, ?, ?)`;
-    const params = [name, description, parseFloat(price), video_url, creator, picture];
-
+    let query = `
+        INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture)
+        VALUES (?, ?, ?, ?, 0, ?, ?)`;
+    let params = [req.session.user.id, name, description, parseFloat(price), video_url, picture];
     db.run(query, params, (err) => {
         if (err) return errorPage(res, "Database error while adding the course!");
-        res.redirect("/user/profile"); // Redirect to the educator's profile page
+        res.redirect("/user/profile");
     });
 });
 

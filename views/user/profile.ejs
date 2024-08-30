@@ -34,7 +34,11 @@
                         <div class="profile-header">
                             <img src="/images/profile-pictures/<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
                             <h1 class="profile-name"><%= user.displayName %></h1>
+                            <%if (user.role == "student") { %>
                             <p class="profile-role">Student</p>
+                            <%} else if (user.role == "educator") { %>
+                            <p class="profile-role">Educator</p>
+                            <%} %>
                         </div>
 
                         <div class="profile-details">
@@ -61,7 +65,8 @@
                     </div>
                 </div>
 
-                <!-- Enrolled Courses -->
+                <!-- Student's Enrolled Courses -->
+                <%if (user.role == "student") { %>
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
                     <%if (user.enrolledCourses.length > 0) { %>
@@ -79,9 +84,34 @@
                         <%}) %>
                     </ul>
                     <%} else { %>
-                    <p>You have not enrolled in any courses yet.</p>
+                    <p>You have not enrolled into any courses yet.</p>
                     <%} %>
                 </div>
+                <%} %>
+
+                <!-- Educator's Dashboard -->
+                <%if (user.role == "educator") { %>
+                <div class="enrolled-courses">
+                    <h2>Your Dashboard</h2>
+                    <button class="btn btn-primary" onclick="window.location.href='/user/add-course'">Add New Course</button>
+                    <%if (user.createdCourses.length > 0) { %>
+                    <ul>
+                        <%user.createdCourses.forEach(course => { %>
+                        <a href="#" class="course-link">
+                            <li class="course-item">
+                                <div class="course-info">
+                                    <h4><%= course.name %></h4>
+                                    <p><%= course.description %></p>
+                                    <p>Students enrolled: <%= course.enrollCount %></p>
+                                </div>
+                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                            </li>
+                        </a>
+                        <%}) %>
+                    </ul>
+                    <%} %>
+                </div>
+                <%} %>
             </div>
 
             <div id="popup" class="popup hidden">
