@@ -188,7 +188,7 @@ router.get("/cart", (request, response) => {
         setPictureProperty("./public/images/courses/", item.name);
         totalPrice += parseFloat(item.price);
     });
-    totalPrice = parseFloat(totalPrice).toFixed(2);
+    totalPrice = parseFloat(totalPrice).toFixed(2); // Set "totalPrice" to 2 decimal places to properly display price
 
     return response.render("cart.ejs", {
         pageName: "Cart",
@@ -222,5 +222,8 @@ router.get("/search", (request, response) => {
 
 // Login
 // See user-router.js
+
+// Handle invalid URLs (eg. "/courses/*")
+// Do not handle invalid URLs here
 
 module.exports = router;

@@ -33,10 +33,12 @@ function isNotLoggedIn(request, response, next) {
     return response.redirect("/user/profile?error=already_logged_in");
 }
 
-function isStudentOrEducator(request, response, next) {
-    if (request.session.user.role == "student") return next();
-    if (request.session.user.role == "educator") return next();
-    return errorPage(response, 'You have no "role", unable to display profile!');
+// TODO JSDoc string
+function hasRoles(roles) {
+    return function (request, response, next) {
+        if (roles.includes(request.session.user.role)) return next();
+        return errorPage(response, "You do not have permission to access this page!");
+    };
 }
 
 // TODO JSDoc string
@@ -261,7 +263,7 @@ module.exports = {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    isStudentOrEducator,
+    hasRoles,
     setPriceProperty,
     setPictureProperty,
     db_isNewCoursesOnly,

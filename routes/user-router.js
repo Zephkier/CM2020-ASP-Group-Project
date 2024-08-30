@@ -6,7 +6,6 @@ const {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    isStudentOrEducator,
     setPriceProperty,
     setPictureProperty,
     db_isExistingUser,
@@ -45,7 +44,7 @@ router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request,
 });
 
 // Profile
-router.get("/profile", isLoggedIn, isStudentOrEducator, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (request, response) => {
+router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (request, response) => {
     let userId = request.session.user.id;
 
     // Fetch recent activities (notes and enrollments)

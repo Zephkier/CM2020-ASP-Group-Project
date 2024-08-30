@@ -135,59 +135,6 @@ router.post("/course/:courseId/notes", isLoggedIn, (req, res) => {
     });
 });
 
-// Checkout: Ensure user is logged in
-router.get("/checkout", isLoggedIn, (request, response) => {
-    let totalPrice = 0;
-    let cart = request.session.cart || [];
-
-    // If cart is empty, then user cannot access checkout page
-    if (cart.length == 0) return response.redirect("/courses/cart?error=empty_checkout");
-
-    cart.forEach((item) => {
-        setPictureAndPriceProperties(item);
-        // Calculate "totalPrice"
-        totalPrice += parseFloat(item.price);
-    });
-
-    // Set ".totalPrice" property to 2 decimal places to properly display price
-    totalPrice = parseFloat(totalPrice).toFixed(2);
-
-    return response.render("courses/checkout.ejs", {
-        pageName: "Checkout",
-        cart: cart,
-        totalPrice: totalPrice,
-        user: request.session.user,
-    });
-});
-
-// Checkout: Payment and database update (same as Credit Card method)
-router.post("/checkout/applepay", db_isNewCoursesOnly, (request, response, next) => {
-    // 1. Ensure cart contains new courses only (done by helper function)
-
-    // 2. Out of scope: Handle Apple Paypayment, and ensure it is successful
-
-    // 3. Update database, delete/clear cart, redirect to updated profile page
-    db_insertIntoEnrollments(request, response, next);
-    db_updateEnrollCount(request, response, next);
-
-    delete request.session.cart;
-    response.redirect("/user/profile");
-});
-
-// Checkout: Payment and database update (same as Apple Pay method)
-router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, next) => {
-    // 1. Ensure cart contains new courses only (done by helper function)
-
-    // 2. Out of scope: Handle Credit Card payment, and ensure it is successful
-
-    // 3. Update database, delete/clear cart, redirect to updated profile page
-    db_insertIntoEnrollments(request, response, next);
-    db_updateEnrollCount(request, response, next);
-
-    delete request.session.cart;
-    response.redirect("/user/profile");
-});
-
 // Route to update time spent on a course
 router.post("/course/:courseId/update-time", (req, res) => {
     const userId = req.session.user.id;
