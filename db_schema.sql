@@ -80,6 +80,8 @@ CREATE TABLE enrollments (
     user_id INTEGER,
     course_id INTEGER,
     enrollment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    progress INTEGER DEFAULT 0,
+    time_spent INTEGER DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id)
 );

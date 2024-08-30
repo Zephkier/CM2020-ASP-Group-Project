@@ -12,7 +12,7 @@
         }
         .notes-section { margin-top: 20px; }
         .saved-notes { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px; }
-        .note-item { margin-bottom: 10px; }
+        .hidden { display: none; }
     </style>
 </head>
 
@@ -36,30 +36,36 @@
                     allowfullscreen>
                 </iframe>
             </div>
-            
+
             <!-- Notes Section -->
             <div class="notes-section">
                 <h2>Your Notes</h2>
                 <form action="/courses/course/<%= course.id %>/notes" method="POST">
                     <textarea name="content" rows="4" placeholder="Add your notes here..."></textarea>
-                    <button type="submit" class="btn btn-primary">Add Note</button>
+                    <button type="submit" class="btn btn-primary">Save Note</button>
                 </form>
-
                 <% if (course.notes && course.notes.length > 0) { %>
                     <div class="saved-notes">
                         <h3>Saved Notes:</h3>
                         <% course.notes.forEach(note => { %>
                             <div class="note-item">
-                                <p><%= note.content %></p>
-                                <!-- Form to Edit Note -->
-                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
-                                    <textarea name="content" rows="2"><%= note.content %></textarea>
-                                    <button type="submit" class="btn btn-secondary">Edit Note</button>
-                                </form>
-                                <!-- Form to Delete Note -->
-                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger">Delete Note</button>
-                                </form>
+                                <!-- Display Mode -->
+                                <div id="display-note-<%= note.id %>">
+                                    <p><%= note.content %></p>
+                                    <button type="button" class="btn btn-secondary" onclick="toggleEditMode(<%= note.id %>)">Edit</button>
+                                </div>
+                                <!-- Edit Mode -->
+                                <div id="edit-form-<%= note.id %>" class="hidden">
+                                    <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
+                                        <textarea name="content" rows="2"><%= note.content %></textarea>
+                                        <button type="submit" class="btn btn-primary">Update Note</button>
+                                        <button type="button" class="btn btn-secondary" onclick="toggleEditMode(<%= note.id %>, false)">Cancel</button>
+                                    </form>
+                                    <!-- Form to Delete Note -->
+                                    <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger">Delete Note</button>
+                                    </form>
+                                </div>
                             </div>
                         <% }) %>
                     </div>
@@ -71,5 +77,40 @@
     </main>
 
     <%- include("../partials/footer.ejs") %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all textareas for notes
+            const textareas = document.querySelectorAll('.notes-section textarea');
+
+            // Function to auto resize the textarea
+            function autoResizeTextarea(textarea) {
+                textarea.style.height = 'auto'; // Reset height
+                textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height based on content
+            }
+
+            textareas.forEach(textarea => {
+                // Resize on input
+                textarea.addEventListener('input', function () {
+                    autoResizeTextarea(textarea);
+                });
+
+                // Initial resize to fit existing content
+                autoResizeTextarea(textarea);
+            });
+        });
+
+        // Toggle between display mode and edit mode for a note
+        function toggleEditMode(noteId, editMode = true) {
+            const displayDiv = document.getElementById('display-note-' + noteId);
+            const editForm = document.getElementById('edit-form-' + noteId);
+            if (editMode) {
+                displayDiv.classList.add('hidden');
+                editForm.classList.remove('hidden');
+            } else {
+                displayDiv.classList.remove('hidden');
+                editForm.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>

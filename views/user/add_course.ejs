@@ -32,25 +32,29 @@
                 <form action="/user/add-course" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Course Name:</label>
-                        <input type="text" id="name" name="name" required />
+                        <input type="text" id="name" name="name" value="<%= formInputStored.name %>" required />
                     </div>
                     <div class="form-group">
                         <label for="description">Course Description:</label>
-                        <textarea id="description" name="description" rows="4" required></textarea>
+                        <textarea id="description" name="description" rows="4" value="<%= formInputStored.description %>" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="price">Price:</label>
-                        <input type="number" step="0.01" id="price" name="price" required />
+                        <input type="number" step="0.01" id="price" name="price" value="<%= formInputStored.price %>" required />
                     </div>
                     <div class="form-group">
                         <label for="video_url">Video URL:</label>
-                        <input type="url" id="video_url" name="video_url" required />
+                        <input type="url" id="video_url" name="video_url" value="<%= formInputStored.video_url %>" required />
                     </div>
                     <div class="form-group">
                         <label for="picture">Course Photo:</label>
-                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" required />
+                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" value="<%= formInputStored.picture %>" required />
                     </div>
+                    <%if (formInputStored) { %>
                     <button type="submit">Add Course</button>
+                    <%} else { %>
+                    <button type="submit">Update Course</button>
+                    <%} %>
                 </form>
             </div>
         </main>

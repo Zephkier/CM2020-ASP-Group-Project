@@ -99,7 +99,7 @@ function db_isNewCoursesOnly(request, response, next) {
  */
 function db_insertIntoEnrollments(request, response, next) {
     request.session.cart.forEach((item) => {
-        let query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
+        let query = "INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)";
         let params = [request.session.user.id, item.id];
         db.get(query, params, (err) => {
             if (err) return errorPage(response, "Database error when adding enrollments!");
@@ -195,7 +195,7 @@ function db_forProfile_getEnrolledCourses(request, response, next) {
         if (err) return errorPage(response, "Database error when retrieving enrolled courses!");
         if (!enrolledCourses) return errorPage(response, "Something went wrong! Unable to load your enrolled courses.");
         request.session.user.enrolledCourses = enrolledCourses || [];
-        next();
+        return next();
     });
 }
 

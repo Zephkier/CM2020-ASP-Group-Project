@@ -16,6 +16,7 @@ const router = express.Router();
 
 // Note that all these URLs has "/courses" prefix!
 
+// TODO move to helper.js
 // Home (Courses)
 router.get("/", async (request, response) => {
     // Promise to complete query, then store in "courses"
@@ -68,13 +69,10 @@ router.get("/", async (request, response) => {
 });
 
 // Courses: Upon choosing a course
-router.get("/course/:courseId", (request, response) => {
+router.get("/course/:courseId", async (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
         if (err) return errorPage(response, "Database error when retrieving chosen course information!");
         if (!course) return errorPage(response, "No chosen course to view!");
-
-        setPictureAndPriceProperties(course);
-
         // If user is logged in, then differentiate button to display "Add to Cart" or "Already Enrolled"
         if (request.session.user) {
             let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
@@ -124,8 +122,22 @@ router.post("/course/:courseId/enroll", (request, response) => {
     });
 });
 
-// TODO Courses: In profile page, select course to learn
-router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
+// TODO move to helper.js
+/**
+ * Ensure user is enrolled into a course so they can rightfully access the "learn" page
+ */
+function db_isEnrolledIntoCourse(request, response, next) {
+    let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+    let params = [request.session.user.id, request.params.courseId];
+    db.get(query, params, (err, existingEnrollment) => {
+        if (err) return errorPage(response, "Database error when retrieving enrollment information!");
+        if (existingEnrollment) return next();
+        else return errorPage(response, "You are not enrolled into this course!");
+    });
+}
+
+// Courses: In profile page, select course to learn
+router.get("/course/:courseId/learn", isLoggedIn, db_isEnrolledIntoCourse, (req, res) => {
     const courseId = req.params.courseId;
     const userId = req.session.user.id;
 
@@ -135,6 +147,9 @@ router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
         if (!course) return errorPage(res, "Course not found!");
 
         setPictureAndPriceProperties(course);
+        
+        // Change "courses.video_url" into embed version
+        course.video_url = course.video_url.replace("watch?v=", "embed/");
 
         // Fetch all notes related to the course for the current user
         db.all("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
@@ -154,7 +169,7 @@ router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
 });
 
 // Route to add a new note
-router.post("/course/:courseId/notes", isLoggedIn, (req, res) => {
+router.post("/course/:courseId/notes", (req, res) => {
     const userId = req.session.user.id;
     const courseId = req.params.courseId;
     const content = req.body.content.trim(); // Trim to avoid empty content issues
@@ -197,7 +212,7 @@ router.post("/course/:courseId/notes/:noteId/delete", isLoggedIn, (req, res) => 
     });
 });
 
-// TODO Courses: Save notes
+// Courses: Save notes
 router.post("/course/:courseId/notes", isLoggedIn, (req, res) => {
     let userId = req.session.user.id;
     let courseId = req.params.courseId;
@@ -313,9 +328,24 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
     response.redirect("/user/profile");
 });
 
+// Route to update time spent on a course
+router.post("/course/:courseId/update-time", (req, res) => {
+    const userId = req.session.user.id;
+    const courseId = req.params.courseId;
+    const { timeSpent } = req.body; 
+
+    const query = "UPDATE enrollments SET time_spent = time_spent + ? WHERE user_id = ? AND course_id = ?";
+    db.run(query, [timeSpent, userId, courseId], (err) => {
+        if (err) return errorPage(res, "Database error while updating time spent!");
+
+        res.json({ success: true }); 
+    });
+});
+
 // Handle invalid URLs (eg. "/courses/*")
 router.get("/*", (request, response) => {
     return response.redirect("/courses?error=invalid_url");
 });
+
 
 module.exports = router;

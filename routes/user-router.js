@@ -61,43 +61,123 @@ function db_forProfile_getCreatedCourses(request, response, next) {
 }
 
 // Profile
-router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (request, response) => {
-    if (request.session.user.role != "student" && request.session.user.role != "educator") {
-        return errorPage(response, 'You have no "role", unable to display profile!');
+router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (req, res) => {
+        const userId = req.session.user.id;
+
+        if (req.session.user.role !== "student" && req.session.user.role !== "educator") {
+            return errorPage(res, 'You have no "role", unable to display profile!');
+        }
+
+        // Fetch recent activities (notes and enrollments)
+        const activityQuery = `
+            SELECT 'Note Added' AS activityType, content AS description, created_at AS activityDate 
+            FROM notes 
+            WHERE user_id = ? 
+            UNION 
+            SELECT 'Enrolled in Course' AS activityType, courses.name AS description, enrollment_date AS activityDate 
+            FROM enrollments 
+            JOIN courses ON enrollments.course_id = courses.id 
+            WHERE enrollments.user_id = ? 
+            ORDER BY activityDate DESC 
+            LIMIT 5`;
+
+        db.all(activityQuery, [userId, userId], (err, recentActivities) => {
+            if (err) return errorPage(res, "Database error when retrieving recent activities!");
+
+            // Fetch user profile information
+            db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
+                if (err) return errorPage(res, "Database error when retrieving profile details!");
+
+                // For students: Fetch enrolled courses and progress
+                if (req.session.user.role === "student") {
+                    db.all(
+                        `
+                        SELECT courses.*, enrollments.progress 
+                        FROM courses 
+                        JOIN enrollments ON courses.id = enrollments.course_id 
+                        WHERE enrollments.user_id = ?
+                        `,
+                        [userId],
+                        (err, enrolledCourses) => {
+                            if (err) return errorPage(res, "Database error when retrieving enrolled courses!");
+
+                            profile.enrolledCourses = enrolledCourses || [];
+
+                            profile.enrolledCourses.forEach((course) => {
+                                setPictureAndPriceProperties(course);
+                            });
+
+                            // Render the student profile with course progress and recent activities
+                            return res.render("user/profile.ejs", {
+                                pageName: "Student Profile",
+                                user: req.session.user,
+                                profile: profile,
+                                recentActivities: recentActivities || [], // Pass recent activities to the template
+                            });
+                        }
+                    );
+                } else if (req.session.user.role === "educator") {
+                    // For educators: Fetch created courses
+                    db.all(
+                        `
+                        SELECT * FROM courses 
+                        WHERE creator_id = ?
+                        `,
+                        [userId],
+                        (err, createdCourses) => {
+                            if (err) return errorPage(res, "Database error when retrieving created courses!");
+
+                            profile.createdCourses = createdCourses || [];
+
+                            profile.createdCourses.forEach((course) => {
+                                setPictureAndPriceProperties(course);
+                            });
+
+                            // Render the educator profile with created courses and recent activities
+                            return res.render("user/profile.ejs", {
+                                pageName: "Educator Profile",
+                                user: req.session.user,
+                                profile: profile,
+                                recentActivities: recentActivities || [], // Pass recent activities to the template
+                            });
+                        }
+                    );
+                }
+            });
+        });
     }
+);
 
-    request.session.user.enrolledCourses.forEach((enrolledCourse) => {
-        setPictureAndPriceProperties(enrolledCourse);
-    });
-
-    return response.render("user/profile.ejs", {
-        pageName: "Profile",
-        user: request.session.user,
-    });
-});
-
-router.get("/profile/edit", (request, response) => {
-    return response.render("user/profile-edit.ejs", {
+// Route to edit the user profile
+router.get("/profile/edit", (req, res) => {
+    return res.render("user/profile-edit.ejs", {
         pageName: "Edit Profile",
-        user: request.session.user,
+        user: req.session.user,
     });
 });
 
-router.post("/profile/update", (request, response) => {
-    let query = `
+// Route to handle profile updates
+router.post("/profile/update", (req, res) => {
+    const { displayName, bio, introduction, profilePicture } = req.body;
+
+    const query = `
         UPDATE profiles
         SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
         WHERE user_id = ?`;
-    let { displayName, bio, introduction, profilePicture } = request.body;
-    db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.id], (err) => {
-        if (err) return errorPage(response, "Database error 4!");
-        request.session.user.displayName = displayName;
-        request.session.user.bio = bio;
-        request.session.user.introduction = introduction;
-        request.session.user.profilePicture = profilePicture;
-        return response.redirect("/user/profile");
+    
+    db.run(query, [displayName, bio, introduction, profilePicture, req.session.user.id], (err) => {
+        if (err) return errorPage(res, "Database error while updating profile!");
+
+        // Update session information
+        req.session.user.displayName = displayName;
+        req.session.user.bio = bio;
+        req.session.user.introduction = introduction;
+        req.session.user.profilePicture = profilePicture;
+
+        return res.redirect("/user/profile");
     });
 });
+
 
 // Register: Ensure user is not logged in
 router.get("/register", isNotLoggedIn, (request, response) => {
@@ -192,9 +272,24 @@ let upload = multer({ storage: storage });
 
 // Route to show form to add a new course
 router.get("/add-course", isLoggedIn, (req, res) => {
-    res.render("user/add_course.ejs", {
+    return res.render("user/add_course.ejs", {
         pageName: "Add New Course",
         user: req.session.user,
+        formInputStored: {}
+    });
+});
+
+// Route to show form to add a new course TODO
+router.get("/add-course/edit/:courseId", isLoggedIn, (req, res) => {
+    db.get("SELECT * FROM courses WHERE id = ?", [req.params.courseId], (err, course) => {
+        if (err) return errorPage(res, "Database error when retrieving course details!");
+        if (!course) return errorPage(res, "Course not found!");
+        console.log(req.session)
+        return res.render("user/add_course.ejs", {
+            pageName: "Edit Course",
+            user: req.session.user,
+            formInputStored: course
+        });
     });
 });
 
@@ -209,7 +304,7 @@ router.post("/add-course", isLoggedIn, upload.single("picture"), (req, res) => {
     let params = [req.session.user.id, name, description, parseFloat(price), video_url, picture];
     db.run(query, params, (err) => {
         if (err) return errorPage(res, "Database error while adding the course!");
-        res.redirect("/user/profile");
+        return res.redirect("/user/profile");
     });
 });
 

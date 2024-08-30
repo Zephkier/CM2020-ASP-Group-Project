@@ -66,51 +66,75 @@
                 </div>
 
                 <!-- Student's Enrolled Courses -->
-                <%if (user.role == "student") { %>
-                <div class="enrolled-courses">
-                    <h2>Your Enrolled Courses</h2>
-                    <%if (user.enrolledCourses.length > 0) { %>
-                    <ul>
-                        <%user.enrolledCourses.forEach(course => { %>
-                        <a href="/courses/course/<%= course.id %>/learn" class="course-link">
-                            <li class="course-item">
-                                <div class="course-info">
-                                    <h4><%= course.name %></h4>
-                                    <p><%= course.description %></p>
-                                </div>
-                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
-                            </li>
-                        </a>
-                        <%}) %>
-                    </ul>
-                    <%} else { %>
-                    <p>You have not enrolled into any courses yet.</p>
-                    <%} %>
+                <% if (user.role == "student") { %>
+                    <div class="enrolled-courses">
+                        <h2>Your Enrolled Courses</h2>
+                        <% if (profile.enrolledCourses.length > 0) { %>
+                        <ul>
+                            <% profile.enrolledCourses.forEach(course => { %>
+                            <a href="/courses/course/<%= course.id %>/learn" class="course-link">
+                                <li class="course-item">
+                                    <div class="course-info">
+                                        <h4><%= course.name %></h4>
+                                        <p><%= course.description %></p>
+                                        <!-- Display course progress -->
+                                        <p>Progress: <%= course.progress %> % completed</p>
+                                    </div>
+                                    <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                                </li>
+                            </a>
+                            <% }) %>
+                        </ul>
+                        <% } else { %>
+                        <p>You have not enrolled in any courses yet.</p>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <!-- New Row for Recent Activity -->
+                <div class="profile-row">
+                    <!-- Recent Activity Section -->
+                    <% if (user.role == "student") { %>
+                        <div class="recent-activity">
+                            <h2>Recent Activity</h2>
+                            <% if (recentActivities.length > 0) { %>
+                                <ul>
+                                    <% recentActivities.forEach(activity => { %>
+                                        <li class="activity-item">
+                                            <p><strong><%= activity.activityType %>:</strong> <%= activity.description %></p>
+                                            <p>Date: <%= new Date(activity.activityDate).toLocaleString() %></p>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } else { %>
+                                <p>No recent activities. Start learning to see your progress here!</p>
+                            <% } %>
+                        </div>
+                    <% } %>
                 </div>
-                <%} %>
 
                 <!-- Educator's Dashboard -->
                 <%if (user.role == "educator") { %>
-                <div class="enrolled-courses">
-                    <h2>Your Dashboard</h2>
-                    <button class="btn btn-primary" onclick="window.location.href='/user/add-course'">Add New Course</button>
-                    <%if (user.createdCourses.length > 0) { %>
-                    <ul>
-                        <%user.createdCourses.forEach(course => { %>
-                        <a href="#" class="course-link">
-                            <li class="course-item">
-                                <div class="course-info">
-                                    <h4><%= course.name %></h4>
-                                    <p><%= course.description %></p>
-                                    <p>Students enrolled: <%= course.enrollCount %></p>
-                                </div>
-                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
-                            </li>
-                        </a>
-                        <%}) %>
-                    </ul>
-                    <%} %>
-                </div>
+                    <div class="enrolled-courses">
+                        <h2>Your Dashboard</h2>
+                        <button class="btn btn-primary" onclick="window.location.href='/user/add-course'">Add New Course</button>
+                        <%if (user.createdCourses.length > 0) { %>
+                        <ul>
+                            <%user.createdCourses.forEach(course => { %>
+                            <a href="/user/add-course/edit/<%= course.id %>" class="course-link">
+                                <li class="course-item">
+                                    <div class="course-info">
+                                        <h4><%= course.name %></h4>
+                                        <p><%= course.description %></p>
+                                        <p>Students enrolled: <%= course.enrollCount %></p>
+                                    </div>
+                                    <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                                </li>
+                            </a>
+                            <%}) %>
+                        </ul>
+                        <%} %>
+                    </div>
                 <%} %>
             </div>
 
