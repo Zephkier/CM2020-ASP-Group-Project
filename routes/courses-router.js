@@ -147,7 +147,7 @@ router.get("/course/:courseId/learn", isLoggedIn, db_isEnrolledIntoCourse, (req,
         if (!course) return errorPage(res, "Course not found!");
 
         setPictureAndPriceProperties(course);
-        
+
         // Change "courses.video_url" into embed version
         course.video_url = course.video_url.replace("watch?v=", "embed/");
 
@@ -332,13 +332,13 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 router.post("/course/:courseId/update-time", (req, res) => {
     const userId = req.session.user.id;
     const courseId = req.params.courseId;
-    const { timeSpent } = req.body; 
+    const { timeSpent } = req.body;
 
     const query = "UPDATE enrollments SET time_spent = time_spent + ? WHERE user_id = ? AND course_id = ?";
     db.run(query, [timeSpent, userId, courseId], (err) => {
         if (err) return errorPage(res, "Database error while updating time spent!");
 
-        res.json({ success: true }); 
+        res.json({ success: true });
     });
 });
 
@@ -346,6 +346,5 @@ router.post("/course/:courseId/update-time", (req, res) => {
 router.get("/*", (request, response) => {
     return response.redirect("/courses?error=invalid_url");
 });
-
 
 module.exports = router;

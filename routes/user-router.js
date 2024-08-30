@@ -62,14 +62,14 @@ function db_forProfile_getCreatedCourses(request, response, next) {
 
 // Profile
 router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (req, res) => {
-        const userId = req.session.user.id;
+    const userId = req.session.user.id;
 
-        if (req.session.user.role !== "student" && req.session.user.role !== "educator") {
-            return errorPage(res, 'You have no "role", unable to display profile!');
-        }
+    if (req.session.user.role !== "student" && req.session.user.role !== "educator") {
+        return errorPage(res, 'You have no "role", unable to display profile!');
+    }
 
-        // Fetch recent activities (notes and enrollments)
-        const activityQuery = `
+    // Fetch recent activities (notes and enrollments)
+    const activityQuery = `
             SELECT 'Note Added' AS activityType, content AS description, created_at AS activityDate 
             FROM notes 
             WHERE user_id = ? 
@@ -81,72 +81,71 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfi
             ORDER BY activityDate DESC 
             LIMIT 5`;
 
-        db.all(activityQuery, [userId, userId], (err, recentActivities) => {
-            if (err) return errorPage(res, "Database error when retrieving recent activities!");
+    db.all(activityQuery, [userId, userId], (err, recentActivities) => {
+        if (err) return errorPage(res, "Database error when retrieving recent activities!");
 
-            // Fetch user profile information
-            db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
-                if (err) return errorPage(res, "Database error when retrieving profile details!");
+        // Fetch user profile information
+        db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
+            if (err) return errorPage(res, "Database error when retrieving profile details!");
 
-                // For students: Fetch enrolled courses and progress
-                if (req.session.user.role === "student") {
-                    db.all(
-                        `
+            // For students: Fetch enrolled courses and progress
+            if (req.session.user.role === "student") {
+                db.all(
+                    `
                         SELECT courses.*, enrollments.progress 
                         FROM courses 
                         JOIN enrollments ON courses.id = enrollments.course_id 
                         WHERE enrollments.user_id = ?
                         `,
-                        [userId],
-                        (err, enrolledCourses) => {
-                            if (err) return errorPage(res, "Database error when retrieving enrolled courses!");
+                    [userId],
+                    (err, enrolledCourses) => {
+                        if (err) return errorPage(res, "Database error when retrieving enrolled courses!");
 
-                            profile.enrolledCourses = enrolledCourses || [];
+                        profile.enrolledCourses = enrolledCourses || [];
 
-                            profile.enrolledCourses.forEach((course) => {
-                                setPictureAndPriceProperties(course);
-                            });
+                        profile.enrolledCourses.forEach((course) => {
+                            setPictureAndPriceProperties(course);
+                        });
 
-                            // Render the student profile with course progress and recent activities
-                            return res.render("user/profile.ejs", {
-                                pageName: "Student Profile",
-                                user: req.session.user,
-                                profile: profile,
-                                recentActivities: recentActivities || [], // Pass recent activities to the template
-                            });
-                        }
-                    );
-                } else if (req.session.user.role === "educator") {
-                    // For educators: Fetch created courses
-                    db.all(
-                        `
+                        // Render the student profile with course progress and recent activities
+                        return res.render("user/profile.ejs", {
+                            pageName: "Student Profile",
+                            user: req.session.user,
+                            profile: profile,
+                            recentActivities: recentActivities || [], // Pass recent activities to the template
+                        });
+                    }
+                );
+            } else if (req.session.user.role === "educator") {
+                // For educators: Fetch created courses
+                db.all(
+                    `
                         SELECT * FROM courses 
                         WHERE creator_id = ?
                         `,
-                        [userId],
-                        (err, createdCourses) => {
-                            if (err) return errorPage(res, "Database error when retrieving created courses!");
+                    [userId],
+                    (err, createdCourses) => {
+                        if (err) return errorPage(res, "Database error when retrieving created courses!");
 
-                            profile.createdCourses = createdCourses || [];
+                        profile.createdCourses = createdCourses || [];
 
-                            profile.createdCourses.forEach((course) => {
-                                setPictureAndPriceProperties(course);
-                            });
+                        profile.createdCourses.forEach((course) => {
+                            setPictureAndPriceProperties(course);
+                        });
 
-                            // Render the educator profile with created courses and recent activities
-                            return res.render("user/profile.ejs", {
-                                pageName: "Educator Profile",
-                                user: req.session.user,
-                                profile: profile,
-                                recentActivities: recentActivities || [], // Pass recent activities to the template
-                            });
-                        }
-                    );
-                }
-            });
+                        // Render the educator profile with created courses and recent activities
+                        return res.render("user/profile.ejs", {
+                            pageName: "Educator Profile",
+                            user: req.session.user,
+                            profile: profile,
+                            recentActivities: recentActivities || [], // Pass recent activities to the template
+                        });
+                    }
+                );
+            }
         });
-    }
-);
+    });
+});
 
 // Route to edit the user profile
 router.get("/profile/edit", (req, res) => {
@@ -164,7 +163,7 @@ router.post("/profile/update", (req, res) => {
         UPDATE profiles
         SET displayName = ?, bio = ?, introduction = ?, profilePicture = ?
         WHERE user_id = ?`;
-    
+
     db.run(query, [displayName, bio, introduction, profilePicture, req.session.user.id], (err) => {
         if (err) return errorPage(res, "Database error while updating profile!");
 
@@ -177,7 +176,6 @@ router.post("/profile/update", (req, res) => {
         return res.redirect("/user/profile");
     });
 });
-
 
 // Register: Ensure user is not logged in
 router.get("/register", isNotLoggedIn, (request, response) => {
@@ -275,7 +273,7 @@ router.get("/add-course", isLoggedIn, (req, res) => {
     return res.render("user/add_course.ejs", {
         pageName: "Add New Course",
         user: req.session.user,
-        formInputStored: {}
+        formInputStored: {},
     });
 });
 
@@ -284,11 +282,11 @@ router.get("/add-course/edit/:courseId", isLoggedIn, (req, res) => {
     db.get("SELECT * FROM courses WHERE id = ?", [req.params.courseId], (err, course) => {
         if (err) return errorPage(res, "Database error when retrieving course details!");
         if (!course) return errorPage(res, "Course not found!");
-        console.log(req.session)
+        console.log(req.session);
         return res.render("user/add_course.ejs", {
             pageName: "Edit Course",
             user: req.session.user,
-            formInputStored: course
+            formInputStored: course,
         });
     });
 });

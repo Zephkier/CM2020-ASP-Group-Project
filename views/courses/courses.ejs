@@ -39,25 +39,22 @@
 
                 <div class="container courses__container">
                     <%courses.forEach(course => { %>
-                        <a href="/courses/course/<%= course.id %>">
-                            <article class="course">
-                                <div class="course__image">
-                                    <img src="/images/courses/<%= course.picture %>" />
-                                </div>
-                                <div class="course__info">
-                                    <h4>Learn <%= course.name %></h4>
-                                    <p class="course__description"><%= course.description %></p>
-                                    <p class="course__enroll">
-                                        <%if (course.isEnrolled) { %>
-                                        You are enrolled!<br>
-                                        <%} else { %>
-                                        Price: $<%= course.price %><br>
-                                        <%} %>
-                                        Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
-                                    </p>
-                                </div>
-                            </article>
-                        </a>
+                    <a href="/courses/course/<%= course.id %>">
+                        <article class="course">
+                            <div class="course__image">
+                                <img src="/images/courses/<%= course.picture %>" />
+                            </div>
+                            <div class="course__info">
+                                <h4>Learn <%= course.name %></h4>
+                                <p class="course__description"><%= course.description %></p>
+                                <p class="course__enroll">
+                                    <%if (course.isEnrolled) { %> You are enrolled!<br />
+                                    <%} else { %> Price: $<%= course.price %><br />
+                                    <%} %> Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
+                                </p>
+                            </div>
+                        </article>
+                    </a>
                     <%}) %>
                 </div>
             </section>
