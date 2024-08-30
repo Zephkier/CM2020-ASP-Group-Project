@@ -136,12 +136,12 @@ router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
 
         setPictureAndPriceProperties(course);
 
-        // Fetch notes related to the course for the current user
-        db.get("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
+        // Fetch all notes related to the course for the current user
+        db.all("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
             if (err) return errorPage(res, "Database error when retrieving notes!");
 
-            // Assign an empty object if no notes are found
-            course.notes = notes || { content: "" }; // Default to an empty string if notes do not exist
+            // Assign notes array to the course
+            course.notes = notes || []; // Default to an empty array if no notes are found
 
             // Render the course detail page with the course and notes data
             res.render("courses/course_detail.ejs", {
@@ -150,6 +150,50 @@ router.get("/course/:courseId/learn", isLoggedIn, (req, res) => {
                 user: req.session.user,
             });
         });
+    });
+});
+
+// Route to add a new note
+router.post("/course/:courseId/notes", isLoggedIn, (req, res) => {
+    const userId = req.session.user.id;
+    const courseId = req.params.courseId;
+    const content = req.body.content.trim(); // Trim to avoid empty content issues
+
+    // Check if the content is not empty
+    if (!content) {
+        return res.redirect(`/courses/course/${courseId}/learn?error=empty_note`);
+    }
+
+    const insertQuery = "INSERT INTO notes (user_id, course_id, content) VALUES (?, ?, ?)";
+    db.run(insertQuery, [userId, courseId, content], (err) => {
+        if (err) {
+            console.error("Database error saving note:", err); // Log the error
+            return errorPage(res, "Database error saving note!");
+        }
+        res.redirect(`/courses/course/${courseId}/learn`);
+    });
+});
+
+// Route to edit a note
+router.post("/course/:courseId/notes/:noteId/edit", isLoggedIn, (req, res) => {
+    const { noteId, courseId } = req.params;
+    const { content } = req.body;
+
+    const query = "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+    db.run(query, [content, noteId], (err) => {
+        if (err) return errorPage(res, "Database error updating note!");
+        res.redirect(`/courses/course/${courseId}/learn`);
+    });
+});
+
+// Route to delete a note
+router.post("/course/:courseId/notes/:noteId/delete", isLoggedIn, (req, res) => {
+    const { noteId, courseId } = req.params;
+
+    const query = "DELETE FROM notes WHERE id = ?";
+    db.run(query, [noteId], (err) => {
+        if (err) return errorPage(res, "Database error deleting note!");
+        res.redirect(`/courses/course/${courseId}/learn`);
     });
 });
 

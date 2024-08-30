@@ -1,62 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + separator + appName %></title>
-        <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="/css/course_detail.css" />
-        <style>
-            body {
-                background-image: url("/images/bg-texture.png");
-            }
-            .notes-section { margin-top: 20px; }
-            .saved-notes { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px; }
-        </style>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageName + separator + appName %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/course_detail.css" />
+    <style>
+        body {
+            background-image: url("/images/bg-texture.png");
+        }
+        .notes-section { margin-top: 20px; }
+        .saved-notes { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px; }
+        .note-item { margin-bottom: 10px; }
+    </style>
+</head>
 
-    <body>
-        <%- include("../partials/navbar.ejs") %>
+<body>
+    <%- include("../partials/navbar.ejs") %>
 
-        <main class="course-detail-main">
-            <div class="course-detail-container">
-                <h1><%= course.name %></h1>
-                <p><%= course.description %></p>
-                
-                <!-- Embedded YouTube Video -->
-                <div class="video-container">
-                    <iframe 
-                        width="560" 
-                        height="315" 
-                        src="<%= course.video_url %>" 
-                        title="YouTube video player" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
+    <main class="course-detail-main">
+        <div class="course-detail-container">
+            <h1><%= course.name %></h1>
+            <p><%= course.description %></p>
+            
+            <!-- Embedded YouTube Video -->
+            <div class="video-container">
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="<%= course.video_url %>" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
             <!-- Notes Section -->
             <div class="notes-section">
                 <h2>Your Notes</h2>
                 <form action="/courses/course/<%= course.id %>/notes" method="POST">
-                    <!-- Use a conditional operator to check if notes exist before accessing content -->
-                    <textarea name="content" rows="4" placeholder="Add your notes here..."><%= course.notes && course.notes.content ? course.notes.content : '' %></textarea>
-                    <button type="submit" class="btn btn-primary">Save Note</button>
+                    <textarea name="content" rows="4" placeholder="Add your notes here..."></textarea>
+                    <button type="submit" class="btn btn-primary">Add Note</button>
                 </form>
 
-                <% if (course.notes && course.notes.content) { %>
-                <div class="saved-notes">
-                    <h3>Saved Note:</h3>
-                    <p><%= course.notes.content %></p>
-                </div>
+                <% if (course.notes && course.notes.length > 0) { %>
+                    <div class="saved-notes">
+                        <h3>Saved Notes:</h3>
+                        <% course.notes.forEach(note => { %>
+                            <div class="note-item">
+                                <p><%= note.content %></p>
+                                <!-- Form to Edit Note -->
+                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
+                                    <textarea name="content" rows="2"><%= note.content %></textarea>
+                                    <button type="submit" class="btn btn-secondary">Edit Note</button>
+                                </form>
+                                <!-- Form to Delete Note -->
+                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger">Delete Note</button>
+                                </form>
+                            </div>
+                        <% }) %>
+                    </div>
                 <% } else { %>
-                <p>No notes added yet. Start by adding your notes!</p>
+                    <p>No notes added yet. Start by adding your notes!</p>
                 <% } %>
             </div>
+        </div>
+    </main>
 
-            </div>
-        </main>
-
-        <%- include("../partials/footer.ejs") %>
-    </body>
+    <%- include("../partials/footer.ejs") %>
+</body>
 </html>
