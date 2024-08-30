@@ -1,5 +1,5 @@
 const { db } = require("./db.js"); // For any database queries
-const fs = require("fs"); // For "returnFilenameWithType()"
+const fs = require("fs"); // For "setPictureProperty()"
 
 /**
  * Redirect to `_error.ejs` file with custom error message.
@@ -33,6 +33,11 @@ function isNotLoggedIn(request, response, next) {
     return response.redirect("/user/profile?error=already_logged_in");
 }
 
+// TODO JSDoc string
+function setPriceProperty(course) {
+    course.price = parseFloat(course.price).toFixed(2);
+}
+
 /**
  * Determine if picture filename uses `.jpg` or `.png`, then return existing one.
  *
@@ -42,7 +47,7 @@ function isNotLoggedIn(request, response, next) {
  * @param {string} filename The target filename itself, excluding its file type!
  * @returns The filename with either `.jpg` or `.png` at the end.
  */
-function returnFilenameWithType(pathToPicture, filename) {
+function setPictureProperty(pathToPicture, filename) {
     if (fs.existsSync(`${pathToPicture}${filename}`)) return filename;
     if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
     if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
@@ -61,11 +66,10 @@ function returnFilenameWithType(pathToPicture, filename) {
  *
  * @param {object} course The object after querying database.
  */
+// TODO remove
 function setPictureAndPriceProperties(course) {
-    if (!course.picture) {
-        course.picture = returnFilenameWithType("./public/images/courses/", course.name);
-    }
-    course.price = parseFloat(course.price).toFixed(2);
+    course.picture = setPictureProperty("./public/images/courses/", course.name);
+    setPriceProperty(course);
 }
 
 /**
@@ -236,8 +240,8 @@ module.exports = {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    returnFilenameWithType,
-    setPictureAndPriceProperties,
+    setPriceProperty,
+    setPictureProperty,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,

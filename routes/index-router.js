@@ -1,16 +1,24 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const { errorPage, setPictureAndPriceProperties } = require("../public/helper.js");
+const {
+    // Format
+    errorPage,
+    setPriceProperty,
+    setPictureProperty,
+} = require("../public/helper.js");
 
 // Initialise router
 const router = express.Router();
 
-// Home
+// Note that all these URLs have no prefix!
+
+// Home (Main)
 router.get("/", (request, response) => {
     db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
-        if (err) return errorPage(response, "Database error when retrieving top few courses!");
-        if (!topCourses) return errorPage(response, "No courses found!");
+        if (err) return errorPage(response, "Error retrieving top courses!");
+        if (!topCourses) return errorPage(response, "No top courses!");
+
         let categories = [
             { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
             { iconscoutName: "uil uil-mobile-android", name: "Mobile App Development", description: "Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter." },
@@ -19,6 +27,7 @@ router.get("/", (request, response) => {
             { iconscoutName: "uil uil-lock-access", name: "Cybersecurity", description: "Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices." },
             { iconscoutName: "uil uil-cloud-database-tree", name: "Cloud Computing", description: "Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud." },
         ];
+
         let faqs = [
             { question: "How do I choose the right course for my needs?", answer: "We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice." },
             { question: "What is the course format?", answer: "Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials." },
@@ -31,6 +40,7 @@ router.get("/", (request, response) => {
             { question: "How do I access the course materials?", answer: "Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection." },
             { question: "Do you offer group discounts or corporate training?", answer: "Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information." },
         ];
+
         let testimonials = [
             {
                 name: "Diana Ayi",
@@ -68,11 +78,14 @@ router.get("/", (request, response) => {
                 quote: "As an instructor, I highly recommend this platform. It offers great tools for learners, and I was able to enrich my teaching materials by taking courses here myself.",
             },
         ];
+
         testimonials.forEach((testimonial) => {
             testimonial.picture = testimonial.name + ".jpg";
         });
+
         topCourses.forEach((topCourse) => {
-            setPictureAndPriceProperties(topCourse);
+            setPriceProperty(topCourse);
+            setPictureProperty(topCourse);
         });
 
         return response.render("index.ejs", {
@@ -163,15 +176,48 @@ router.get("/contact", (request, response) => {
     });
 });
 
+// Courses
+// See courses-router.js
+
+// Cart
+router.get("/cart", (request, response) => {
+    let totalPrice = 0;
+    let cart = request.session.cart || [];
+    cart.forEach((item) => {
+        setPriceProperty(item);
+        setPictureProperty("./public/images/courses/", item.name);
+        totalPrice += parseFloat(item.price);
+    });
+    totalPrice = parseFloat(totalPrice).toFixed(2);
+
+    return response.render("cart.ejs", {
+        pageName: "Cart",
+        cart: cart,
+        totalPrice: totalPrice,
+    });
+});
+
+router.post("/cart/remove", (request, response) => {
+    let cart = request.session.cart || [];
+
+    // Filter "<input name='courseId'>" and update session cart
+    cart = cart.filter((item) => item.id !== parseInt(request.body.courseId, 10));
+    request.session.cart = cart;
+
+    return response.redirect("/cart");
+});
+
 // Search
 router.get("/search", (request, response) => {
-    let query = request.query.q;
-    if (!query) return response.redirect("/");
+    // let query = request.query.q;
+    // if (!query) return response.redirect("/");
+    // return response.render("search.ejs", {
+    //     pageName: "Search",
+    //     query: query,
+    // });
 
-    return response.render("search.ejs", {
-        pageName: "Search",
-        query: query,
-    });
+    // Unsure on how to implement search...
+    return response.redirect("https://www.google.com");
 });
 
 module.exports = router;

@@ -56,7 +56,7 @@ function db_forProfile_getCreatedCourses(request, response, next) {
         if (err) return errorPage(response, "Database error when retrieving your created courses!");
         if (!createdCourses) return errorPage(response, "Something went wrong! Unable to load your created courses.");
         request.session.user.createdCourses = createdCourses || [];
-        return next();
+        next();
     });
 }
 

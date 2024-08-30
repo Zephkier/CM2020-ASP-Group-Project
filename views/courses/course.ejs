@@ -50,7 +50,7 @@
                         </ul>
 
                         <div class="course-detail__actions">
-                            <form action="/courses/course/<%= course.id %>/enroll" method="POST">
+                            <form action="/courses/<%= course.id %>/enroll" method="POST">
                                 <input type="hidden" name="courseId" value="<%= course.id %>" />
                                 <%if (course.isEnrolled) { %>
                                 <button type="submit" class="btn btn-secondary" disabled>You are enrolled!</button>

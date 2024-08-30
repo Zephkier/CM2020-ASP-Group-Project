@@ -7,14 +7,14 @@
             <li><a href="/contact">Contact</a></li>
             <li><a href="/courses">Courses</a></li>
             <li>
-                <a href="/courses/cart"><i class="uil uil-shopping-cart" style="font-size: 1.5rem"></i></a>
+                <a href="/cart"><i class="uil uil-shopping-cart" style="font-size: 1.5rem"></i></a>
             </li>
 
             <!-- Search text box -->
             <li>
-                <!-- <form method="GET" action="/search" id="search-form" class="search-container"> -->
+                <!-- <form action="/search" method="GET" id="search-form" class="search-container"> -->
                 <!-- lol jk -->
-                <form method="GET" action="https://www.google.com/search" id="search-form" class="search-container">
+                <form action="https://www.google.com/search" method="GET" id="search-form" class="search-container">
                     <a href="#" id="search-icon"><i class="uil uil-search search-icon"></i></a>
                     <input name="q" type="text" id="search-box" placeholder="Search..." />
                 </form>
@@ -47,7 +47,8 @@
         const searchBox = document.getElementById("search-box");
         const query = searchBox.value.trim(); // Get the trimmed search query
         if (!query) searchBox.focus(); // Focus on the input if empty
-        const formAction = "/search?q=" + encodeURIComponent(query); // Append the query to the search form action
+        // const formAction = "/search?q=" + encodeURIComponent(query); // Append the query to the search form action
+        const formAction = "https://www.google.com/search?q=" + encodeURIComponent(query); // Append the query to the Google search form action
         window.location.href = formAction; // Redirect to the search URL
     });
 
