@@ -113,16 +113,20 @@
                 <%if (user.role == "educator") { %>
                 <div class="enrolled-courses">
                     <h2>Your Dashboard</h2>
-                    <button class="btn btn-primary" onclick="window.location.href='/user/add-course'">Add New Course</button>
+                    <button class="btn btn-primary" onclick="window.location.href='/educator/add/course'">Add New Course</button>
                     <%if (user.createdCourses.length > 0) { %>
                     <ul>
                         <%user.createdCourses.forEach(course => { %>
-                        <a href="/educator/edit/<%= course.id %>" class="course-link">
+                        <a href="/educator/edit/course/<%= course.id %>" class="course-link">
                             <li class="course-item">
                                 <div class="course-info">
                                     <h4><%= course.name %></h4>
                                     <p><%= course.description %></p>
-                                    <p>Students enrolled: <%= course.enrollCount %></p>
+                                    <p>
+                                        Price: $<%= course.price %>
+                                        <br />
+                                        Students enrolled: <%= course.enrollCount %>
+                                    </p>
                                 </div>
                                 <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
                             </li>

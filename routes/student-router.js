@@ -5,19 +5,13 @@ const {
     // Format
     errorPage,
     isLoggedIn,
-    isNotLoggedIn,
     hasRoles,
     setPriceProperty,
     setPictureProperty,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,
-    db_isExistingUser,
     db_isEnrolledIntoCourse,
-    db_forProfile_getProfileInfo,
-    db_forProfile_getEnrolledCourses,
-    db_forProfile_getCreatedCourses,
-    db_isUnique_usernameAndEmail,
 } = require("../public/helper.js");
 
 // Initialise router

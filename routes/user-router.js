@@ -74,7 +74,8 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfi
                     SELECT courses.*, enrollments.progress 
                     FROM courses JOIN enrollments
                     ON courses.id = enrollments.course_id 
-                    WHERE enrollments.user_id = ?`;
+                    WHERE enrollments.user_id = ?
+                    ORDER BY enrollments.enrollment_date DESC`;
                 db.all(query, [userId], (err, enrolledCourses) => {
                     if (err) return errorPage(response, "Error retrieving enrolled courses!");
                     if (!enrolledCourses) return errorPage(response, "You have no enrolled courses!");
@@ -97,9 +98,11 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfi
             // TEST helper functions makes this redundant
             if (request.session.user.role == "educator") {
                 // Educators = created courses
-                db.all("SELECT * FROM courses WHERE creator_id = ?", [userId], (err, createdCourses) => {
+                db.all("SELECT * FROM courses WHERE creator_id = ? ORDER BY courses.id DESC", [userId], (err, createdCourses) => {
                     if (err) return errorPage(response, "Error retrieving created courses!");
                     if (!createdCourses) return errorPage(response, "You have no created courses!");
+
+                    console.log(createdCourses); // FIXME not in DESC order
 
                     profile.createdCourses = createdCourses || [];
                     profile.createdCourses.forEach((course) => {
