@@ -44,7 +44,7 @@ router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request,
 });
 
 // Profile
-router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfile_getCreatedCourses, (request, response) => {
+router.get("/profile", isLoggedIn, (request, response) => {
     let userId = request.session.user.id;
 
     // Fetch recent activities (notes and enrollments)
@@ -67,7 +67,6 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfi
             if (err) return errorPage(response, "Error retrieving profile details!");
             if (!profile) return errorPage(response, "Profile not found!");
 
-            // TEST helper functions makes this redundant
             // Students = enrolled courses and its progress
             if (request.session.user.role == "student") {
                 query = `
@@ -95,14 +94,11 @@ router.get("/profile", isLoggedIn, db_forProfile_getEnrolledCourses, db_forProfi
                 });
             }
 
-            // TEST helper functions makes this redundant
+            // Educators = created courses
             if (request.session.user.role == "educator") {
-                // Educators = created courses
                 db.all("SELECT * FROM courses WHERE creator_id = ? ORDER BY courses.id DESC", [userId], (err, createdCourses) => {
                     if (err) return errorPage(response, "Error retrieving created courses!");
                     if (!createdCourses) return errorPage(response, "You have no created courses!");
-
-                    console.log(createdCourses); // FIXME not in DESC order
 
                     profile.createdCourses = createdCourses || [];
                     profile.createdCourses.forEach((course) => {

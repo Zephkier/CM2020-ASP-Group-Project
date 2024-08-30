@@ -114,9 +114,9 @@
                 <div class="enrolled-courses">
                     <h2>Your Dashboard</h2>
                     <button class="btn btn-primary" onclick="window.location.href='/educator/add/course'">Add New Course</button>
-                    <%if (user.createdCourses.length > 0) { %>
+                    <%if (profile.createdCourses.length > 0) { %>
                     <ul>
-                        <%user.createdCourses.forEach(course => { %>
+                        <%profile.createdCourses.forEach(course => { %>
                         <a href="/educator/edit/course/<%= course.id %>" class="course-link">
                             <li class="course-item">
                                 <div class="course-info">
