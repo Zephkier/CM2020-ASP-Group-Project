@@ -7,7 +7,7 @@ const fs = require("fs"); // For "setPictureProperty()"
  * @param {string} errorMessage The message to inform user. For security reasons, do not reveal explicit details!
  */
 function errorPage(response, errorMessage) {
-    response.render("_error.ejs", { errorMessage: errorMessage });
+    response.render("partials/error.ejs", { errorMessage: errorMessage });
 }
 
 /**
@@ -31,6 +31,12 @@ function isLoggedIn(request, response, next) {
 function isNotLoggedIn(request, response, next) {
     if (!request.session.user) return next();
     return response.redirect("/user/profile?error=already_logged_in");
+}
+
+function isStudentOrEducator(request, response, next) {
+    if (request.session.user.role == "student") return next();
+    if (request.session.user.role == "educator") return next();
+    return errorPage(response, 'You have no "role", unable to display profile!');
 }
 
 // TODO JSDoc string
@@ -203,6 +209,21 @@ function db_forProfile_getEnrolledCourses(request, response, next) {
     });
 }
 
+// TODO JSDoc string
+function db_forProfile_getCreatedCourses(request, response, next) {
+    let query = `
+        SELECT *
+        FROM courses JOIN educators
+        ON courses.creator_id = educators.user_id
+        WHERE educators.user_id = ?`;
+    db.all(query, [request.session.user.id], (err, createdCourses) => {
+        if (err) return errorPage(response, "Database error when retrieving your created courses!");
+        if (!createdCourses) return errorPage(response, "Something went wrong! Unable to load your created courses.");
+        request.session.user.createdCourses = createdCourses || [];
+        return next();
+    });
+}
+
 /**
  * Query `users` table to ensure both `username` and `email` are unique.
  *
@@ -240,6 +261,7 @@ module.exports = {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
+    isStudentOrEducator,
     setPriceProperty,
     setPictureProperty,
     db_isNewCoursesOnly,
@@ -248,5 +270,6 @@ module.exports = {
     db_isExistingUser,
     db_forProfile_getProfileInfo,
     db_forProfile_getEnrolledCourses,
+    db_forProfile_getCreatedCourses,
     db_isUnique_usernameAndEmail,
 };

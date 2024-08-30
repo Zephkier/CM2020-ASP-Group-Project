@@ -220,4 +220,7 @@ router.get("/search", (request, response) => {
     return response.redirect("https://www.google.com");
 });
 
+// Login
+// See user-router.js
+
 module.exports = router;

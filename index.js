@@ -27,7 +27,7 @@ app.use((request, response, next) => {
 
     // For navbar.ejs
     response.locals.session = request.session;
-    next();
+    return next();
 });
 
 /**

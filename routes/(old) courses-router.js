@@ -25,7 +25,7 @@ function db_isEnrolledIntoCourse(request, response, next) {
     let params = [request.session.user.id, request.params.courseId];
     db.get(query, params, (err, existingEnrollment) => {
         if (err) return errorPage(response, "Database error when retrieving enrollment information!");
-        if (existingEnrollment) next();
+        if (existingEnrollment) return next();
         else return errorPage(response, "You are not enrolled into this course!");
     });
 }
