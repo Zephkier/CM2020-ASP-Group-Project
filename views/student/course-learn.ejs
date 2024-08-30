@@ -40,7 +40,8 @@
                 <!-- Notes Section -->
                 <div class="notes-section">
                     <h2>Your Notes</h2>
-                    <form action="/courses/course/<%= course.id %>/notes" method="POST">
+                    <!-- Add new note -->
+                    <form action="/student/learn/course/<%= course.id %>/notes" method="POST">
                         <textarea name="content" rows="4" placeholder="Add your notes here..."></textarea>
                         <button type="submit" class="btn btn-primary">Save Note</button>
                     </form>
@@ -49,20 +50,20 @@
                         <h3>Saved Notes:</h3>
                         <% course.notes.forEach(note => { %>
                         <div class="note-item">
-                            <!-- Display Mode -->
+                            <!-- Display note -->
                             <div id="display-note-<%= note.id %>">
                                 <p><%= note.content %></p>
                                 <button type="button" class="btn btn-secondary" onclick="toggleEditMode('<%= note.id %>')">Edit</button>
                             </div>
-                            <!-- Edit Mode -->
+                            <!-- Edit note -->
                             <div id="edit-form-<%= note.id %>" class="hidden">
-                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
+                                <form action="/student/learn/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
                                     <textarea name="content" rows="2"><%= note.content %></textarea>
                                     <button type="submit" class="btn btn-primary">Update Note</button>
                                     <button type="button" class="btn btn-secondary" onclick="toggleEditMode('<%= note.id %>', false)">Cancel</button>
                                 </form>
-                                <!-- Form to Delete Note -->
-                                <form action="/courses/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline">
+                                <!-- Delete note -->
+                                <form action="/student/learn/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline">
                                     <button type="submit" class="btn btn-danger">Delete Note</button>
                                 </form>
                             </div>

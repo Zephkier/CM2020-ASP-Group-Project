@@ -159,6 +159,20 @@ function db_isExistingUser(request, response, next) {
 }
 
 /**
+ * TODO JSDoc string
+ * Ensure user is enrolled into a course so they can rightfully access the "learn" page
+ */
+function db_isEnrolledIntoCourse(request, response, next) {
+    let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+    let params = [request.session.user.id, request.params.courseId];
+    db.get(query, params, (err, existingEnrollment) => {
+        if (err) return errorPage(response, "Database error when retrieving enrollment information!");
+        if (existingEnrollment) return next();
+        else return errorPage(response, "You are not enrolled into this course!");
+    });
+}
+
+/**
  * Query to `SELECT *` when joining `users` and `profiles` tables.
  *
  * - If user **has** `profiles.user_id`,
@@ -270,6 +284,7 @@ module.exports = {
     db_insertIntoEnrollments,
     db_updateEnrollCount,
     db_isExistingUser,
+    db_isEnrolledIntoCourse,
     db_forProfile_getProfileInfo,
     db_forProfile_getEnrolledCourses,
     db_forProfile_getCreatedCourses,
