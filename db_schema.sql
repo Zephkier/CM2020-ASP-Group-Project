@@ -69,7 +69,7 @@ INSERT INTO courses (name, description, price, enrollCount, video_url, creator, 
 INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('R', 'Perform statistical analysis and data visualization with R.', 60.50, 1540, 'https://www.youtube.com/watch?v=_V8eKsto3Ug', 'Skyler Harris','R.jpg'); 
 INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Lua', 'Integrate Lua scripting in your applications.', 80.50, 8340, 'https://www.youtube.com/watch?v=iMacxZQMPXs', 'Quinn Anderson','Lua.png'); 
 INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Haskell', 'Dive into functional programming with Haskell.', 70.50, 120, 'https://www.youtube.com/watch?v=02_H3LjqMr8', 'Taylor Jackson','Haskell.png'); 
-INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picturen) VALUES ('Elixir', 'Build scalable and maintainable applications with Elixir.', 90.50, 1560, 'https://www.youtube.com/watch?v=-lgtb-YSUWE', 'Avery Thomas','Elixir.jpg');
+INSERT INTO courses (name, description, price, enrollCount, video_url, creator, picture) VALUES ('Elixir', 'Build scalable and maintainable applications with Elixir.', 90.50, 1560, 'https://www.youtube.com/watch?v=-lgtb-YSUWE', 'Avery Thomas','Elixir.jpg');
 
 CREATE TABLE enrollments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
