@@ -72,7 +72,7 @@
                 <h2>Our Popular Courses</h2>
                 <div class="container courses__container">
                     <%topCourses.forEach(topCourse => { %>
-                    <a href="/courses/course/<%= topCourse.id %>">
+                    <a href="/courses/<%= topCourse.id %>">
                         <article class="course">
                             <div class="course__image">
                                 <img src="/images/courses/<%= topCourse.picture %>" />
