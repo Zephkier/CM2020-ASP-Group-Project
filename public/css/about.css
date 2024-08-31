@@ -1,12 +1,10 @@
 /* ============== ACHIEVEMENTS ============= */
-.about__achievements {
-    margin-top: 3rem;
-}
 
 .about__achievements-container {
     display: grid;
     grid-template-columns: 40% 60%;
     gap: 5rem;
+    height: 100%;
 }
 
 .about__achievements-right > p {
