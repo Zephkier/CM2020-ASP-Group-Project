@@ -4,7 +4,6 @@ Welcome to the Agile Software Project (ASP) for **Bright Learning Academy**! Thi
 
 ## 🚀 Quick Start Guide
 
-### Follow the instructions below to get the ASP up and running:
 ### Within the terminal...
 
 1.  **Install dependencies used in project**
@@ -17,7 +16,7 @@ Welcome to the Agile Software Project (ASP) for **Bright Learning Academy**! Thi
 
     If you're on Windows, then run: `npm run build-db-win`
 
-    A file called `database.db` should appear in the directory.
+    A `database.db` file should appear in the directory.
 
 3.  **Start application**
 
@@ -27,14 +26,29 @@ Welcome to the Agile Software Project (ASP) for **Bright Learning Academy**! Thi
 
 ## Additional Information
 
-### Project Overview: This project is an Agile Software Development initiative for Bright Learning Academy, aiming to deliver a comprehensive and interactive learning experience.
+### Project Overview
 
-Technologies Used:
+This project is an Agile Software Development initiative for Bright Learning Academy, aiming to deliver a comprehensive and interactive learning experience.
 
-Node.js
-Express.js
-EJS Templating
-SQLite3
-Contributing: Contributions are welcome! Please follow the CONTRIBUTING.md guidelines.
+### Technologies Used
 
-License: This project is licensed under the MIT License. See the LICENSE file for more details.
+The project utilises `Node.js` and its dependencies as seen in `package.json`:
+
+```json
+"dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.2.0",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7"
+}
+```
+
+### Contributing
+
+Contributions are welcomed! Please follow the `CONTRIBUTING.md` guidelines.
+
+### License
+
+This project is licensed under the MIT License. See the LICENSE file for more details.
