@@ -27,22 +27,45 @@
         <%- include("../partials/navbar.ejs") %>
 
         <main>
+            <!-- Our Courses Section Header -->
+            <section class="courses-header">
+                <div class="container courses-header__container">
+                    <div class="courses-header__left">
+                        <div class="courses-header__left-image">
+                            <img src="/images/courses-header.svg" />
+                        </div>
+                    </div>
+
+                    <div class="courses-header__right">
+                        <h1>Our Courses</h1>
+                        <p>
+                            Explore our wide range of courses designed to help you develop practical skills and real-world knowledge. Whether you're looking to advance in your career or pursue a passion, we have something for everyone.
+                        </p>
+                        <!-- Scroll Button -->
+                        <button onclick="scrollToCourses()" class="btn btn-primary">Explore Courses</button>
+                    </div>
+                </div>
+            </section>
+
             <section class="courses">
-                <form action="/courses" method="GET" id="sortForm" class="container">
-                    <label for="sort">Sort by:</label>
-                    <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();">
-                        <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>Most Popular</option>
-                        <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
-                        <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
-                    </select>
-                </form>
+                <div class="container">
+                    <form action="/courses" method="GET" id="sortForm" class="sort-form">
+                        <label for="sort">Sort by:</label>
+                        <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();" class="sort-select">
+                            <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>Most Popular</option>
+                            <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
+                            <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
+                        </select>
+                    </form>
+                </div>
 
                 <div class="container courses__container">
                     <%courses.forEach(course => { %>
                     <a href="/courses/<%= course.id %>">
                         <article class="course">
                             <div class="course__image">
-                                <img src="/images/courses/<%= course.picture %>" />
+                                <img src="/images/courses/<%= course.picture %>" alt="Image of <%= course.name %>" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                                <div class="no-image">No Image Available</div>
                             </div>
                             <div class="course__info">
                                 <h4>Learn <%= course.name %></h4>
@@ -69,5 +92,10 @@
 
         <script src="/main.js"></script>
         <script src="/error-popup-box.js"></script>
+        <script>
+            function scrollToCourses() {
+                document.querySelector('.courses').scrollIntoView({ behavior: 'smooth' });
+            }
+        </script>
     </body>
 </html>
