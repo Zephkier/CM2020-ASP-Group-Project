@@ -462,19 +462,18 @@ header {
 /* =================== FOOTER ===================== */
 footer {
     background: var(--color-bg1);
-    padding: 0.5rem;
     font-size: 0.9rem;
     position: relative;
     bottom: 0;
     width: 100%;
-    padding-top: 80px;
+    padding-top: 3rem;
 }
 
 .footer__container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
     width: 80%;
+    padding-bottom: 2rem;
 }
 
 .footer__container > div h4 {
@@ -496,7 +495,6 @@ footer {
     align-items: center;
     max-width: 450px;
     text-align: center;
-    /* border: 5px red solid; */
     padding-left: 5rem;
 }
 
