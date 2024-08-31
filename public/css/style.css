@@ -254,7 +254,7 @@ header {
 /* =================== CATEGORIES ===================== */
 .categories {
     background: var(--color-bg1);
-    height: 70rem;
+    height: auto;
 }
 
 .categories h1 {
@@ -322,7 +322,6 @@ header {
 
 /* =================== POPULAR COURSES ===================== */
 .courses {
-    margin-top: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -333,7 +332,6 @@ header {
 .courses__container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
     gap: 5rem;
     max-width: 1500px;
     width: 100%;

@@ -30,7 +30,7 @@
 }
 
 /* =================== COURSES ===================== */
-.courses {
+.courses:not(.courses.index) {
     margin: auto;
     text-align: center;
     padding: 0;
