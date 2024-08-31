@@ -241,7 +241,7 @@ header {
 
 .header__container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 40% 60%;
     align-items: center;
     gap: 5rem;
     height: 100%;
