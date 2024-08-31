@@ -56,7 +56,7 @@
 
                     <div class="categories__right">
                         <%categories.forEach(category => { %>
-                        <article class="category">
+                        <article class="category hidden">
                             <span class="category__icon">
                                 <i class="<%= category.iconscoutName %>"></i>
                             </span>
@@ -72,7 +72,7 @@
                 <h1>Our Popular Courses</h1>
                 <div class="container courses__container">
                     <%topCourses.forEach(topCourse => { %>
-                    <a href="/courses/<%= topCourse.id %>">
+                    <a href="/courses/<%= topCourse.id %>" class="hidden">
                         <article class="course">
                             <div class="course__image">
                                 <img src="/images/courses/<%= topCourse.picture %>" />
@@ -96,7 +96,7 @@
 
                 <div class="container faqs__container">
                     <%faqs.forEach(faq => { %>
-                    <article class="faq">
+                    <article class="faq hidden">
                         <div class="faq__icon"><i class="uil uil-plus"></i></div>
                         <div class="question__answer">
                             <h4><%= faq.question %></h4>
@@ -137,6 +137,7 @@
         <%- include("./partials/footer.ejs") %>
 
         <script src="/main.js"></script>
+        <script src="/scroll.js"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script>
             // Slides for testimonials section
