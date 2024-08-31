@@ -8,7 +8,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.checkout-container h1, .checkout-container h2 {
+.checkout-container h1,
+.checkout-container h2 {
     text-align: center;
     margin-bottom: 1.5rem;
 }
@@ -24,7 +25,9 @@
     color: var(--color-white);
 }
 
-.user-details, .cart-summary, .payment-options {
+.user-details,
+.cart-summary,
+.payment-options {
     background-color: var(--color-bg);
     padding: 2rem;
     margin-bottom: 2rem;
@@ -32,23 +35,27 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.user-details h3, .cart-summary h3, .payment-options h3 {
+.user-details h3,
+.cart-summary h3,
+.payment-options h3 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
     color: var(--color-white);
 }
 
-.user-details h3, .cart-summary h3{
+.user-details h3,
+.cart-summary h3 {
     margin-left: 7rem;
     text-decoration: underline;
 }
 
-.user-details p, .cart-summary p {
+.user-details p,
+.cart-summary p {
     font-size: 1rem;
     line-height: 2;
 }
 
-.user-details p{
+.user-details p {
     color: white;
     margin-left: 7rem;
 }
@@ -89,28 +96,27 @@
     text-align: right;
     font-size: 1.5rem;
     margin-top: 3rem;
-    background-color: var(--color-bg2);;
+    background-color: var(--color-bg2);
     padding: 0.8rem;
-    padding-right: 4rem; 
+    padding-right: 4rem;
     border-radius: 5px;
-
 }
 
 .payment-options {
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
 }
 
 .payment-options h3 {
-    margin-bottom: 1rem; 
+    margin-bottom: 1rem;
 }
 
 .payment-options .btn-container {
     display: flex;
-    gap: 1rem; 
-    justify-content: center; 
+    gap: 1rem;
+    justify-content: center;
 }
 
 .payment-options .btn {
