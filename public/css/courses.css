@@ -111,7 +111,6 @@
 .course-detail {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 7rem;
     padding: 5rem;
     border-radius: 8px;
 }
@@ -120,9 +119,9 @@
     flex: 1 1 40%;
     max-width: 45%;
     width: 650px;
-    height: 450px;
+    height: 520px;
     overflow: hidden;
-    margin-top: 7rem;
+    margin-top: 5.5rem;
     margin-left: 5rem;
     margin-bottom: 5rem;
 }
