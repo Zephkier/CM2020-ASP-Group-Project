@@ -126,4 +126,7 @@ router.get("/*", (request, response) => {
     return response.redirect("/courses?error=invalid_url");
 });
 
+
+
+
 module.exports = router;
