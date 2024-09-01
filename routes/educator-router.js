@@ -58,15 +58,23 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
 
     if (request.body.button == "add") {
         let query = `
-            INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture)
-            VALUES (?, ?, ?, ?, 0, ?, ?)`;
-        let params = [request.session.user.id, name, description, parseFloat(price), video_url, picture];
+            INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category)
+            VALUES (?, ?, ?, ?, 0, ?, ?, ?)`;
+        let params = [
+            request.session.user.id,
+            name,
+            description,
+            parseFloat(price),
+            video_url,
+            picture,
+            request.body.category // Include the category from the form
+        ];
         db.run(query, params, (err) => {
             if (err) return errorPage(response, "Error adding course!");
             return response.redirect("/user/profile");
         });
     }
-
+    
     if (request.body.button == "update") {
         let query = `
             UPDATE courses
