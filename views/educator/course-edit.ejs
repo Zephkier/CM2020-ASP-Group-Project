@@ -49,7 +49,20 @@
                     </div>
                     <div class="form-group">
                         <label for="picture">Course Photo:</label>
-                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" value="<%= formInputStored.picture %>" required />
+                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Course Category:</label>
+                        <select id="category" name="category" required>
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="Web Development" <%= formInputStored.category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
+                            <option value="Computer Programming" <%= formInputStored.category === 'Computer Programming' ? 'selected' : '' %>>Computer Programming</option>
+                            <option value="Game Development" <%= formInputStored.category === 'Game Development' ? 'selected' : '' %>>Game Development</option>
+                            <option value="Data Science" <%= formInputStored.category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+                            <option value="Design" <%= formInputStored.category === 'Design' ? 'selected' : '' %>>Design</option>
+                            <option value="Others" <%= formInputStored.category === 'Others' ? 'selected' : '' %>>Others</option>                            
+                            <!-- Add more categories as needed -->
+                        </select>
                     </div>
                     <%if (formInputStored.id) { %>
                     <button type="submit" name="button" value="update">Update Course</button>
