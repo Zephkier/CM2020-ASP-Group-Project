@@ -79,6 +79,9 @@
 
 .team__member-image img {
     filter: saturate(0);
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
 }
 
 .team__member:hover img {
