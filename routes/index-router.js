@@ -176,8 +176,7 @@ router.get("/contact", (request, response) => {
     });
 });
 
-// Courses
-// See courses-router.js
+// Courses related methods -> courses-router.js
 
 // Cart
 router.get("/cart", (request, response) => {
@@ -197,6 +196,7 @@ router.get("/cart", (request, response) => {
     });
 });
 
+// remove items from cart
 router.post("/cart/remove", (request, response) => {
     let cart = request.session.cart || [];
 
@@ -206,24 +206,5 @@ router.post("/cart/remove", (request, response) => {
 
     return response.redirect("/cart");
 });
-
-// Search
-router.get("/search", (request, response) => {
-    // let query = request.query.q;
-    // if (!query) return response.redirect("/");
-    // return response.render("search.ejs", {
-    //     pageName: "Search",
-    //     query: query,
-    // });
-
-    // Unsure on how to implement search...
-    return response.redirect("https://www.google.com");
-});
-
-// Login
-// See user-router.js
-
-// Handle invalid URLs (eg. "/courses/*")
-// Do not handle invalid URLs here
 
 module.exports = router;
