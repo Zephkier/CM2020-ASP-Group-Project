@@ -9,7 +9,7 @@
 }
 
 :root {
-    --color-primary: rgb(67, 62, 169);
+    --color-primary: rgb(23, 53, 101);
     --color-success: #00bf8e;
     --color-warning: #f7c94b;
     --color-danger: #062944;
@@ -42,7 +42,7 @@ body {
 }
 
 body {
-    font-family: "Arial";
+    font-family: "Roboto";
     line-height: 1.7;
     color: var(--color-white);
     background: var(--color-bg);
@@ -343,6 +343,7 @@ header {
     text-align: center;
     border: 1px solid transparent;
     transition: var(--transition);
+    border-radius: 1.2rem;
 }
 
 .course:hover {
@@ -389,7 +390,7 @@ header {
     height: fit-content;
     background: var(--color-primary);
     cursor: pointer;
-    min-height: 110px;
+    min-height: 100px;
     height: 100%;
     box-sizing: border-box;
 }
@@ -402,6 +403,7 @@ header {
 .faq__icon {
     align-self: flex-start;
     font-size: 1.5rem;
+    margin-top: 1rem;
 }
 
 .faq p {
@@ -418,7 +420,8 @@ header {
     overflow-x: hidden;
     position: relative;
     margin-bottom: 2rem;
-    min-height: 50rem;
+    min-height: 45rem;
+    padding-right: 3rem;
 }
 
 .testimonial {
@@ -431,7 +434,7 @@ header {
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto 1rem;
-    border: 1rem solid var(--color-bg1);
+    border: 0.5rem solid var(--color-bg1);
 }
 
 .avatar img{
