@@ -19,6 +19,8 @@ const router = express.Router();
 
 // Note that all these URLs have "/student" prefix!
 
+// TODO redo helper functions to be less niche, make them take in input params!
+
 // Home (Profile)
 router.get("/", (request, response) => {
     return response.redirect("/user/profile");
@@ -74,9 +76,9 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 
 // Learn
 router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledIntoCourse, (request, response) => {
-    let courseId = request.params.courseId;
-    let topicId = request.query.topicId || 1;
     let userId = request.session.user.id;
+    let courseId = request.params.courseId;
+    let topicId = request.query.topicId || 1; // Default to topic 1
 
     // Get selected course
     db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {

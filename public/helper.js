@@ -4,21 +4,33 @@ const fs = require("fs"); // For "return_validPictureFilename()"
 // ----- General Helper Functions ----- //
 
 /**
- * Returns a number with 2 decimal places, mainly to display prices with cents.
+ * Used in `index-router.js`
  *
- * @param {*} number Number **without** zeroes at the end *(eg. 1.5 or 1)*
- * @returns Number **with** 2 decimal places *(eg. 1.50 or 1.00)*
+ * To display prices with cents.
+ *
+ * @param {*} number
+ * Number without zeroes at the end *(eg. 1.5 or 1)*
+ *
+ * @returns
+ * Number with 2 decimal places *(eg. 1.50 or 1.00)*
  */
 function return_twoDecimalPlaces(number) {
     return parseFloat(number).toFixed(2);
 }
 
 /**
- * Checks if either `.jpg` or `.png` file exists, then return the existing/valid `filename`.
+ * Used in `index-router.js`
  *
- * @param {string} pathToPicture Path to directory with target filename, end with "/" *(eg. "./public/images/courses/")*
- * @param {string} filename Filename to check and return, exclude its file type *(eg. "C Sharp")*
- * @returns Filename with either `.jpg` or `.png` at the end *(eg. "C Sharp.jpg")*
+ * To validate and get `filename` with its existing file type.
+ *
+ * @param {string} pathToPicture
+ * Directory path containing `filename`. Must end with "/"! *(eg. "./public/images/courses/")*
+ *
+ * @param {string} filename
+ * File to validate. Must exclude its file type! *(eg. "C Sharp")*
+ *
+ * @returns
+ * `filename` with either `.jpg` or `.png` at the end *(eg. "C Sharp.jpg")*
  */
 function return_validPictureFilename(pathToPicture, filename) {
     if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
@@ -27,14 +39,49 @@ function return_validPictureFilename(pathToPicture, filename) {
 }
 
 /**
- * Returns a number with `commas` and `space` at every thousands place.
+ * Used in `index-router.js`
  *
- * @param {*} number Number without any formatting *(eg. 10000)*
- * @returns Number with formatting *(eg. 10, 000)*
+ * To format long numbers with commas every 3 digits.
+ *
+ * @param {*} number
+ * Number without any formatting *(eg. 10000)*
+ *
+ * @returns
+ * Number with formatting *(eg. 10,000)*
  */
 function return_formattedNumber(number) {
     return number.toLocaleString();
 }
+
+// ----- Database-related Helper Functions ----- //
+
+/**
+ * Used in `index-router.js`
+ *
+ * Get limited number of courses ordered by its enroll count from most to least.
+ *
+ * Actual query:
+ * - `SELECT * FROM courses`
+ * - `ORDER BY enrollCount DESC`
+ * - `LIMIT ?`
+ *
+ * @param {*} limit Number of courses to return.
+ * @returns Query result in `request.topFewCourses`
+ */
+function db_getTopFewCourses(limit) {
+    return (request, response, next) => {
+        db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?", [limit], (err, topFewCourses) => {
+            if (err) return errorPage(response, "Error retrieving top courses!");
+            if (!topFewCourses) return errorPage(response, "No courses found!");
+            request.topFewCourses = topFewCourses;
+            return next();
+        });
+    };
+}
+
+// ------------------------ //
+// ----- Unused Below ----- //
+// ------------------------ //
 
 /**
  * Render error page with custom error message. For security reasons, do not reveal explicit details!
@@ -76,25 +123,41 @@ function hasRoles(roles) {
     };
 }
 
-// ----- Database-related Helper Functions ----- //
+/**
+ * Query to `SELECT * FROM courses WHERE id = ?`
+ *
+ * @returns Object with `courses` properties.
+ */
+function db_getSpecificCourse(courseId) {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
+            if (err) return errorPage(response, "Error retrieving course selected!");
+            if (!course) return errorPage(response, "No course selected!");
+            return resolve(course);
+        });
+    });
+}
 
 /**
- * Query to `SELECT * FROM courses`
- * - Ordered by `enrollCount` in `DESC` order.
- * - Limited by `limit`
+ * Query to `SELECT * FROM enrollments` with:
+ * - Specific `user_id`
+ * - Specific `course_id`
  *
- * @param {*} limit Number of courses to return.
- * @returns Query results in `request.topFewCourses`
+ * If user is enrolled into course, then `object.isEnrolled = true`
+ *
+ * If user is not enrolled into course, then `object.isEnrolled = false`
+ *
+ * @returns Object with `enrollments` properties, plus an additional `.isEnrolled` property.
  */
-function db_getTopFewCourses(limit) {
-    return (request, response, next) => {
-        db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?", [limit], (err, topFewCourses) => {
-            if (err) return errorPage(response, "Error retrieving top courses!");
-            if (!topFewCourses) return errorPage(response, "No courses found!");
-            request.topFewCourses = topFewCourses;
-            return next();
+function db_getIsEnrolled_forSpecificUserAndCourse(userId, courseId, object) {
+    return new Promise((resolve, reject) => {
+        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+        db.get(query, [userId, courseId], (err, existingEnrollment) => {
+            if (err) return errorPage(response, "Error retrieving enrolled courses!");
+            existingEnrollment ? (object.isEnrolled = true) : (object.isEnrolled = false);
+            return resolve(object);
         });
-    };
+    });
 }
 
 /**
@@ -291,19 +354,26 @@ function db_isUnique_usernameAndEmail(request, response, next) {
 
 // Export module containing the following so external files can access it
 module.exports = {
+    // "Used" below
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
     errorPage,
+    // -----
+    db_getTopFewCourses,
+    db_getSpecificCourse,
+    db_getIsEnrolled_forSpecificUserAndCourse,
+
+    // "Unused" below
     isLoggedIn,
     isNotLoggedIn,
     hasRoles,
-    db_getTopFewCourses,
+    // -----
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,
-    db_isExistingUser,
     db_isEnrolledIntoCourse,
+    db_isExistingUser,
     db_forProfile_getProfileInfo,
     db_forProfile_getEnrolledCourses,
     db_forProfile_getCreatedCourses,

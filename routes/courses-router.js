@@ -7,6 +7,8 @@ const {
     return_validPictureFilename,
     return_formattedNumber,
     errorPage,
+    db_getSpecificCourse,
+    db_getIsEnrolled_forSpecificUserAndCourse,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -18,7 +20,7 @@ const router = express.Router();
 router.get("/", async (request, response) => {
     // If user logged in, then check if user has enrolled into any courses
     // So that text displays either price or "Already Enrolled"
-    // But it takes time to complete this query, thus, use Promise()
+    // But it takes time to complete this query, thus, must use Promise()
 
     // Get all courses
     let coursesPromised = await new Promise((resolve, reject) => {
@@ -29,9 +31,6 @@ router.get("/", async (request, response) => {
         });
     });
 
-    // Wait for query to complete
-    coursesPromised = await Promise.all(coursesPromised);
-
     // Sort all courses
     let sortOption = request.query.sort || "popular";
     if (sortOption == "popular") coursesPromised.sort((a, b) => b.enrollCount - a.enrollCount);
@@ -39,10 +38,8 @@ router.get("/", async (request, response) => {
     else if (sortOption == "desc") coursesPromised.sort((a, b) => b.name.localeCompare(a.name));
 
     /**
-     * 1. Set every course's ".price" property
-     * 2. Set every course's ".picture" property
-     * 3. Set every course's ".enrollCount" property
-     * 4. Set every course's ".isEnrolled" property to differentiate text to display either price or "Already Enrolled"
+     * 1. Set every course's ".price/picture/enrollCount" property
+     * 2. Set every course's ".isEnrolled" property to differentiate text to display either price or "Already Enrolled"
      */
     let coursesPromisedEdited = coursesPromised.map((course) => {
         return new Promise((resolve, reject) => {
@@ -50,7 +47,7 @@ router.get("/", async (request, response) => {
             course.picture = return_validPictureFilename("./public/images/courses/", course.name);
             course.enrollCount = return_formattedNumber(course.enrollCount);
             if (request.session.user) {
-                // If logged in, then differentiate text to display as planned
+                // If logged in, then differentiate text to display either price or "Already Enrolled"
                 let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
                 let params = [request.session.user.id, course.id];
                 db.get(query, params, (err, existingEnrollment) => {
@@ -59,7 +56,7 @@ router.get("/", async (request, response) => {
                     resolve(course);
                 });
             } else {
-                // If not logged in, then display price
+                // If not logged in, then just display price
                 course.isEnrolled = false;
                 resolve(course);
             }
@@ -77,31 +74,29 @@ router.get("/", async (request, response) => {
 });
 
 // Individual course
-router.get("/:courseId", (request, response) => {
-    db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
-        if (err) return errorPage(response, "Error retrieving course selected!");
-        if (!course) return errorPage(response, "No course selected!");
+router.get("/:courseId", async (request, response) => {
+    let userId = request.session.user ? request.session.user.id : null;
+    let courseId = request.params.courseId;
 
-        course.price = return_twoDecimalPlaces(course.price);
-        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+    // Await for promised query result
+    let course = await db_getSpecificCourse(courseId);
 
-        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-        let userId = request.session.user ? request.session.user.id : null;
-        let params = [userId, request.params.courseId];
-        db.get(query, params, (err, existingEnrollment) => {
-            if (err) return errorPage(response, "Error retrieving enrollment information!");
-            existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false);
+    // Set "course" properties
+    course.price = return_twoDecimalPlaces(course.price);
+    course.picture = return_validPictureFilename("./public/images/courses/", course.name);
 
-            db.all("SELECT * FROM topics WHERE course_id = ? LIMIT 3", [request.params.courseId], (err, topics) => {
-                if (err) return errorPage(response, "Error retrieving course topics!");
-                if (!topics) return errorPage(response, "Course topics not found!");
+    // Await for promised query result
+    course = await db_getIsEnrolled_forSpecificUserAndCourse(userId, courseId, course);
 
-                course.topics = topics;
-                return response.render("courses/course.ejs", {
-                    pageName: `About ${course.name}`,
-                    course: course,
-                });
-            });
+    let query = "SELECT * FROM topics WHERE course_id = ? LIMIT 3";
+    db.all(query, [courseId], (err, topics) => {
+        if (err) return errorPage(response, "Error retrieving course topics!");
+        if (!topics) return errorPage(response, "Course topics not found!");
+
+        course.topics = topics;
+        return response.render("courses/course.ejs", {
+            pageName: `About ${course.name}`,
+            course: course,
         });
     });
 });

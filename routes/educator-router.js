@@ -1,7 +1,6 @@
 // Import and setup modules
 const express = require("express");
 const { db } = require("../public/db.js");
-const multer = require("multer");
 const {
     // Format
     errorPage,
@@ -9,6 +8,7 @@ const {
 } = require("../public/helper.js");
 
 // Configure multer for file uploads
+const multer = require("multer");
 let storage = multer.diskStorage({
     destination: function (request, file, cb) {
         cb(null, "./public/images/courses/");
