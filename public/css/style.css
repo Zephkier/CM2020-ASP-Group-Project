@@ -342,6 +342,7 @@ header {
     color: var(--color-white);
     text-align: center;
     transition: var(--transition);
+    border-radius: 2rem;
 }
 
 .course:hover {
