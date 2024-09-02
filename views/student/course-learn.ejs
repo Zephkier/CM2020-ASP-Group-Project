@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
         <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap" rel="stylesheet" />
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/course-learn.css" />
@@ -30,6 +30,12 @@
             .hidden {
                 display: none;
             }
+            .topic-buttons {
+                margin-bottom: 20px;
+            }
+            .topic-buttons button {
+                margin-right: 10px;
+            }
         </style>
     </head>
 
@@ -41,22 +47,34 @@
                 <h1><%= course.name %></h1>
                 <p><%= course.description %></p>
 
+                <!-- Topic Selection Buttons -->
+                <div class="topic-buttons">
+                    <% topics.forEach(topic => { %>
+                    <a href="/student/learn/course/<%= course.id %>?topicId=<%= topic.id %>">
+                        <button class="btn <%= topic.id == selectedTopic.id ? 'btn-primary' : 'btn-secondary' %>"><%= topic.name %></button>
+                    </a>
+                    <% }); %>
+                </div>
+
                 <!-- Embedded YouTube Video -->
                 <div class="video-container">
-                    <iframe width="560" height="315" src="<%= course.video_url %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> </iframe>
+                    <iframe width="560" height="315" src="<%= selectedTopic.video_url %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> </iframe>
                 </div>
 
                 <!-- Notes Section -->
                 <div class="notes-section">
                     <h2>Your Notes</h2>
+
                     <!-- Add new note -->
                     <form action="/student/learn/course/<%= course.id %>/notes" method="POST">
                         <textarea name="content" rows="4" placeholder="Add your notes here..."></textarea>
                         <button type="submit" class="btn btn-primary">Save Note</button>
                     </form>
+
                     <% if (course.notes && course.notes.length > 0) { %>
                     <div class="saved-notes">
                         <h3>Saved Notes:</h3>
+
                         <% course.notes.forEach(note => { %>
                         <div class="note-item">
                             <!-- Display note -->
@@ -64,6 +82,7 @@
                                 <p><%= note.content %></p>
                                 <button type="button" class="btn btn-secondary" onclick="toggleEditMode('<%= note.id %>')">Edit</button>
                             </div>
+
                             <!-- Edit note -->
                             <div id="edit-form-<%= note.id %>" class="hidden">
                                 <form action="/student/learn/course/<%= course.id %>/notes/<%= note.id %>/edit" method="POST">
@@ -71,6 +90,7 @@
                                     <button type="submit" class="btn btn-primary">Update Note</button>
                                     <button type="button" class="btn btn-secondary" onclick="toggleEditMode('<%= note.id %>', false)">Cancel</button>
                                 </form>
+
                                 <!-- Delete note -->
                                 <form action="/student/learn/course/<%= course.id %>/notes/<%= note.id %>/delete" method="POST" style="display: inline">
                                     <button type="submit" class="btn btn-danger">Delete Note</button>
@@ -91,24 +111,20 @@
             document.addEventListener("DOMContentLoaded", function () {
                 // Get all textareas for notes
                 const textareas = document.querySelectorAll(".notes-section textarea");
-
                 // Function to auto resize the textarea
                 function autoResizeTextarea(textarea) {
                     textarea.style.height = "auto"; // Reset height
                     textarea.style.height = textarea.scrollHeight + "px"; // Set height based on content
                 }
-
                 textareas.forEach((textarea) => {
                     // Resize on input
                     textarea.addEventListener("input", function () {
                         autoResizeTextarea(textarea);
                     });
-
                     // Initial resize to fit existing content
                     autoResizeTextarea(textarea);
                 });
             });
-
             // Toggle between display mode and edit mode for a note
             function toggleEditMode(noteId, editMode = true) {
                 const displayDiv = document.getElementById("display-note-" + noteId);

@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
         <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/course-update.css" />
@@ -27,42 +27,81 @@
 
         <main>
             <div class="form-container">
-                <h2>Add New Course</h2>
+                <h2><%= formInputStored.id ? "Edit Course" : "Add New Course" %></h2>
+
                 <% let endpoint; formInputStored.id ? (endpoint = "/educator/update/course/" + formInputStored.id) : (endpoint = "/educator/update/course"); %>
                 <form action="<%= endpoint %>" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="name">Course Name:</label>
-                        <input type="text" id="name" name="name" value="<%= formInputStored.name %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Course Description:</label>
-                        <textarea id="description" name="description" rows="4" required><%= formInputStored.description %></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price:</label>
-                        <input type="number" step="0.01" id="price" name="price" value="<%= formInputStored.price %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="video_url">Video URL:</label>
-                        <input type="url" id="video_url" name="video_url" value="<%= formInputStored.video_url %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="picture">Course Photo:</label>
-                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" required />
-                    </div>
                     <div class="form-group">
                         <label for="category">Course Category:</label>
                         <select id="category" name="category" required>
                             <option value="" disabled selected>Select Category</option>
-                            <option value="Web Development" <%= formInputStored.category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
-                            <option value="Computer Programming" <%= formInputStored.category === 'Computer Programming' ? 'selected' : '' %>>Computer Programming</option>
-                            <option value="Game Development" <%= formInputStored.category === 'Game Development' ? 'selected' : '' %>>Game Development</option>
-                            <option value="Data Science" <%= formInputStored.category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
-                            <option value="Design" <%= formInputStored.category === 'Design' ? 'selected' : '' %>>Design</option>
-                            <option value="Others" <%= formInputStored.category === 'Others' ? 'selected' : '' %>>Others</option>                            
-                            <!-- Add more categories as needed -->
+                            <%categories.forEach(category => { %>
+                            <option value="<%= category %>" <%= formInputStored.category == category ? 'selected' : '' %>><%= category %></option>
+                            <%}) %>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="name">Course Name:</label>
+                        <input type="text" id="name" name="name" value="<%= formInputStored.name %>" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Course Description:</label>
+                        <textarea id="description" name="description" rows="4" required><%= formInputStored.description %></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" step="0.01" id="price" name="price" value="<%= formInputStored.price %>" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="picture">Course Photo:</label>
+                        <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" required />
+                    </div>
+
+                    <!-- Topics -->
+                    <div class="form-group">
+                        <h3>Topics</h3>
+
+                        <!-- Existing topics area (if editing an existing course with topics) -->
+                        <%if (!formInputStored.topics || formInputStored.topics.length == 0) { %>
+                        <p>No topics yet. Add some below:</p>
+                        <%} else { formInputStored.topics.forEach((topic, index) => { %>
+                        <div class="topic-group" id="existing-topic-<%= index %>">
+                            <h4>Topic <%= index + 1 %></h4>
+                            <label for="topic-name-<%= index %>">Name:</label>
+                            <input type="text" id="topic-name-<%= index %>" name="existingTopics[<%= topic.id %>][name]" value="<%= topic.name %>" required />
+
+                            <label for="topic-description-<%= index %>">Description:</label>
+                            <textarea id="topic-description-<%= index %>" name="existingTopics[<%= topic.id %>][description]" rows="2" required><%= topic.description %></textarea>
+
+                            <label for="topic-video-url-<%= index %>">Video URL:</label>
+                            <input type="url" id="topic-video-url-<%= index %>" name="existingTopics[<%= topic.id %>][video_url]" value="<%= topic.video_url %>" required />
+                        </div>
+                        <% }); } %>
+
+                        <!-- New topics area -->
+                        <div id="new-topics-area">
+                            <div class="topic-group" id="new-topic-0">
+                                <h4>New Topic 1</h4>
+                                <label for="new-topic-name-0">Name:</label>
+                                <input type="text" id="new-topic-name-0" name="newTopics[0][name]" required />
+
+                                <label for="new-topic-description-0">Description:</label>
+                                <textarea id="new-topic-description-0" name="newTopics[0][description]" rows="2" required></textarea>
+
+                                <label for="new-topic-video-url-0">Video URL:</label>
+                                <input type="url" id="new-topic-video-url-0" name="newTopics[0][video_url]" required />
+                            </div>
+                        </div>
+
+                        <!-- Add more topics button -->
+                        <button type="button" id="add-more-topics" onclick="addMoreTopics()">+ Add More Topics</button>
+                    </div>
+
+                    <!-- Submit button -->
                     <%if (formInputStored.id) { %>
                     <button type="submit" name="button" value="update">Update Course</button>
                     <%} else { %>
@@ -70,6 +109,27 @@
                     <%} %>
                 </form>
             </div>
+
+            <script>
+                let topicIndex = 1;
+                function addMoreTopics() {
+                    const newTopicHtml = `
+                        <div class="topic-group" id="new-topic-${topicIndex}">
+                            <h4>New Topic ${topicIndex + 1}</h4>
+                            <label for="new-topic-name-${topicIndex}">Name:</label>
+                            <input type="text" id="new-topic-name-${topicIndex}" name="newTopics[${topicIndex}][name]" required />
+            
+                            <label for="new-topic-description-${topicIndex}">Description:</label>
+                            <textarea id="new-topic-description-${topicIndex}" name="newTopics[${topicIndex}][description]" rows="2" required></textarea>
+            
+                            <label for="new-topic-video-url-${topicIndex}">Video URL:</label>
+                            <input type="url" id="new-topic-video-url-${topicIndex}" name="newTopics[${topicIndex}][video_url]" required />
+                        </div>
+                    `;
+                    document.getElementById("new-topics-area").insertAdjacentHTML("beforeend", newTopicHtml);
+                    topicIndex++;
+                }
+            </script>
         </main>
 
         <%- include("../partials/footer.ejs") %>

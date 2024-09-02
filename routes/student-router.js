@@ -33,7 +33,7 @@ router.get("/checkout", isLoggedIn, hasRoles(["student"]), (request, response) =
     let cart = request.session.cart || [];
     cart.forEach((item) => {
         item.price = return_twoDecimalPlaces(item.price);
-        item.picture = return_validPictureFilename("./public/images/courses", item.picture);
+        item.picture = return_validPictureFilename("./public/images/courses/", item.name);
         totalPrice += parseFloat(item.price);
     });
     totalPrice = return_twoDecimalPlaces(totalPrice);
@@ -75,27 +75,40 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 // Learn
 router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledIntoCourse, (request, response) => {
     let courseId = request.params.courseId;
+    let topicId = request.query.topicId || 1;
     let userId = request.session.user.id;
 
-    // Get course for user to learn
+    // Get selected course
     db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
         if (err) return errorPage(response, "Error retrieving course to learn!");
         if (!course) return errorPage(response, "Course not found!");
 
-        // Change "courses.video_url" into embed version
-        course.video_url = course.video_url.replace("watch?v=", "embed/");
+        // Get topics belonging to selected course
+        db.all("SELECT * FROM topics WHERE course_id = ?", [courseId], (err, topics) => {
+            if (err) return errorPage(response, "Error retrieving topics!");
+            if (!topics) return errorPage(response, "No topics found for this course!");
 
-        // Get notes related to course for current user
-        db.all("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
-            if (err) return errorPage(response, "Error retrieving notes!");
-            if (!notes) return errorPage(response, "Notes not found!");
+            // Find selected topic, default to topic 1
+            let selectedTopic = topics.find((topic) => topic.id == topicId) || topics[0];
 
-            // Default to an empty array if no notes are found
-            course.notes = notes || [];
-            return response.render("student/course-learn.ejs", {
-                pageName: `Learn: ${course.name}`,
-                course: course,
-                user: request.session.user,
+            // Change its ".video_url" property into embed version URL
+            selectedTopic.video_url = selectedTopic.video_url.replace("watch?v=", "embed/");
+
+            // Get notes belonging to selected course and user
+            db.all("SELECT * FROM notes WHERE course_id = ? AND user_id = ?", [courseId, userId], (err, notes) => {
+                if (err) return errorPage(response, "Error retrieving notes!");
+                if (!notes) return errorPage(response, "Notes not found!");
+
+                // Default to an empty array if no notes are found
+                course.notes = notes || [];
+
+                return response.render("student/course-learn.ejs", {
+                    pageName: `Learn: ${course.name}`,
+                    course: course,
+                    topics: topics,
+                    selectedTopic: selectedTopic,
+                    user: request.session.user,
+                });
             });
         });
     });

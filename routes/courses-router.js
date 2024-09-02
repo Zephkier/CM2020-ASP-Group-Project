@@ -92,9 +92,15 @@ router.get("/:courseId", (request, response) => {
             if (err) return errorPage(response, "Error retrieving enrollment information!");
             existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false);
 
-            return response.render("courses/course.ejs", {
-                pageName: `About ${course.name}`,
-                course: course,
+            db.all("SELECT * FROM topics WHERE course_id = ? LIMIT 3", [request.params.courseId], (err, topics) => {
+                if (err) return errorPage(response, "Error retrieving course topics!");
+                if (!topics) return errorPage(response, "Course topics not found!");
+
+                course.topics = topics;
+                return response.render("courses/course.ejs", {
+                    pageName: `About ${course.name}`,
+                    course: course,
+                });
             });
         });
     });

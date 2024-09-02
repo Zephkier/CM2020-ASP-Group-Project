@@ -23,7 +23,7 @@ function return_twoDecimalPlaces(number) {
 function return_validPictureFilename(pathToPicture, filename) {
     if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
     if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
-    return `default_image.jpg`;
+    return false;
 }
 
 /**
@@ -33,7 +33,7 @@ function return_validPictureFilename(pathToPicture, filename) {
  * @returns Number with formatting *(eg. 10, 000)*
  */
 function return_formattedNumber(number) {
-    return number.toLocaleString().replace(",", ", ");
+    return number.toLocaleString();
 }
 
 /**

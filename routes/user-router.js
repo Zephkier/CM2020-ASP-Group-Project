@@ -5,6 +5,7 @@ const {
     // Format
     return_twoDecimalPlaces,
     return_validPictureFilename,
+    return_formattedNumber,
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
@@ -84,7 +85,7 @@ router.get("/profile", isLoggedIn, (request, response) => {
                     profile.enrolledCourses = enrolledCourses || [];
                     profile.enrolledCourses.forEach((course) => {
                         course.price = return_twoDecimalPlaces(course.price);
-                        course.picture = return_validPictureFilename("./public/images/courses", course.picture);
+                        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
                     });
 
                     return response.render("user/profile.ejs", {
@@ -104,7 +105,8 @@ router.get("/profile", isLoggedIn, (request, response) => {
                     profile.createdCourses = createdCourses || [];
                     profile.createdCourses.forEach((course) => {
                         course.price = return_twoDecimalPlaces(course.price);
-                        course.picture = return_validPictureFilename("./public/images/courses", course.picture);
+                        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+                        course.enrollCount = return_formattedNumber(course.enrollCount);
                     });
 
                     return response.render("user/profile.ejs", {
