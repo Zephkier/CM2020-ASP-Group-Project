@@ -69,7 +69,6 @@ INSERT INTO courses (creator_id, name, description, price, enrollCount, video_ur
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'C Sharp', 'Build robust applications using C# and .NET framework.', 50.50, 70, 'https://www.youtube.com/watch?v=gfkTfcpWqAY', 'C Sharp.png', 'Computer Programming'); 
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'Java', 'Write cross-platform applications with Java.', 70.50, 6430, 'https://www.youtube.com/watch?v=eIrMbAQSU34', 'Java.png', 'Computer Programming'); 
 
-
 -- Game development
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'C++', 'Enhance your programming skills with C++.', 80.50, 120, 'https://www.youtube.com/watch?v=ZzaPdXTrSb8', 'C++.jpg', 'Game Development'); 
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'Lua', 'Integrate Lua scripting in your applications.', 80.50, 8340, 'https://www.youtube.com/watch?v=iMacxZQMPXs', 'Lua.png', 'Game Development'); 
@@ -87,7 +86,6 @@ INSERT INTO courses (creator_id, name, description, price, enrollCount, video_ur
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'UI/UX Design', 'The Complete guide for UI/UX design', 20.50, 2172, 'https://www.youtube.com/watch?v=YqkyasAg00I', 'Uiux.jpg', 'Design');
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'Design Principles', 'Learn to design powerful user interface.', 30.50, 12, 'https://www.youtube.com/watch?v=uwNClNmekGU', 'Principles.jpg', 'Design');
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'Adobe Illustrator', 'Essential course for graphic designers.', 30.50, 12, 'https://www.youtube.com/watch?v=3NBKRywEbNs', 'Adobe Illustrator.jpg', 'Design');
-
 
 -- Others 
 INSERT INTO courses (creator_id, name, description, price, enrollCount, video_url, picture, category) VALUES (2, 'Go', 'Build efficient and scalable systems with Go.', 50.50, 3620, 'https://www.youtube.com/watch?v=446E-r0rXHI', 'Go.jpg', 'Others'); 

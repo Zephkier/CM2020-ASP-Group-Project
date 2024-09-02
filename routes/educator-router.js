@@ -67,14 +67,14 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
             parseFloat(price),
             video_url,
             picture,
-            request.body.category // Include the category from the form
+            request.body.category, // Include the category from the form
         ];
         db.run(query, params, (err) => {
             if (err) return errorPage(response, "Error adding course!");
             return response.redirect("/user/profile");
         });
     }
-    
+
     if (request.body.button == "update") {
         let query = `
             UPDATE courses

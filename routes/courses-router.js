@@ -45,7 +45,7 @@ router.get("/", async (request, response) => {
                 let params = [request.session.user.id, course.id];
                 db.get(query, params, (err, existingEnrollment) => {
                     if (err) reject("Error checking student's enrollment for this course!");
-                    existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false); // TEST
+                    existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false);
                     resolve(course);
                 });
             } else {
@@ -125,8 +125,5 @@ router.post("/:courseId/enroll", (request, response) => {
 router.get("/*", (request, response) => {
     return response.redirect("/courses?error=invalid_url");
 });
-
-
-
 
 module.exports = router;

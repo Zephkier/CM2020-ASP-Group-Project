@@ -59,20 +59,13 @@ router.get("/profile", isLoggedIn, (request, response) => {
         WHERE enrollments.user_id = ?
         ORDER BY activityDate DESC
         LIMIT 5`;
-
     db.all(query, [userId, userId], (err, recentActivities) => {
-        if (err) {
-            console.error("Error retrieving recent activities:", err.message); // Log the exact error
-            return errorPage(response, "Error retrieving recent activities!");
-        }
+        if (err) return errorPage(response, "Error retrieving recent activities!");
 
         recentActivities = recentActivities || [];
 
         db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
-            if (err) {
-                console.error("Error retrieving profile details:", err.message); // Log the exact error
-                return errorPage(response, "Error retrieving profile details!");
-            }
+            if (err) return errorPage(response, "Error retrieving profile details!");
             if (!profile) return errorPage(response, "Profile not found!");
 
             // Students = enrolled courses and its progress
@@ -83,12 +76,8 @@ router.get("/profile", isLoggedIn, (request, response) => {
                     ON courses.id = enrollments.course_id 
                     WHERE enrollments.user_id = ?
                     ORDER BY enrollments.enrollment_date DESC`;
-                
                 db.all(query, [userId], (err, enrolledCourses) => {
-                    if (err) {
-                        console.error("Error retrieving enrolled courses:", err.message); // Log the exact error
-                        return errorPage(response, "Error retrieving enrolled courses!");
-                    }
+                    if (err) return errorPage(response, "Error retrieving enrolled courses!");
 
                     profile.enrolledCourses = enrolledCourses || [];
                     profile.enrolledCourses.forEach((course) => {
@@ -100,7 +89,7 @@ router.get("/profile", isLoggedIn, (request, response) => {
                         pageName: "Student Profile",
                         user: request.session.user,
                         profile: profile,
-                        recentActivities: recentActivities, 
+                        recentActivities: recentActivities,
                     });
                 });
             }
@@ -108,10 +97,7 @@ router.get("/profile", isLoggedIn, (request, response) => {
             // Educators = created courses
             if (request.session.user.role == "educator") {
                 db.all("SELECT * FROM courses WHERE creator_id = ? ORDER BY courses.id DESC", [userId], (err, createdCourses) => {
-                    if (err) {
-                        console.error("Error retrieving created courses:", err.message); // Log the exact error
-                        return errorPage(response, "Error retrieving created courses!");
-                    }
+                    if (err) return errorPage(response, "Error retrieving created courses!");
 
                     profile.createdCourses = createdCourses || [];
                     profile.createdCourses.forEach((course) => {
@@ -123,15 +109,13 @@ router.get("/profile", isLoggedIn, (request, response) => {
                         pageName: "Educator Profile",
                         user: request.session.user,
                         profile: profile,
-                        recentActivities: recentActivities, 
+                        recentActivities: recentActivities,
                     });
                 });
             }
         });
     });
 });
-
-
 
 router.get("/profile/edit", isLoggedIn, (request, response) => {
     return response.render("user/profile-edit.ejs", {
