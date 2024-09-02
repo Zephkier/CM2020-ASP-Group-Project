@@ -72,7 +72,7 @@
                                 <p class="course__enroll">
                                     <% if (course.isEnrolled) { %> You are enrolled!<br />
                                     <% } else { %> Price: $<%= course.price %><br />
-                                    <% } %> Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
+                                    <% } %> Students enrolled: <%= course.enrollCount %>
                                 </p>
                             </div>
                         </a>
@@ -100,7 +100,7 @@
                                 <p class="course__enroll">
                                     <% if (course.isEnrolled) { %> You are enrolled!<br />
                                     <% } else { %> Price: $<%= course.price %><br />
-                                    <% } %> Students enrolled: <%= course.enrollCount.toLocaleString().replace(",", ", ") %>
+                                    <% } %> Students enrolled: <%= course.enrollCount %>
                                 </p>
                             </div>
                         </a>

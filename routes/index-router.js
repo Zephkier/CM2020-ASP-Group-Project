@@ -3,9 +3,10 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // Format
-    errorPage,
-    setPriceProperty,
-    setPictureProperty,
+    return_twoDecimalPlaces,
+    return_validPictureFilename,
+    return_formattedNumber,
+    db_getTopFewCourses,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -14,87 +15,82 @@ const router = express.Router();
 // Note that all these URLs have no prefix!
 
 // Home (Main)
-router.get("/", (request, response) => {
-    db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT 3", (err, topCourses) => {
-        if (err) return errorPage(response, "Error retrieving top courses!");
-        if (!topCourses) return errorPage(response, "No top courses!");
+router.get("/", db_getTopFewCourses(3), (request, response) => {
+    request.topFewCourses.forEach((topCourse) => {
+        topCourse.price = return_twoDecimalPlaces(topCourse.price);
+        topCourse.picture = return_validPictureFilename("./public/images/courses/", topCourse.name);
+        topCourse.enrollCount = return_formattedNumber(topCourse.enrollCount);
+    });
 
-        let categories = [
-            { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
-            { iconscoutName: "uil uil-mobile-android", name: "Mobile App Development", description: "Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter." },
-            { iconscoutName: "uil uil-sitemap", name: "Data Structures and Algorithms", description: "Understand the core concepts of data structures and algorithms to solve complex problems efficiently." },
-            { iconscoutName: "uil uil-robot", name: "Machine Learning", description: "Explore the world of AI by learning the principles of machine learning, including supervised and unsupervised learning." },
-            { iconscoutName: "uil uil-lock-access", name: "Cybersecurity", description: "Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices." },
-            { iconscoutName: "uil uil-cloud-database-tree", name: "Cloud Computing", description: "Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud." },
-        ];
+    let categories = [
+        { iconscoutName: "uil uil-desktop", name: "Web Development", description: "Master the fundamentals of HTML, CSS, and JavaScript to build responsive and dynamic websites." },
+        { iconscoutName: "uil uil-mobile-android", name: "Mobile App Development", description: "Learn to create powerful mobile applications for Android and iOS using frameworks like React Native and Flutter." },
+        { iconscoutName: "uil uil-sitemap", name: "Data Structures and Algorithms", description: "Understand the core concepts of data structures and algorithms to solve complex problems efficiently." },
+        { iconscoutName: "uil uil-robot", name: "Machine Learning", description: "Explore the world of AI by learning the principles of machine learning, including supervised and unsupervised learning." },
+        { iconscoutName: "uil uil-lock-access", name: "Cybersecurity", description: "Gain insights into protecting systems and data from cyber threats through ethical hacking and security practices." },
+        { iconscoutName: "uil uil-cloud-database-tree", name: "Cloud Computing", description: "Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud." },
+    ];
 
-        let faqs = [
-            { question: "How do I choose the right course for my needs?", answer: "We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice." },
-            { question: "What is the course format?", answer: "Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials." },
-            { question: "Will I receive a certificate upon completion?", answer: "Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer." },
-            { question: "Can I access the course content after completing it?", answer: "Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future." },
-            { question: "Are there any prerequisites for enrolling in a course?", answer: "Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level." },
-            { question: "How do I interact with instructors and other students?", answer: "You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities." },
-            { question: "What if I have questions during the course?", answer: "If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey." },
-            { question: "What is your refund policy?", answer: "We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details." },
-            { question: "How do I access the course materials?", answer: "Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection." },
-            { question: "Do you offer group discounts or corporate training?", answer: "Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information." },
-        ];
+    let faqs = [
+        { question: "How do I choose the right course for my needs?", answer: "We offer a variety of courses tailored to different skill levels and interests. To help you choose the right course, consider your current knowledge, goals, and the course syllabus. You can also reach out to our support team for personalized advice." },
+        { question: "What is the course format?", answer: "Our courses are designed to be flexible and engaging, combining video lectures, quizzes, assignments, and hands-on projects. You can study at your own pace, with lifetime access to the course materials." },
+        { question: "Will I receive a certificate upon completion?", answer: "Yes, upon successfully completing a course, you will receive a certificate of completion that you can share on your LinkedIn profile, resume, or with your employer." },
+        { question: "Can I access the course content after completing it?", answer: "Absolutely! Once you enroll in a course, you have lifetime access to the content, including any updates or new materials added in the future." },
+        { question: "Are there any prerequisites for enrolling in a course?", answer: "Some courses may require prior knowledge or skills. We recommend checking the course description and prerequisites before enrolling to ensure it aligns with your current level." },
+        { question: "How do I interact with instructors and other students?", answer: "You can interact with instructors and fellow students through discussion forums, live Q&A sessions, and group projects. This collaborative environment enhances learning and provides valuable networking opportunities." },
+        { question: "What if I have questions during the course?", answer: "If you have any questions or need clarification on the course material, you can post your questions in the course forum, where instructors and other students can assist you. We are here to support your learning journey." },
+        { question: "What is your refund policy?", answer: "We offer a satisfaction guarantee. If you are not satisfied with a course, you can request a refund within 30 days of purchase. Please refer to our refund policy for more details." },
+        { question: "How do I access the course materials?", answer: "Once you enroll in a course, you can access the materials through your account dashboard. All resources are available online and can be accessed from any device with an internet connection." },
+        { question: "Do you offer group discounts or corporate training?", answer: "Yes, we offer discounts for group enrollments and customized corporate training solutions. Please contact our sales team for more information." },
+    ];
 
-        let testimonials = [
-            {
-                name: "Diana Ayi",
-                role: "Student",
-                quote: "Thanks to this platform, I was able to gain new skills in web development. The flexible learning pace helped me manage my time effectively while still working full-time.",
-            },
-            {
-                name: "Edem Quist",
-                role: "Student",
-                quote: "The quality of instruction is unmatched. I loved the hands-on projects, which really helped me apply the theory I was learning.",
-            },
-            {
-                name: "Hajia Bintu",
-                role: "Student",
-                quote: "I never thought I'd be able to code, but this platform made it possible. The beginner-friendly courses and great instructors boosted my confidence.",
-            },
-            {
-                name: "Ernest Achiever",
-                role: "Web Developer",
-                quote: "The courses here are top-notch. I completed the Full-Stack Development program and received a certificate that helped me land a new role in just a few months!",
-            },
-            {
-                name: "Sarah Mensah",
-                role: "Data Analyst",
-                quote: "The Data Science courses are fantastic! The knowledge I gained from this platform has been incredibly valuable in my current role as a Data Analyst.",
-            },
-            {
-                name: "Kwame Ofori",
-                role: "Marketing Manager",
-                quote: "The digital marketing certification I earned here has greatly improved my career prospects. The course content was up-to-date and extremely relevant to today’s market.",
-            },
-            {
-                name: "Joyce Adu",
-                role: "Educator",
-                quote: "As an instructor, I highly recommend this platform. It offers great tools for learners, and I was able to enrich my teaching materials by taking courses here myself.",
-            },
-        ];
+    let testimonials = [
+        {
+            name: "Diana Ayi",
+            role: "Student",
+            quote: "Thanks to this platform, I was able to gain new skills in web development. The flexible learning pace helped me manage my time effectively while still working full-time.",
+        },
+        {
+            name: "Edem Quist",
+            role: "Student",
+            quote: "The quality of instruction is unmatched. I loved the hands-on projects, which really helped me apply the theory I was learning.",
+        },
+        {
+            name: "Hajia Bintu",
+            role: "Student",
+            quote: "I never thought I'd be able to code, but this platform made it possible. The beginner-friendly courses and great instructors boosted my confidence.",
+        },
+        {
+            name: "Ernest Achiever",
+            role: "Web Developer",
+            quote: "The courses here are top-notch. I completed the Full-Stack Development program and received a certificate that helped me land a new role in just a few months!",
+        },
+        {
+            name: "Sarah Mensah",
+            role: "Data Analyst",
+            quote: "The Data Science courses are fantastic! The knowledge I gained from this platform has been incredibly valuable in my current role as a Data Analyst.",
+        },
+        {
+            name: "Kwame Ofori",
+            role: "Marketing Manager",
+            quote: "The digital marketing certification I earned here has greatly improved my career prospects. The course content was up-to-date and extremely relevant to today’s market.",
+        },
+        {
+            name: "Joyce Adu",
+            role: "Educator",
+            quote: "As an instructor, I highly recommend this platform. It offers great tools for learners, and I was able to enrich my teaching materials by taking courses here myself.",
+        },
+    ];
+    testimonials.forEach((testimonial) => {
+        testimonial.picture = return_validPictureFilename("./public/images/testimonials/", testimonial.name);
+    });
 
-        testimonials.forEach((testimonial) => {
-            testimonial.picture = testimonial.name + ".jpg";
-        });
-
-        topCourses.forEach((topCourse) => {
-            setPriceProperty(topCourse);
-            setPictureProperty(topCourse);
-        });
-
-        return response.render("index.ejs", {
-            pageName: "Home",
-            categories: categories,
-            topCourses: topCourses,
-            faqs: faqs,
-            testimonials: testimonials,
-        });
+    return response.render("index.ejs", {
+        pageName: "Home",
+        categories: categories,
+        topFewCourses: request.topFewCourses,
+        faqs: faqs,
+        testimonials: testimonials,
     });
 });
 
@@ -159,7 +155,7 @@ router.get("/about", (request, response) => {
         },
     ];
     teamMembers.forEach((teamMember) => {
-        teamMember.picture = teamMember.name + ".jpg";
+        teamMember.picture = return_validPictureFilename("./public/images/team members/", teamMember.name);
     });
     teamMembers.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -176,18 +172,18 @@ router.get("/contact", (request, response) => {
     });
 });
 
-// Courses related methods -> courses-router.js
+// Courses: Found in courses-router.js
 
 // Cart
 router.get("/cart", (request, response) => {
     let totalPrice = 0;
     let cart = request.session.cart || [];
     cart.forEach((item) => {
-        setPriceProperty(item);
-        setPictureProperty("./public/images/courses/", item.name);
+        item.price = return_twoDecimalPlaces(item.price);
+        item.picture = return_validPictureFilename("./public/images/courses/", item.name);
         totalPrice += parseFloat(item.price);
     });
-    totalPrice = parseFloat(totalPrice).toFixed(2); // Set "totalPrice" to 2 decimal places to properly display price
+    totalPrice = return_twoDecimalPlaces(totalPrice);
 
     return response.render("cart.ejs", {
         pageName: "Cart",
@@ -196,12 +192,11 @@ router.get("/cart", (request, response) => {
     });
 });
 
-// remove items from cart
 router.post("/cart/remove", (request, response) => {
     let cart = request.session.cart || [];
 
     // Filter "<input name='courseId'>" and update session cart
-    cart = cart.filter((item) => item.id !== parseInt(request.body.courseId, 10));
+    cart = cart.filter((item) => item.id != parseInt(request.body.courseId, 10));
     request.session.cart = cart;
 
     return response.redirect("/cart");

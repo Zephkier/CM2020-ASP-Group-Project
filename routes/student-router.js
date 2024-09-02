@@ -3,11 +3,11 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // Format
+    return_twoDecimalPlaces,
+    return_validPictureFilename,
     errorPage,
     isLoggedIn,
     hasRoles,
-    setPriceProperty,
-    setPictureProperty,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,
@@ -32,11 +32,11 @@ router.get("/checkout", isLoggedIn, hasRoles(["student"]), (request, response) =
     let totalPrice = 0;
     let cart = request.session.cart || [];
     cart.forEach((item) => {
-        setPriceProperty(item);
-        setPictureProperty(item);
+        item.price = return_twoDecimalPlaces(item.price);
+        item.picture = return_validPictureFilename("./public/images/courses", item.picture);
         totalPrice += parseFloat(item.price);
     });
-    totalPrice = parseFloat(totalPrice).toFixed(2); // Set "totalPrice" to 2 decimal places to properly display price
+    totalPrice = return_twoDecimalPlaces(totalPrice);
 
     return response.render("student/checkout.ejs", {
         pageName: "Checkout",

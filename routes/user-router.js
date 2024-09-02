@@ -3,15 +3,13 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // Format
+    return_twoDecimalPlaces,
+    return_validPictureFilename,
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    setPriceProperty,
-    setPictureProperty,
     db_isExistingUser,
     db_forProfile_getProfileInfo,
-    db_forProfile_getEnrolledCourses,
-    db_forProfile_getCreatedCourses,
     db_isUnique_usernameAndEmail,
 } = require("../public/helper.js");
 
@@ -49,11 +47,16 @@ router.get("/profile", isLoggedIn, (request, response) => {
 
     // Fetch recent activities (notes and enrollments)
     let query = `
-        SELECT 'Note Added' AS activityType, content AS description, created_at AS activityDate
-        FROM notes
-        WHERE user_id = ?
+        SELECT
+            'Note Added' AS activityType,
+            content AS description,
+            created_at AS activityDate
+        FROM notes WHERE user_id = ?
         UNION
-        SELECT 'Enrolled in Course' AS activityType, courses.name AS description, enrollment_date AS activityDate
+        SELECT
+            'Enrolled in Course' AS activityType,
+            courses.name AS description,
+            enrollment_date AS activityDate
         FROM enrollments JOIN courses
         ON enrollments.course_id = courses.id
         WHERE enrollments.user_id = ?
@@ -63,7 +66,6 @@ router.get("/profile", isLoggedIn, (request, response) => {
         if (err) return errorPage(response, "Error retrieving recent activities!");
 
         recentActivities = recentActivities || [];
-
         db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
             if (err) return errorPage(response, "Error retrieving profile details!");
             if (!profile) return errorPage(response, "Profile not found!");
@@ -81,8 +83,8 @@ router.get("/profile", isLoggedIn, (request, response) => {
 
                     profile.enrolledCourses = enrolledCourses || [];
                     profile.enrolledCourses.forEach((course) => {
-                        setPriceProperty(course);
-                        setPictureProperty(course);
+                        course.price = return_twoDecimalPlaces(course.price);
+                        course.picture = return_validPictureFilename("./public/images/courses", course.picture);
                     });
 
                     return response.render("user/profile.ejs", {
@@ -101,8 +103,8 @@ router.get("/profile", isLoggedIn, (request, response) => {
 
                     profile.createdCourses = createdCourses || [];
                     profile.createdCourses.forEach((course) => {
-                        setPriceProperty(course);
-                        setPictureProperty(course);
+                        course.price = return_twoDecimalPlaces(course.price);
+                        course.picture = return_validPictureFilename("./public/images/courses", course.picture);
                     });
 
                     return response.render("user/profile.ejs", {

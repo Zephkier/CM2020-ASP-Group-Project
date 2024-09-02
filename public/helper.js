@@ -1,10 +1,45 @@
 const { db } = require("./db.js"); // For any database queries
-const fs = require("fs"); // For "setPictureProperty()"
+const fs = require("fs"); // For "return_validPictureFilename()"
+
+// ----- General Helper Functions ----- //
 
 /**
- * Redirect to `_error.ejs` file with custom error message.
+ * Returns a number with 2 decimal places, mainly to display prices with cents.
  *
- * @param {string} errorMessage The message to inform user. For security reasons, do not reveal explicit details!
+ * @param {*} number Number **without** zeroes at the end *(eg. 1.5 or 1)*
+ * @returns Number **with** 2 decimal places *(eg. 1.50 or 1.00)*
+ */
+function return_twoDecimalPlaces(number) {
+    return parseFloat(number).toFixed(2);
+}
+
+/**
+ * Checks if either `.jpg` or `.png` file exists, then return the existing/valid `filename`.
+ *
+ * @param {string} pathToPicture Path to directory with target filename, end with "/" *(eg. "./public/images/courses/")*
+ * @param {string} filename Filename to check and return, exclude its file type *(eg. "C Sharp")*
+ * @returns Filename with either `.jpg` or `.png` at the end *(eg. "C Sharp.jpg")*
+ */
+function return_validPictureFilename(pathToPicture, filename) {
+    if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
+    if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
+    return `default_image.jpg`;
+}
+
+/**
+ * Returns a number with `commas` and `space` at every thousands place.
+ *
+ * @param {*} number Number without any formatting *(eg. 10000)*
+ * @returns Number with formatting *(eg. 10, 000)*
+ */
+function return_formattedNumber(number) {
+    return number.toLocaleString().replace(",", ", ");
+}
+
+/**
+ * Render error page with custom error message. For security reasons, do not reveal explicit details!
+ *
+ * @param {string} errorMessage Message to inform user, and for us to identify what went wrong.
  */
 function errorPage(response, errorMessage) {
     response.render("partials/error.ejs", { errorMessage: errorMessage });
@@ -41,43 +76,25 @@ function hasRoles(roles) {
     };
 }
 
-// TODO JSDoc string
-function setPriceProperty(course) {
-    course.price = parseFloat(course.price).toFixed(2);
-}
+// ----- Database-related Helper Functions ----- //
 
 /**
- * Determine if picture filename uses `.jpg` or `.png`, then return existing one.
+ * Query to `SELECT * FROM courses`
+ * - Ordered by `enrollCount` in `DESC` order.
+ * - Limited by `limit`
  *
- * Course names _(eg. `C Sharp`)_ == picture filenames _(eg. `C Sharp.jpg`)_
- *
- * @param {string} pathToPicture The path to directory containing target filename.
- * @param {string} filename The target filename itself, excluding its file type!
- * @returns The filename with either `.jpg` or `.png` at the end.
+ * @param {*} limit Number of courses to return.
+ * @returns Query results in `request.topFewCourses`
  */
-function setPictureProperty(pathToPicture, filename) {
-    if (fs.existsSync(`${pathToPicture}${filename}`)) return filename;
-    if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
-    if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
-    return `default_image.jpg`;
-}
-
-/**
- * `.picture` property:
- * - Contains filename with its type at the end.
- *   - _eg. `C Sharp.jpg`_
- * - Is added to the object.
- *
- * `.price` property:
- * - Set to 2 decimal places to properly display price.
- *   - _eg. `1.5` becomes `1.50`_
- *
- * @param {object} course The object after querying database.
- */
-// TODO remove
-function setPictureAndPriceProperties(course) {
-    course.picture = setPictureProperty("./public/images/courses/", course.name);
-    setPriceProperty(course);
+function db_getTopFewCourses(limit) {
+    return (request, response, next) => {
+        db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?", [limit], (err, topFewCourses) => {
+            if (err) return errorPage(response, "Error retrieving top courses!");
+            if (!topFewCourses) return errorPage(response, "No courses found!");
+            request.topFewCourses = topFewCourses;
+            return next();
+        });
+    };
 }
 
 /**
@@ -274,12 +291,14 @@ function db_isUnique_usernameAndEmail(request, response, next) {
 
 // Export module containing the following so external files can access it
 module.exports = {
+    return_twoDecimalPlaces,
+    return_validPictureFilename,
+    return_formattedNumber,
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
     hasRoles,
-    setPriceProperty,
-    setPictureProperty,
+    db_getTopFewCourses,
     db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,

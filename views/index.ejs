@@ -9,10 +9,10 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
         <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-       
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/courses.css" />
@@ -41,7 +41,7 @@
                         <h1>Grow your skills to advance your career path</h1>
                         <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends.</p>
                         <a href="/user/register" class="btn btn-primary">Sign Up</a>
-                        <a href="/courses" class="btn btn-primary">See all courses</a>
+                        <a href="/courses" class="btn btn-primary">See all Courses</a>
                     </div>
                 </div>
             </section>
@@ -51,7 +51,7 @@
                     <div class="categories__left">
                         <h1>Categories</h1>
                         <p>Expand your coding expertise and dive into the world of technology. Whether you're a beginner or looking to advance your skills, explore these courses designed to enhance your programming knowledge.</p>
-                        <a href="/courses" class="btn">See all courses</a>
+                        <a href="/courses" class="btn">See all Courses</a>
                     </div>
 
                     <div class="categories__right">
@@ -71,7 +71,7 @@
             <section class="courses index">
                 <h1>Our Popular Courses</h1>
                 <div class="container courses__container">
-                    <%topCourses.forEach(topCourse => { %>
+                    <%topFewCourses.forEach(topCourse => { %>
                     <a href="/courses/<%= topCourse.id %>" class="hidden">
                         <article class="course">
                             <div class="course__image">
@@ -82,7 +82,7 @@
                                 <p class="course__description"><%= topCourse.description %></p>
                                 <p class="course__enroll">
                                     Price: $<%= topCourse.price %><br />
-                                    Students enrolled: <%= topCourse.enrollCount.toLocaleString().replace(",", ", ") %>
+                                    Students enrolled: <%= topCourse.enrollCount %>
                                 </p>
                             </div>
                         </article>

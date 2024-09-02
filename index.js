@@ -12,14 +12,21 @@ const educatorRouter = require("./routes/educator-router.js");
 const port = 3000;
 const app = express();
 
-app.set("view engine", "ejs"); // Express to use EJS as templating engine
-app.use(express.static(__dirname + "/public")); // Set location of static files (like CSS, JS, images), looks into "public" dir by default
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: "secretKey", saveUninitialized: false, resave: false })); // Call session first, then routers
-app.use((request, response, next) => {
-    // Set default local variables, then call next() to proceed with rest of code file
-    // Thus, no need to pass (the following) variables to every route
+// Express to use EJS as templating engine
+app.set("view engine", "ejs");
 
+// Set location of static files (like CSS, JS, images), looks into "public" dir by default
+app.use(express.static(__dirname + "/public"));
+
+// Allow passing "request.body" form data
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Call session first, then routers
+app.use(session({ secret: "secretKey", saveUninitialized: false, resave: false }));
+
+// Set "local" variables, then call next() to proceed with rest of code file
+// Thus, no need to pass the following variables to every route
+app.use((request, response, next) => {
     // For EJS file's <title>
     response.locals.pageName = "You forgot to set 'pageName' in this page's EJS file!";
     response.locals.separator = " | ";
@@ -27,6 +34,7 @@ app.use((request, response, next) => {
 
     // For navbar.ejs
     response.locals.session = request.session;
+
     return next();
 });
 

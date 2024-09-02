@@ -3,9 +3,10 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // Format
+    return_twoDecimalPlaces,
+    return_validPictureFilename,
+    return_formattedNumber,
     errorPage,
-    setPriceProperty,
-    setPictureProperty,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -15,8 +16,12 @@ const router = express.Router();
 
 // Home (Courses)
 router.get("/", async (request, response) => {
-    // Promise to complete query, then store in "courses"
-    let promisedCourses = await new Promise((resolve, reject) => {
+    // If user logged in, then check if user has enrolled into any courses
+    // So that text displays either price or "Already Enrolled"
+    // But it takes time to complete this query, thus, use Promise()
+
+    // Get all courses
+    let coursesPromised = await new Promise((resolve, reject) => {
         db.all("SELECT * FROM courses", (err, courses) => {
             if (err) return reject("Error retrieving all courses!");
             if (!courses) return reject("No courses found!");
@@ -24,23 +29,28 @@ router.get("/", async (request, response) => {
         });
     });
 
+    // Wait for query to complete
+    coursesPromised = await Promise.all(coursesPromised);
+
+    // Sort all courses
     let sortOption = request.query.sort || "popular";
-    if (sortOption === "popular") promisedCourses.sort((a, b) => b.enrollCount - a.enrollCount);
-    else if (sortOption === "asc") promisedCourses.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortOption === "desc") promisedCourses.sort((a, b) => b.name.localeCompare(a.name));
+    if (sortOption == "popular") coursesPromised.sort((a, b) => b.enrollCount - a.enrollCount);
+    else if (sortOption == "asc") coursesPromised.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortOption == "desc") coursesPromised.sort((a, b) => b.name.localeCompare(a.name));
 
     /**
-     * Promise to:
-     * 1. Set each course's price and picture properties
-     * 2. Complete query for ".isEnrolled" property to differentiate price to display price itself or "Already Enrolled"
-     *
-     * Then store in "enrollmentPromises"
+     * 1. Set every course's ".price" property
+     * 2. Set every course's ".picture" property
+     * 3. Set every course's ".enrollCount" property
+     * 4. Set every course's ".isEnrolled" property to differentiate text to display either price or "Already Enrolled"
      */
-    let promisedCoursesWithEditedProperties = promisedCourses.map((course) => {
+    let coursesPromisedEdited = coursesPromised.map((course) => {
         return new Promise((resolve, reject) => {
-            setPriceProperty(course);
-            setPictureProperty(course);
+            course.price = return_twoDecimalPlaces(course.price);
+            course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+            course.enrollCount = return_formattedNumber(course.enrollCount);
             if (request.session.user) {
+                // If logged in, then differentiate text to display as planned
                 let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
                 let params = [request.session.user.id, course.id];
                 db.get(query, params, (err, existingEnrollment) => {
@@ -49,18 +59,19 @@ router.get("/", async (request, response) => {
                     resolve(course);
                 });
             } else {
+                // If not logged in, then display price
                 course.isEnrolled = false;
                 resolve(course);
             }
         });
     });
 
-    // Wait for all promises to complete
-    await Promise.all(promisedCoursesWithEditedProperties);
+    // Wait for query to complete
+    coursesPromisedEdited = await Promise.all(coursesPromisedEdited);
 
     return response.render("courses/courses.ejs", {
         pageName: "Courses",
-        courses: promisedCourses,
+        courses: coursesPromisedEdited,
         sort: sortOption,
     });
 });
@@ -71,29 +82,21 @@ router.get("/:courseId", (request, response) => {
         if (err) return errorPage(response, "Error retrieving course selected!");
         if (!course) return errorPage(response, "No course selected!");
 
-        setPriceProperty(course);
+        course.price = return_twoDecimalPlaces(course.price);
+        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
 
-        // Differentiate "Add to Cart" or "Already enrolled" button
-        if (request.session.user) {
-            let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-            let params = [request.session.user.id, request.params.courseId];
-            db.get(query, params, (err, existingEnrollment) => {
-                if (err) return errorPage(response, "Error retrieving enrollment information!");
-                existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false);
-                // Must "return response.render()" the same thing twice
-                return response.render("courses/course.ejs", {
-                    pageName: `${course.name}`,
-                    course: course,
-                });
-            });
-        } else {
-            // Must use "else" statement
-            // Must "return response.render()" the same thing twice
+        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+        let userId = request.session.user ? request.session.user.id : null;
+        let params = [userId, request.params.courseId];
+        db.get(query, params, (err, existingEnrollment) => {
+            if (err) return errorPage(response, "Error retrieving enrollment information!");
+            existingEnrollment ? (course.isEnrolled = true) : (course.isEnrolled = false);
+
             return response.render("courses/course.ejs", {
-                pageName: `${course.name}`,
+                pageName: `About ${course.name}`,
                 course: course,
             });
-        }
+        });
     });
 });
 
