@@ -53,6 +53,18 @@ function return_formattedNumber(number) {
     return number.toLocaleString();
 }
 
+/**
+ * Render error page with custom error message.
+ *
+ * For security reasons, do not reveal explicit details!
+ *
+ * @param {string} errorMessage
+ * Message to inform user, and for us to identify what went wrong.
+ */
+function errorPage(response, errorMessage) {
+    response.render("partials/error.ejs", { errorMessage: errorMessage });
+}
+
 // ----- Database-related Helper Functions ----- //
 
 /**
@@ -65,10 +77,13 @@ function return_formattedNumber(number) {
  * - `ORDER BY enrollCount DESC`
  * - `LIMIT ?`
  *
- * @param {*} limit Number of courses to return.
- * @returns Query result in `request.topFewCourses`
+ * @param {*} limit
+ * Number of courses to return.
+ *
+ * @returns
+ * Query result in `request.topFewCourses`
  */
-function db_getTopFewCourses(limit) {
+function db_getCoursesLimited(limit) {
     return (request, response, next) => {
         db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?", [limit], (err, topFewCourses) => {
             if (err) return errorPage(response, "Error retrieving top courses!");
@@ -79,18 +94,70 @@ function db_getTopFewCourses(limit) {
     };
 }
 
+/**
+ * Used in `courses-router.js`
+ *
+ * Create `new Promise()` to check if user is enrolled into course or not.
+ * - If user is enrolled into course, then `object.isEnrolled = true`
+ * - If user is not enrolled into course, then `object.isEnrolled = false`
+ *
+ * Actual query:
+ * - `SELECT * FROM enrollments`
+ * - `WHERE user_id = ? AND course_id = ?`
+ *
+ * @param {*} userId
+ * Current (and logged in) user's ID; usually `request.session.user.id`
+ *
+ * @param {*} courseId
+ * Course's ID to check if user is enrolled into.
+ *
+ * @param {*} object
+ * Object to add and set `.isEnrolled` property to.
+ *
+ * @returns
+ * Object with `enrollments` table properties, and additional `.isEnrolled` property.
+ */
+function db_isEnrolledInCourse_promise(userId, courseId, object) {
+    return new Promise((resolve, reject) => {
+        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+        db.get(query, [userId, courseId], (err, existingEnrollment) => {
+            if (err) return reject(new Error("Error checking if user enrolled into course!"));
+            existingEnrollment ? (object.isEnrolled = true) : (object.isEnrolled = false);
+            return resolve(object);
+        });
+    });
+}
+
+/**
+ * Used in `courses-router.js`
+ *
+ * Create `new Promise()` to get specific course based on its ID.
+ *
+ * Actual query:
+ * - `SELECT * FROM courses WHERE id = ?`
+ *
+ * @param {*} courseId
+ * Course's ID to check if user is enrolled into.
+ *
+ * @param {*} response
+ * To run `errorPage()`
+ *
+ * @returns
+ * Object with `courses` table properties.
+ */
+function db_getCourse_promise(courseId, response) {
+    return new Promise((resolve) => {
+        db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
+            if (err) return errorPage(response, "Error retrieving course selected!");
+            if (!course) return errorPage(response, "No course selected!");
+            return resolve(course);
+        });
+    });
+}
+
 // ------------------------ //
 // ----- Unused Below ----- //
 // ------------------------ //
-
-/**
- * Render error page with custom error message. For security reasons, do not reveal explicit details!
- *
- * @param {string} errorMessage Message to inform user, and for us to identify what went wrong.
- */
-function errorPage(response, errorMessage) {
-    response.render("partials/error.ejs", { errorMessage: errorMessage });
-}
 
 /**
  * Checks for `request.session.user` *(aka. if user is logged in)*.
@@ -121,43 +188,6 @@ function hasRoles(roles) {
         if (roles.includes(request.session.user.role)) return next();
         return errorPage(response, "You do not have permission to access this page!");
     };
-}
-
-/**
- * Query to `SELECT * FROM courses WHERE id = ?`
- *
- * @returns Object with `courses` properties.
- */
-function db_getSpecificCourse(courseId) {
-    return new Promise((resolve, reject) => {
-        db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
-            if (err) return errorPage(response, "Error retrieving course selected!");
-            if (!course) return errorPage(response, "No course selected!");
-            return resolve(course);
-        });
-    });
-}
-
-/**
- * Query to `SELECT * FROM enrollments` with:
- * - Specific `user_id`
- * - Specific `course_id`
- *
- * If user is enrolled into course, then `object.isEnrolled = true`
- *
- * If user is not enrolled into course, then `object.isEnrolled = false`
- *
- * @returns Object with `enrollments` properties, plus an additional `.isEnrolled` property.
- */
-function db_getIsEnrolled_forSpecificUserAndCourse(userId, courseId, object) {
-    return new Promise((resolve, reject) => {
-        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-        db.get(query, [userId, courseId], (err, existingEnrollment) => {
-            if (err) return errorPage(response, "Error retrieving enrolled courses!");
-            existingEnrollment ? (object.isEnrolled = true) : (object.isEnrolled = false);
-            return resolve(object);
-        });
-    });
 }
 
 /**
@@ -360,9 +390,9 @@ module.exports = {
     return_formattedNumber,
     errorPage,
     // -----
-    db_getTopFewCourses,
-    db_getSpecificCourse,
-    db_getIsEnrolled_forSpecificUserAndCourse,
+    db_getCoursesLimited,
+    db_isEnrolledInCourse_promise,
+    db_getCourse_promise,
 
     // "Unused" below
     isLoggedIn,

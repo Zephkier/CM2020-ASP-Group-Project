@@ -6,7 +6,7 @@ const {
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
-    db_getTopFewCourses,
+    db_getCoursesLimited,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -15,13 +15,7 @@ const router = express.Router();
 // Note that all these URLs have no prefix!
 
 // Home (Main)
-router.get("/", db_getTopFewCourses(3), (request, response) => {
-    request.topFewCourses.forEach((topCourse) => {
-        topCourse.price = return_twoDecimalPlaces(topCourse.price);
-        topCourse.picture = return_validPictureFilename("./public/images/courses/", topCourse.name);
-        topCourse.enrollCount = return_formattedNumber(topCourse.enrollCount);
-    });
-
+router.get("/", db_getCoursesLimited(3), (request, response) => {
     let categories = [
         {
             iconscoutName: "uil uil-desktop",
@@ -54,6 +48,12 @@ router.get("/", db_getTopFewCourses(3), (request, response) => {
             description: "Learn how to deploy and manage applications in the cloud with platforms like AWS, Azure, and Google Cloud.",
         },
     ];
+
+    request.topFewCourses.forEach((topCourse) => {
+        topCourse.price = return_twoDecimalPlaces(topCourse.price);
+        topCourse.picture = return_validPictureFilename("./public/images/courses/", topCourse.name);
+        topCourse.enrollCount = return_formattedNumber(topCourse.enrollCount);
+    });
 
     let faqs = [
         {
@@ -225,8 +225,6 @@ router.get("/contact", (request, response) => {
         pageName: "Contact",
     });
 });
-
-// Courses: Found in courses-router.js
 
 // Cart
 router.get("/cart", (request, response) => {
