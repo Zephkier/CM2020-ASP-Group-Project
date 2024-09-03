@@ -252,4 +252,6 @@ router.post("/cart/remove", (request, response) => {
     return response.redirect("/cart");
 });
 
+// Do not handle invalid URLs here, as other routes need to access URLs too
+
 module.exports = router;

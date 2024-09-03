@@ -100,7 +100,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
     }
 });
 
-// Handle invalid URLs (eg. "/user/*")
+// Handle invalid URLs (eg. "/educator/*")
 router.get("/*", (request, response) => {
     return response.redirect("/?error=invalid_url");
 });

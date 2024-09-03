@@ -197,7 +197,7 @@ router.post("/learn/course/:courseId/update-time", (request, response) => {
     });
 });
 
-// Handle invalid URLs (eg. "/user/*")
+// Handle invalid URLs (eg. "/student/*")
 router.get("/*", (request, response) => {
     return response.redirect("/?error=invalid_url");
 });

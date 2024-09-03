@@ -80,9 +80,9 @@ app.use("/student", studentRouter);
 app.use("/educator", educatorRouter);
 
 // Handle invalid URLs via '/*' (likewise, uncomment this once everything above (the routers) is done)
-// app.get("/*", (request, response) => {
-//     return response.redirect("/");
-// });
+app.get("/*", (request, response) => {
+    return response.redirect("/");
+});
 
 // Start server
 app.listen(port, () => {
