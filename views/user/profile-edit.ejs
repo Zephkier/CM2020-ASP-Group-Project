@@ -9,9 +9,10 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
         <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/profile-edit.css" />
@@ -34,12 +35,12 @@
                     <div class="form-group">
                         <label for="profilePicture">Profile Picture:</label>
                         <div class="profile-picture-options">
-                            <% const profilePictures = ["bear.png", "cat.png", "chicken.png", "dog.png", "meerkat.png", "panda.png", "rabbit.png", "user.png", "woman.png"]; %> <% profilePictures.forEach((picture) => { %>
+                            <%const profilePictures = ["bear.png", "cat.png", "chicken.png", "dog.png", "meerkat.png", "panda.png", "rabbit.png", "user.png", "woman.png"]; %> <%profilePictures.forEach((picture) => { %>
                             <label>
                                 <input type="radio" name="profilePicture" value="<%= picture %>" <%= user.profilePicture === picture ? "checked" : "" %> />
                                 <img src="/images/profile-pictures/<%= picture %>" alt="<%= picture %>" class="profile-picture-option" />
                             </label>
-                            <% }) %>
+                            <%}) %>
                         </div>
                     </div>
 

@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/course-update.css" />
@@ -29,7 +30,7 @@
             <div class="form-container">
                 <h2><%= formInputStored.id ? "Edit Course" : "Add New Course" %></h2>
 
-                <% let endpoint; formInputStored.id ? (endpoint = "/educator/update/course/" + formInputStored.id) : (endpoint = "/educator/update/course"); %>
+                <%let endpoint; formInputStored.id ? (endpoint = "/educator/update/course/" + formInputStored.id) : (endpoint = "/educator/update/course"); %>
                 <form action="<%= endpoint %>" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="category">Course Category:</label>
@@ -80,7 +81,7 @@
                             <label for="topic-video-url-<%= index %>">Video URL:</label>
                             <input type="url" id="topic-video-url-<%= index %>" name="existingTopics[<%= topic.id %>][video_url]" value="<%= topic.video_url %>" required />
                         </div>
-                        <% }); } %>
+                        <%}); } %>
 
                         <!-- New topics area -->
                         <div id="new-topics-area">

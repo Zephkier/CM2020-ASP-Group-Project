@@ -9,9 +9,10 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
         <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/cart.css" />
@@ -29,7 +30,7 @@
             <div class="checkout-container">
                 <h1>Your Cart</h1>
 
-                <% if (cart.length > 0) { cart.forEach(item => { %>
+                <%if (cart.length > 0) { cart.forEach(item => { %>
                 <div class="cart-item">
                     <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
                     <div>
@@ -43,7 +44,7 @@
                         </form>
                     </div>
                 </div>
-                <% }) %>
+                <%}) %>
 
                 <div class="total">
                     <p>Total: $<%= totalPrice %></p>
@@ -54,9 +55,9 @@
                         <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
                     </form>
                 </div>
-                <% } else { %>
+                <%} else { %>
                 <p>Your cart is empty.</p>
-                <% } %>
+                <%} %>
             </div>
 
             <div id="popup" class="popup hidden">

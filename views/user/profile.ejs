@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+
         <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/profile.css" />
@@ -65,12 +66,12 @@
                 </div>
 
                 <!-- Student: Enrolled Courses -->
-                <% if (user.role == "student") { %>
+                <%if (user.role == "student") { %>
                 <div class="enrolled-courses">
                     <h2>Your Enrolled Courses</h2>
-                    <% if (profile.enrolledCourses.length > 0) { %>
+                    <%if (profile.enrolledCourses.length > 0) { %>
                     <ul>
-                        <% profile.enrolledCourses.forEach(course => { %>
+                        <%profile.enrolledCourses.forEach(course => { %>
                         <a href="/student/learn/course/<%= course.id %>" class="course-link">
                             <li class="course-item">
                                 <div class="course-info">
@@ -81,32 +82,32 @@
                                 <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
                             </li>
                         </a>
-                        <% }) %>
+                        <%}) %>
                     </ul>
-                    <% } else { %>
+                    <%} else { %>
                     <p>You have not enrolled in any courses yet.</p>
-                    <% } %>
+                    <%} %>
                 </div>
 
                 <!-- Student: Recent Activity -->
                 <div class="profile-row">
                     <div class="recent-activity">
                         <h2>Recent Activity</h2>
-                        <% if (recentActivities.length > 0) { %>
+                        <%if (recentActivities.length > 0) { %>
                         <ul>
-                            <% recentActivities.forEach(activity => { %>
+                            <%recentActivities.forEach(activity => { %>
                             <li class="activity-item">
                                 <p><strong><%= activity.activityType %>:</strong> <%= activity.description %></p>
                                 <p>Date: <%= new Date(activity.activityDate).toLocaleString() %></p>
                             </li>
-                            <% }) %>
+                            <%}) %>
                         </ul>
-                        <% } else { %>
+                        <%} else { %>
                         <p>No recent activities. Start learning to see your progress here!</p>
-                        <% } %>
+                        <%} %>
                     </div>
                 </div>
-                <% } %>
+                <%} %>
 
                 <!-- Educator: Created Courses -->
                 <%if (user.role == "educator") { %>

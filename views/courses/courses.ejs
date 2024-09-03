@@ -13,12 +13,10 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-        <!-- Swiper CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
-
-        <!-- Custom CSS -->
+        <!-- CSS -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/courses.css" />
+        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
         <style>
             body {
                 background-image: url("/images/bg-texture.png");
@@ -56,11 +54,11 @@
                     <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();" class="sort-select">
                         <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>Most Popular</option>
                         <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
-                        <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>            
+                        <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
                     </select>
                 </form>
                 <div class="swiper-wrapper">
-                    <% courses.forEach(course => { %>
+                    <%courses.forEach(course => { %>
                     <article class="course swiper-slide">
                         <a href="/courses/<%= course.id %>">
                             <div class="course__image">
@@ -71,14 +69,14 @@
                                 <h4>Learn <%= course.name %></h4>
                                 <p class="course__description"><%= course.description %></p>
                                 <p class="course__enroll">
-                                    <% if (course.isEnrolled) { %> You are enrolled!<br />
-                                    <% } else { %> Price: $<%= course.price %><br />
-                                    <% } %> Students enrolled: <%= course.enrollCount %>
+                                    <%if (course.isEnrolled) { %> You are enrolled!<br />
+                                    <%} else { %> Price: $<%= course.price %><br />
+                                    <%} %> Students enrolled: <%= course.enrollCount %>
                                 </p>
                             </div>
                         </a>
                     </article>
-                    <% }) %>
+                    <%}) %>
                 </div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
@@ -86,11 +84,11 @@
             </section>
 
             <!-- Categorized Courses Sections -->
-            <% const categories = [...new Set(courses.map(course => course.category))]; %> <% categories.forEach(category => { %>
+            <%const categories = [...new Set(courses.map(course => course.category))]; %> <%categories.forEach(category => { %>
             <section class="container categorized-courses__container mySwiper">
                 <h2><%= category %> Courses</h2>
                 <div class="swiper-wrapper">
-                    <% const filteredCourses = courses.filter(course => course.category === category); %> <% filteredCourses.forEach(course => { %>
+                    <%const filteredCourses = courses.filter(course => course.category === category); %> <%filteredCourses.forEach(course => { %>
                     <article class="course swiper-slide">
                         <a href="/courses/<%= course.id %>">
                             <div class="course__image">
@@ -101,22 +99,22 @@
                                 <h4>Learn <%= course.name %></h4>
                                 <p class="course__description"><%= course.description %></p>
                                 <p class="course__enroll">
-                                    <% if (course.isEnrolled) { %> You are enrolled!<br />
-                                    <% } else { %> Price: $<%= course.price %><br />
-                                    <% } %> Students enrolled: <%= course.enrollCount %>
+                                    <%if (course.isEnrolled) { %> You are enrolled!<br />
+                                    <%} else { %> Price: $<%= course.price %><br />
+                                    <%} %> Students enrolled: <%= course.enrollCount %>
                                 </p>
                             </div>
                         </a>
                     </article>
-                    <% }) %>
+                    <%}) %>
                 </div>
-                <% if (filteredCourses.length > 4) { %>
+                <%if (filteredCourses.length > 4) { %>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
-                <% } %>
+                <%} %>
                 <div class="swiper-pagination"></div>
             </section>
-            <% }) %>
+            <%}) %>
 
             <div id="popup" class="popup hidden">
                 <p id="popup-message"></p>
