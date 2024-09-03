@@ -19,8 +19,6 @@ const router = express.Router();
 
 // Note that all these URLs have "/student" prefix!
 
-// TODO redo helper functions to be less niche, make them take in input params!
-
 // Home (Profile)
 router.get("/", (request, response) => {
     return response.redirect("/user/profile");

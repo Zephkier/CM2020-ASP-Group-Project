@@ -1,6 +1,5 @@
 // Import and setup modules
 const express = require("express");
-const { db } = require("../public/db.js");
 const {
     // Format
     return_twoDecimalPlaces,

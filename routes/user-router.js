@@ -9,9 +9,15 @@ const {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    db_isExistingUser,
-    db_forProfile_getProfileInfo,
-    db_isUnique_usernameAndEmail,
+    // Login route
+    db_isExistingUser_promise,
+    db_getProfileInfo_promise,
+    // Profile route
+    db_getProfileRecentActivities_promise,
+    db_getProfileEnrolledCourses_promise,
+    db_getProfileCreatedCourses_promise,
+    // Register route
+    db_isUniqueLoginCredentials_promise,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -33,7 +39,21 @@ router.get("/login", isNotLoggedIn, (request, response) => {
     });
 });
 
-router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request, response) => {
+router.post("/login", async (request, response) => {
+    try {
+        // If user's login credentials are invalid (eg. incorrect or does not exist)
+        request.session.user = await db_isExistingUser_promise(request.body.usernameOrEmail, request.body.password);
+        // If user has no matching "id" to get profile info
+        request.session.user = await db_getProfileInfo_promise(request.session.user.id);
+    } catch (err) {
+        // Then re-render login page
+        return response.render("user/login.ejs", {
+            pageName: "Login",
+            usernameOrEmailStored: request.body.usernameOrEmail,
+            errorMessage: err.message,
+        });
+    }
+
     // This is for when not-logged-in users checkout their cart
     // Thus, upon login, redirect to checkout page
     if (request.session.cart) return response.redirect("/student/checkout");
@@ -43,82 +63,45 @@ router.post("/login", db_isExistingUser, db_forProfile_getProfileInfo, (request,
 });
 
 // Profile
-router.get("/profile", isLoggedIn, (request, response) => {
+router.get("/profile", isLoggedIn, async (request, response) => {
     let userId = request.session.user.id;
 
-    // Fetch recent activities (notes and enrollments)
-    let query = `
-        SELECT
-            'Note Added' AS activityType,
-            content AS description,
-            created_at AS activityDate
-        FROM notes WHERE user_id = ?
-        UNION
-        SELECT
-            'Enrolled in Course' AS activityType,
-            courses.name AS description,
-            enrollment_date AS activityDate
-        FROM enrollments JOIN courses
-        ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = ?
-        ORDER BY activityDate DESC
-        LIMIT 5`;
-    db.all(query, [userId, userId], (err, recentActivities) => {
-        if (err) return errorPage(response, "Error retrieving recent activities!");
+    // Too many promises to await, so just "try-catch" entire block
+    try {
+        // Common queries for both student and educator
+        let profile = await db_getProfileInfo_promise(userId);
+        let recentActivities = await db_getProfileRecentActivities_promise(userId);
 
-        recentActivities = recentActivities || [];
-        db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, profile) => {
-            if (err) return errorPage(response, "Error retrieving profile details!");
-            if (!profile) return errorPage(response, "Profile not found!");
+        // Role-specific queries
+        let roleSpecificData;
+        if (request.session.user.role == "student") {
+            roleSpecificData = await db_getProfileEnrolledCourses_promise(userId);
+            profile.enrolledCourses = roleSpecificData.map((course) => {
+                course.price = return_twoDecimalPlaces(course.price);
+                course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+                return course;
+            });
+        }
+        if (request.session.user.role == "educator") {
+            roleSpecificData = await db_getProfileCreatedCourses_promise(userId);
+            profile.createdCourses = roleSpecificData.map((course) => {
+                course.price = return_twoDecimalPlaces(course.price);
+                course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+                course.enrollCount = return_formattedNumber(course.enrollCount);
+                return course;
+            });
+        }
 
-            // Students = enrolled courses and its progress
-            if (request.session.user.role == "student") {
-                query = `
-                    SELECT courses.*, enrollments.progress 
-                    FROM courses JOIN enrollments
-                    ON courses.id = enrollments.course_id 
-                    WHERE enrollments.user_id = ?
-                    ORDER BY enrollments.enrollment_date DESC`;
-                db.all(query, [userId], (err, enrolledCourses) => {
-                    if (err) return errorPage(response, "Error retrieving enrolled courses!");
-
-                    profile.enrolledCourses = enrolledCourses || [];
-                    profile.enrolledCourses.forEach((course) => {
-                        course.price = return_twoDecimalPlaces(course.price);
-                        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
-                    });
-
-                    return response.render("user/profile.ejs", {
-                        pageName: "Student Profile",
-                        user: request.session.user,
-                        profile: profile,
-                        recentActivities: recentActivities,
-                    });
-                });
-            }
-
-            // Educators = created courses
-            if (request.session.user.role == "educator") {
-                db.all("SELECT * FROM courses WHERE creator_id = ? ORDER BY courses.id DESC", [userId], (err, createdCourses) => {
-                    if (err) return errorPage(response, "Error retrieving created courses!");
-
-                    profile.createdCourses = createdCourses || [];
-                    profile.createdCourses.forEach((course) => {
-                        course.price = return_twoDecimalPlaces(course.price);
-                        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
-                        course.enrollCount = return_formattedNumber(course.enrollCount);
-                    });
-
-                    return response.render("user/profile.ejs", {
-                        pageName: "Educator Profile",
-                        user: request.session.user,
-                        profile: profile,
-                        recentActivities: recentActivities,
-                    });
-                });
-            }
+        // Back to (nearly) common code for both student and educator
+        return response.render("user/profile.ejs", {
+            pageName: request.session.user.role == "student" ? "Student Profile" : "Educator Profile",
+            user: request.session.user,
+            profile: profile,
+            recentActivities: recentActivities,
         });
-    });
+    } catch (err) {
+        return errorPage(response, err.message);
+    }
 });
 
 router.get("/profile/edit", isLoggedIn, (request, response) => {
@@ -161,8 +144,20 @@ router.get("/register", isNotLoggedIn, (request, response) => {
     });
 });
 
-router.post("/register", db_isUnique_usernameAndEmail, (request, response) => {
+router.post("/register", async (request, response) => {
     let { role, username, email, password, major, year, department, title } = request.body;
+
+    // Ensure login credentials are unique
+    try {
+        await db_isUniqueLoginCredentials_promise(username, email);
+    } catch (err) {
+        if (err.message) return errorPage(response, err.message);
+        return response.render("user/register.ejs", {
+            pageName: "Register",
+            errors: err.errors,
+            formInputStored: request.body,
+        });
+    }
 
     // 1. Insert into "users" table
     let query = "INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)";
@@ -181,7 +176,8 @@ router.post("/register", db_isUnique_usernameAndEmail, (request, response) => {
             if (role == "student") {
                 query = "INSERT INTO students (user_id, major, year) VALUES (?, ?, ?)";
                 param = [existingUser.id, major, year];
-            } else if (role == "educator") {
+            }
+            if (role == "educator") {
                 query = "INSERT INTO educators (user_id, department, title) VALUES (?, ?, ?)";
                 param = [existingUser.id, department, title];
             }
@@ -189,14 +185,16 @@ router.post("/register", db_isUnique_usernameAndEmail, (request, response) => {
                 if (err) return errorPage(response, "Error assigning role!");
 
                 // 4. Insert into "profiles" table
-                query = "INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture) VALUES (?, ?, ?, ?, ?)";
+                query = `
+                    INSERT INTO profiles (user_id, displayName, bio, introduction, profilePicture)
+                    VALUES (?, ?, ?, ?, ?)`;
                 params = [
                     // Format
                     existingUser.id,
                     username,
                     `Hi there, I'm ${existingUser.username} and this is my bio!`,
                     `Hi there, I'm ${existingUser.username} and this is my introduction!`,
-                    "dog.png",
+                    "user.png",
                 ];
                 db.run(query, params, (err) => {
                     if (err) return errorPage(response, "Error creating profile!");
