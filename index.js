@@ -79,7 +79,7 @@ app.use("/user", userRouter);
 app.use("/student", studentRouter);
 app.use("/educator", educatorRouter);
 
-// Handle invalid URLs via '/*' (likewise, uncomment this once everything above (the routers) is done)
+// Handle invalid URLs via '/*'
 app.get("/*", (request, response) => {
     return response.redirect("/");
 });
