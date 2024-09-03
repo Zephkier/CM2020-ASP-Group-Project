@@ -2,21 +2,19 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 const {
-    // Format
+    // General helper functions
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
-    // Login route
+    // Database-related helper functions
     db_isExistingUser_promise,
     db_getProfileInfo_promise,
-    // Profile route
     db_getProfileRecentActivities_promise,
     db_getProfileEnrolledCourses_promise,
     db_getProfileCreatedCourses_promise,
-    // Register route
     db_isUniqueLoginCredentials_promise,
 } = require("../public/helper.js");
 

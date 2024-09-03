@@ -2,9 +2,11 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 const {
-    // Format
+    // General helper functions
     errorPage,
     isLoggedIn,
+    // Database-related helper functions
+    db_processTopics,
 } = require("../public/helper.js");
 
 // Configure multer for file uploads
@@ -64,33 +66,6 @@ router.get("/edit/course/:courseId", isLoggedIn, (request, response) => {
     });
 });
 
-// TODO move to helper.js
-function processTopics(request, courseId) {
-    // Handle new topics (insert them)
-    if (request.body.newTopics) {
-        let newTopics = request.body.newTopics;
-        Object.keys(newTopics).forEach((index) => {
-            let query = "INSERT INTO topics (course_id, name, description, video_url) VALUES (?, ?, ?, ?)";
-            let { name, description, video_url } = newTopics[index];
-            db.run(query, [courseId, name, description, video_url], (err) => {
-                if (err) console.log("Error adding new topic: ", err);
-            });
-        });
-    }
-
-    // Handle existing topics (update them)
-    if (request.body.existingTopics) {
-        let existingTopics = request.body.existingTopics;
-        Object.keys(existingTopics).forEach((index) => {
-            let query = "UPDATE topics SET name = ?, description = ?, video_url = ? WHERE course_id = ? AND id = ?";
-            let { name, description, video_url } = existingTopics[index];
-            db.run(query, [name, description, video_url, courseId, index], (err) => {
-                if (err) console.log("Error updating topic: ", err);
-            });
-        });
-    }
-}
-
 // Submit form for both "add" and "edit" course (thus, "?" means it is optional "courseId")
 router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (request, response) => {
     let { category, name, description, price, video_url, button } = request.body;
@@ -105,7 +80,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
             if (err) return errorPage(response, "Error adding course!");
 
             let courseId = this.lastID;
-            processTopics(request, courseId);
+            db_processTopics(request, courseId);
             return response.redirect("/user/profile");
         });
     }
@@ -119,7 +94,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
         db.run(query, params, (err) => {
             if (err) return errorPage(response, "Error updating course!");
 
-            processTopics(request, request.params.courseId);
+            db_processTopics(request, request.params.courseId);
             return response.redirect("/user/profile");
         });
     }

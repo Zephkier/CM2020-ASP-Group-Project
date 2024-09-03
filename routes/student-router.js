@@ -2,16 +2,16 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 const {
-    // Format
+    // General helper functions
     return_twoDecimalPlaces,
     return_validPictureFilename,
     errorPage,
-    isLoggedIn,
     hasRoles,
-    // Checkout route, after successful payment
+    isLoggedIn,
+    // Database-related helper functions
+    db_isEnrolledInCourse,
     db_insertIntoEnrollments,
     db_updateEnrollCount,
-    db_isEnrolledIntoCourse,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -69,7 +69,7 @@ router.post("/checkout/creditcard", (request, response, next) => {
 });
 
 // Learn
-router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledIntoCourse, (request, response, next) => {
+router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledInCourse, (request, response, next) => {
     let userId = request.session.user.id;
     let courseId = request.params.courseId;
     let topicId = request.query.topicId || 1; // Default to topic 1
@@ -117,8 +117,8 @@ router.post("/learn/course/:courseId/notes", (request, response) => {
     let content = request.body.content.trim(); // Trim to avoid empty content issues
     if (!content) return response.redirect(`/student/learn/course/${courseId}?error=empty_note`); // Ensure content is not empty
 
-    let insertQuery = "INSERT INTO notes (user_id, course_id, content) VALUES (?, ?, ?)";
-    db.run(insertQuery, [userId, courseId, content], (err) => {
+    let query = "INSERT INTO notes (user_id, course_id, content) VALUES (?, ?, ?)";
+    db.run(query, [userId, courseId, content], (err) => {
         if (err) return errorPage(response, "Error saving note!");
         return response.redirect(`/student/learn/course/${courseId}`);
     });
@@ -137,15 +137,20 @@ router.post("/learn/course/:courseId/notes", (request, response) => {
 
         if (existingNote) {
             // Update the existing note
-            let updateQuery = "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
-            db.run(updateQuery, [content, existingNote.id], (err) => {
+            query = `
+                UPDATE notes
+                SET content = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?`;
+            db.run(query, [content, existingNote.id], (err) => {
                 if (err) return errorPage(response, "Error updating note!");
                 return response.redirect(`/student/learn/course/${courseId}`);
             });
         } else {
             // Insert a new note
-            let insertQuery = "INSERT INTO notes (user_id, course_id, content) VALUES (?, ?, ?)";
-            db.run(insertQuery, [userId, courseId, content], (err) => {
+            query = `
+                INSERT INTO notes (user_id, course_id, content)
+                VALUES (?, ?, ?)`;
+            db.run(query, [userId, courseId, content], (err) => {
                 if (err) return errorPage(response, "Error saving note!");
                 return response.redirect(`/student/learn/course/${courseId}`);
             });
@@ -157,7 +162,10 @@ router.post("/learn/course/:courseId/notes", (request, response) => {
 router.post("/learn/course/:courseId/notes/:noteId/edit", (request, response) => {
     let { noteId, courseId } = request.params;
     let { content } = request.body;
-    let query = "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+    let query = `
+        UPDATE notes
+        SET content = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?`;
     db.run(query, [content, noteId], (err) => {
         if (err) return errorPage(response, "Error updating note!");
         return response.redirect(`/student/learn/course/${courseId}`);
@@ -179,7 +187,10 @@ router.post("/learn/course/:courseId/update-time", (request, response) => {
     let userId = request.session.user.id;
     let courseId = request.params.courseId;
     let { timeSpent } = request.body;
-    let query = "UPDATE enrollments SET time_spent = time_spent + ? WHERE user_id = ? AND course_id = ?";
+    let query = `
+        UPDATE enrollments
+        SET time_spent = time_spent + ?
+        WHERE user_id = ? AND course_id = ?`;
     db.run(query, [timeSpent, userId, courseId], (err) => {
         if (err) return errorPage(response, "Error updating time spent!");
         return response.json({ success: true });

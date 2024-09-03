@@ -1,10 +1,11 @@
 // Import and setup modules
 const express = require("express");
 const {
-    // Format
+    // General helper functions
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
+    // Database-related helper functions
     db_getCoursesLimited,
 } = require("../public/helper.js");
 

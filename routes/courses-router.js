@@ -2,13 +2,14 @@
 const express = require("express");
 const { db } = require("../public/db.js");
 const {
-    // Format
+    // General helper functions
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
     errorPage,
-    db_isEnrolledInCourse_promise,
+    // Database-related helper functions
     db_getCourse_promise,
+    db_isEnrolledInCourse_promise,
 } = require("../public/helper.js");
 
 // Initialise router

@@ -1,10 +1,10 @@
 const { db } = require("./db.js"); // For any database queries
 const fs = require("fs"); // For "return_validPictureFilename()"
 
-// ----- General Helper Functions ----- //
+// ----- General helper functions ----- //
 
 /**
- * To display prices with cents.
+ * Display prices with cents.
  *
  * @param {*} number
  * Number without zeroes at the end *(eg. 1.5 or 1)*
@@ -17,7 +17,7 @@ function return_twoDecimalPlaces(number) {
 }
 
 /**
- * To validate and get `filename` with its existing file type.
+ * Validate and get `filename` with its existing file type.
  *
  * @param {string} pathToPicture
  * Directory path containing `filename`. Must end with "/"! *(eg. "./public/images/courses/")*
@@ -35,7 +35,7 @@ function return_validPictureFilename(pathToPicture, filename) {
 }
 
 /**
- * To format long numbers with commas every 3 digits.
+ * Format long numbers with commas every 3 digits.
  *
  * @param {*} number
  * Number without any formatting *(eg. 10000)*
@@ -60,6 +60,21 @@ function errorPage(response, errorMessage) {
 }
 
 /**
+ * Check `roles` against `request.session.user.role`:
+ * - If match, then proceed.
+ * - If does not match, then return error page.
+ *
+ * @param {array} roles
+ * Array of strings *(eg. ["student", "educator"])*.
+ */
+function hasRoles(roles) {
+    return function (request, response, next) {
+        if (roles.includes(request.session.user.role)) return next();
+        return errorPage(response, "You do not have permission to access this page!");
+    };
+}
+
+/**
  * If user is logged in, then proceed.
  *
  * If user is not logged in, then redirect to login page with error message.
@@ -79,15 +94,7 @@ function isNotLoggedIn(request, response, next) {
     return response.redirect("/user/profile?error=already_logged_in");
 }
 
-// TODO
-function hasRoles(roles) {
-    return function (request, response, next) {
-        if (roles.includes(request.session.user.role)) return next();
-        return errorPage(response, "You do not have permission to access this page!");
-    };
-}
-
-// ----- Database-related Helper Functions ----- //
+// ----- Database-related helper functions ----- //
 
 /**
  * Get limited number of courses, ordered by enroll count from most to least.
@@ -128,11 +135,18 @@ function db_getCourse_promise(courseId, response) {
     });
 }
 
-// TODO
 /**
- * Ensure user is enrolled into a course so they can rightfully access the "learn" page
+ * Check if user is enrolled into a course.
+ *
+ * - If user is enrolled, then proceed.
+ *
+ * - If user is not enrolled, then return error page.
+ *
+ * Actual query:
+ * - `SELECT * FROM enrollments`
+ * - `WHERE user_id = [request.session.user.id] AND course_id = [request.params.courseId]`
  */
-function db_isEnrolledIntoCourse(request, response, next) {
+function db_isEnrolledInCourse(request, response, next) {
     let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
     let params = [request.session.user.id, request.params.courseId];
     db.get(query, params, (err, existingEnrollment) => {
@@ -213,7 +227,15 @@ function db_getProfileInfo_promise(userId) {
     });
 }
 
-// TODO
+/**
+ * Create `new Promise()` to get user's reent activities.
+ *
+ * - If there is matching `notes/enrollments.user_id`, then return query result.
+ * - If there is no matching `notes/enrollments.user_id`, then return new `Error()`
+ *
+ * Actual query is huge, in brief:
+ * - Queries `notes`, `enrollments`, and `courses` tables.
+ */
 function db_getProfileRecentActivities_promise(userId) {
     return new Promise((resolve, reject) => {
         let query = `
@@ -239,7 +261,16 @@ function db_getProfileRecentActivities_promise(userId) {
     });
 }
 
-// TODO
+/**
+ * Create `new Promise()` to get user's enrolled courses.
+ *
+ * - If there is matching `enrollments.user_id`, then return query result.
+ * - If there is no matching `enrollments.user_id`, then return new `Error()`
+ *
+ * Actual query is huge, in brief:
+ * - Queries `courses` and `enrollments` tables.
+ * - Matches `enrollments.user_id = ?`
+ */
 function db_getProfileEnrolledCourses_promise(userId) {
     return new Promise((resolve, reject) => {
         let query = `
@@ -255,7 +286,17 @@ function db_getProfileEnrolledCourses_promise(userId) {
     });
 }
 
-// TODO
+/**
+ * Create `new Promise()` to get user's created courses with latest one first.
+ *
+ * - If there is matching `courses.creator_id`, then return query result.
+ * - If there is no matching `courses.creator_id`, then return new `Error()`
+ *
+ * Actual query:
+ * - `SELECT * FROM courses`
+ * - `WHERE creator_id = ?`
+ * - `ORDER BY courses.id DESC`
+ */
 function db_getProfileCreatedCourses_promise(userId) {
     return new Promise((resolve, reject) => {
         let query = "SELECT * FROM courses WHERE creator_id = ? ORDER BY courses.id DESC";
@@ -266,15 +307,15 @@ function db_getProfileCreatedCourses_promise(userId) {
     });
 }
 
-// TODO
 /**
- * Query `users` table to ensure both `username` and `email` are unique.
+ * Create `new Promise()` to ensure both `username` and `email` are unique.
  *
- * - If **both** are unique, then proceed.
+ * - If both are unique, then proceed.
+ * - If either are not unique, then return new `Error()` containing `errors.username/email` (or both).
  *
- * - If **either** are not unique,
- * then `errors.username` and/or `errors.email` is created,
- * then redirect to register page with error message.
+ * Actual queries:
+ * - `SELECT * FROM users WHERE username = ?`
+ * - `SELECT * FROM users WHERE email = ?`
  */
 function db_isUniqueLoginCredentials_promise(username, email) {
     return new Promise((resolve, reject) => {
@@ -298,11 +339,12 @@ function db_isUniqueLoginCredentials_promise(username, email) {
     });
 }
 
-// TODO
 /**
- * For `student-router.js` `.post("/checkout")` route.
+ * For `student-router.js' .post("/checkout")` route.
  *
- * Query to `INSERT INTO enrollments` table.
+ * Actual query:
+ * - `INSERT INTO enrollments (user_id, course_id)`
+ * - `VALUES (?, ?)`
  */
 function db_insertIntoEnrollments(request, response, next) {
     request.session.cart.forEach((item) => {
@@ -315,11 +357,13 @@ function db_insertIntoEnrollments(request, response, next) {
     });
 }
 
-// TODO
 /**
- * For `student-router.js` `.post("/checkout")` route.
+ * For `student-router.js' .post("/checkout")` route.
  *
- * Query to `UPDATE courses` table's `enrollCount`
+ * Actual query:
+ * - `UPDATE courses`
+ * - `SET enrollCount = enrollCount + 1`
+ * - `WHERE id = ?`
  */
 function db_updateEnrollCount(request, response, next) {
     request.session.cart.forEach((item) => {
@@ -331,63 +375,61 @@ function db_updateEnrollCount(request, response, next) {
     });
 }
 
-// ------------------------ //
-// ----- Unused Below ----- //
-// ------------------------ //
-
 /**
- * Query to `SELECT *` when joining `enrollments` and `courses` tables.
+ * For `educator-router.js' .post("/update/course")` route.
  *
- * - If user **has** `enrollments.user_id`,
- * then store result in `request.session.user.enrolledCourses` and proceed.
+ * This covers both inserting new and updating existing topics.
  *
- *   - If user is not enrolled into any courses, then `[]` is stored.
+ * Actual queries:
+ * - `INSERT INTO topics (course_id, name, description, video_url)`
+ * - `VALUES (?, ?, ?, ?)`
  *
- * - If user **does not have** `enrollments.user_id`,
- * then redirect to error page as database query failed.
+ * And
+ *
+ * - `UPDATE topics`
+ * - `SET name = ?, description = ?, video_url = ?`
+ * - `WHERE course_id = ? AND id = ?`
  */
-function db_forProfile_getEnrolledCourses(request, response, next) {
-    let query = `
-        SELECT *
-        FROM enrollments JOIN courses
-        ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = ?`;
-    db.all(query, [request.session.user.id], (err, enrolledCourses) => {
-        if (err) return errorPage(response, "Database error when retrieving enrolled courses!");
-        if (!enrolledCourses) return errorPage(response, "Something went wrong! Unable to load your enrolled courses.");
-        request.session.user.enrolledCourses = enrolledCourses || [];
-        return next();
-    });
-}
+function db_processTopics(request, courseId) {
+    // Handle new topics (insert them)
+    if (request.body.newTopics) {
+        let newTopics = request.body.newTopics;
+        Object.keys(newTopics).forEach((index) => {
+            let query = "INSERT INTO topics (course_id, name, description, video_url) VALUES (?, ?, ?, ?)";
+            let { name, description, video_url } = newTopics[index];
+            db.run(query, [courseId, name, description, video_url], (err) => {
+                if (err) console.log("Error adding new topic: ", err);
+            });
+        });
+    }
 
-// TODO JSDoc string
-function db_forProfile_getCreatedCourses(request, response, next) {
-    let query = `
-        SELECT *
-        FROM courses JOIN educators
-        ON courses.creator_id = educators.user_id
-        WHERE educators.user_id = ?`;
-    db.all(query, [request.session.user.id], (err, createdCourses) => {
-        if (err) return errorPage(response, "Database error when retrieving your created courses!");
-        if (!createdCourses) return errorPage(response, "Something went wrong! Unable to load your created courses.");
-        request.session.user.createdCourses = createdCourses || [];
-        return next();
-    });
+    // Handle existing topics (update them)
+    if (request.body.existingTopics) {
+        let existingTopics = request.body.existingTopics;
+        Object.keys(existingTopics).forEach((index) => {
+            let query = "UPDATE topics SET name = ?, description = ?, video_url = ? WHERE course_id = ? AND id = ?";
+            let { name, description, video_url } = existingTopics[index];
+            db.run(query, [name, description, video_url, courseId, index], (err) => {
+                if (err) console.log("Error updating topic: ", err);
+            });
+        });
+    }
 }
 
 // Export module containing the following so external files can access it
 module.exports = {
-    // "Used" below
+    // General helper functions
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
     errorPage,
+    hasRoles,
     isLoggedIn,
     isNotLoggedIn,
-    hasRoles,
-    // -----
+    // Database-related helper functions
     db_getCoursesLimited,
     db_getCourse_promise,
+    db_isEnrolledInCourse,
     db_isEnrolledInCourse_promise,
     db_isExistingUser_promise,
     db_getProfileInfo_promise,
@@ -395,12 +437,7 @@ module.exports = {
     db_getProfileEnrolledCourses_promise,
     db_getProfileCreatedCourses_promise,
     db_isUniqueLoginCredentials_promise,
-
-    // "Unused" below
-    // -----
     db_insertIntoEnrollments,
     db_updateEnrollCount,
-    db_isEnrolledIntoCourse,
-    db_forProfile_getEnrolledCourses,
-    db_forProfile_getCreatedCourses,
+    db_processTopics,
 };
