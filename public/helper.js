@@ -150,7 +150,7 @@ function db_isEnrolledInCourse(request, response, next) {
     let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
     let params = [request.session.user.id, request.params.courseId];
     db.get(query, params, (err, existingEnrollment) => {
-        if (err) return errorPage(response, "Database error when retrieving enrollment information!");
+        if (err) return errorPage(response, "Error retrieving enrollment information!");
         if (existingEnrollment) return next();
         else return errorPage(response, "You are not enrolled into this course!");
     });
@@ -351,7 +351,7 @@ function db_insertIntoEnrollments(request, response, next) {
         let query = "INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)";
         let params = [request.session.user.id, item.id];
         db.get(query, params, (err) => {
-            if (err) return errorPage(response, "Database error when adding enrollments!");
+            if (err) return errorPage(response, "Error adding enrollments!");
             return next();
         });
     });
@@ -369,7 +369,7 @@ function db_updateEnrollCount(request, response, next) {
     request.session.cart.forEach((item) => {
         let query = "UPDATE courses SET enrollCount = enrollCount + 1 WHERE id = ?";
         db.run(query, [item.id], (err) => {
-            if (err) return errorPage(response, "Database error when updating enrollment count!");
+            if (err) return errorPage(response, "Error updating enrollment count!");
             return next();
         });
     });

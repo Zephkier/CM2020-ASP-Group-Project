@@ -116,7 +116,7 @@ router.post("/profile/update", (request, response) => {
         WHERE user_id = ?`;
     let { displayName, bio, introduction, profilePicture } = request.body;
     db.run(query, [displayName, bio, introduction, profilePicture, request.session.user.id], (err) => {
-        if (err) return errorPage(response, "Database error while updating profile!");
+        if (err) return errorPage(response, "Error while updating profile!");
 
         // Update session object
         request.session.user.displayName = displayName;
