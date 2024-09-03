@@ -79,6 +79,14 @@ function isNotLoggedIn(request, response, next) {
     return response.redirect("/user/profile?error=already_logged_in");
 }
 
+// TODO
+function hasRoles(roles) {
+    return function (request, response, next) {
+        if (roles.includes(request.session.user.role)) return next();
+        return errorPage(response, "You do not have permission to access this page!");
+    };
+}
+
 // ----- Database-related Helper Functions ----- //
 
 /**
@@ -117,6 +125,20 @@ function db_getCourse_promise(courseId, response) {
             if (!course) return errorPage(response, "No course selected!");
             return resolve(course);
         });
+    });
+}
+
+// TODO
+/**
+ * Ensure user is enrolled into a course so they can rightfully access the "learn" page
+ */
+function db_isEnrolledIntoCourse(request, response, next) {
+    let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
+    let params = [request.session.user.id, request.params.courseId];
+    db.get(query, params, (err, existingEnrollment) => {
+        if (err) return errorPage(response, "Database error when retrieving enrollment information!");
+        if (existingEnrollment) return next();
+        else return errorPage(response, "You are not enrolled into this course!");
     });
 }
 
@@ -276,45 +298,10 @@ function db_isUniqueLoginCredentials_promise(username, email) {
     });
 }
 
-// ------------------------ //
-// ----- Unused Below ----- //
-// ------------------------ //
-
-// TODO JSDoc string
-function hasRoles(roles) {
-    return function (request, response, next) {
-        if (roles.includes(request.session.user.role)) return next();
-        return errorPage(response, "You do not have permission to access this page!");
-    };
-}
-
+// TODO
 /**
- * Query to `SELECT *` from `enrollments` table.
+ * For `student-router.js` `.post("/checkout")` route.
  *
- * For each item (aka. course) within `request.session.cart`:
- *
- * - If item **does not exist** in `enrollments` table,
- * then it means that the user **is enrolling into a new** item (aka. course),
- * then proceed.
- *
- * - If item **exists** in `enrollments` table,
- * then it means that the user **is enrolling into an existing** item (aka. course),
- * then do not allow checkout,
- * then redirect to checkout page with error message.
- */
-function db_isNewCoursesOnly(request, response, next) {
-    request.session.cart.forEach((item) => {
-        let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-        let params = [request.session.user.id, item.id];
-        db.get(query, params, (err, existingEnrollment) => {
-            if (err) return errorPage(response, "Database error when retrieving enrollment information!");
-            if (existingEnrollment) return response.redirect("/courses/checkout?error=already_enrolled");
-            return next();
-        });
-    });
-}
-
-/**
  * Query to `INSERT INTO enrollments` table.
  */
 function db_insertIntoEnrollments(request, response, next) {
@@ -328,8 +315,11 @@ function db_insertIntoEnrollments(request, response, next) {
     });
 }
 
+// TODO
 /**
- * Query to `UPDATE courses` table's `enrollCount`.
+ * For `student-router.js` `.post("/checkout")` route.
+ *
+ * Query to `UPDATE courses` table's `enrollCount`
  */
 function db_updateEnrollCount(request, response, next) {
     request.session.cart.forEach((item) => {
@@ -341,19 +331,9 @@ function db_updateEnrollCount(request, response, next) {
     });
 }
 
-/**
- * TODO JSDoc string
- * Ensure user is enrolled into a course so they can rightfully access the "learn" page
- */
-function db_isEnrolledIntoCourse(request, response, next) {
-    let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
-    let params = [request.session.user.id, request.params.courseId];
-    db.get(query, params, (err, existingEnrollment) => {
-        if (err) return errorPage(response, "Database error when retrieving enrollment information!");
-        if (existingEnrollment) return next();
-        else return errorPage(response, "You are not enrolled into this course!");
-    });
-}
+// ------------------------ //
+// ----- Unused Below ----- //
+// ------------------------ //
 
 /**
  * Query to `SELECT *` when joining `enrollments` and `courses` tables.
@@ -404,6 +384,7 @@ module.exports = {
     errorPage,
     isLoggedIn,
     isNotLoggedIn,
+    hasRoles,
     // -----
     db_getCoursesLimited,
     db_getCourse_promise,
@@ -416,9 +397,7 @@ module.exports = {
     db_isUniqueLoginCredentials_promise,
 
     // "Unused" below
-    hasRoles,
     // -----
-    db_isNewCoursesOnly,
     db_insertIntoEnrollments,
     db_updateEnrollCount,
     db_isEnrolledIntoCourse,

@@ -8,7 +8,7 @@ const {
     errorPage,
     isLoggedIn,
     hasRoles,
-    db_isNewCoursesOnly,
+    // Checkout route, after successful payment
     db_insertIntoEnrollments,
     db_updateEnrollCount,
     db_isEnrolledIntoCourse,
@@ -46,12 +46,10 @@ router.get("/checkout", isLoggedIn, hasRoles(["student"]), (request, response) =
     });
 });
 
-router.post("/checkout/applepay", db_isNewCoursesOnly, (request, response, next) => {
-    // 1. Ensure cart contains new courses only (done by helper function)
+router.post("/checkout/applepay", (request, response, next) => {
+    // 1. Out of scope: Handle Apple Paypayment, and ensure it is successful
 
-    // 2. Out of scope: Handle Apple Paypayment, and ensure it is successful
-
-    // 3. Update database, delete/clear cart, redirect to updated profile page
+    // 2. Update database, delete/clear cart, redirect to updated profile page
     db_insertIntoEnrollments(request, response, next);
     db_updateEnrollCount(request, response, next);
 
@@ -59,12 +57,10 @@ router.post("/checkout/applepay", db_isNewCoursesOnly, (request, response, next)
     return response.redirect("/user/profile?payment_success_applepay");
 });
 
-router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, next) => {
-    // 1. Ensure cart contains new courses only (done by helper function)
+router.post("/checkout/creditcard", (request, response, next) => {
+    // 1. Out of scope: Handle Credit Card payment, and ensure it is successful
 
-    // 2. Out of scope: Handle Credit Card payment, and ensure it is successful
-
-    // 3. Update database, delete/clear cart, redirect to updated profile page
+    // 2. Update database, delete/clear cart, redirect to updated profile page
     db_insertIntoEnrollments(request, response, next);
     db_updateEnrollCount(request, response, next);
 
@@ -73,7 +69,7 @@ router.post("/checkout/creditcard", db_isNewCoursesOnly, (request, response, nex
 });
 
 // Learn
-router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledIntoCourse, (request, response) => {
+router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledIntoCourse, (request, response, next) => {
     let userId = request.session.user.id;
     let courseId = request.params.courseId;
     let topicId = request.query.topicId || 1; // Default to topic 1
