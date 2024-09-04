@@ -2,7 +2,6 @@
 const express = require("express");
 const {
     // General helper functions
-    errorPage,
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
@@ -51,9 +50,11 @@ router.get("/", async (request, response) => {
     ];
 
     let popularCourses;
+    // Await for promised (and formatted) query result
     try {
         // If query succeeds, then "popularCourses" is an array
         popularCourses = await db_getLimitedPopularCourses_promise(3);
+        // Then format properties
         popularCourses.forEach((popularCourse) => {
             popularCourse.price = return_twoDecimalPlaces(popularCourse.price);
             popularCourse.picture = return_validPictureFilename("./public/images/courses/", popularCourse.name);

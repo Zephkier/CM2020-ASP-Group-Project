@@ -115,8 +115,6 @@ function db_getLimitedPopularCourses_promise(limit) {
     return new Promise((resolve, reject) => {
         let query = "SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?";
         db.all(query, [limit], (err, popularCourses) => {
-            // err = true; // TEST
-            // popularCourses = false; // TEST
             if (err) return reject("Error retrieving popular courses!");
             if (!popularCourses) return reject("No popular courses found!");
             return resolve(popularCourses);
