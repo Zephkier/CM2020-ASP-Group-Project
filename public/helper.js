@@ -174,7 +174,7 @@ function db_isEnrolledInCourse_promise(userId, courseId, object) {
     return new Promise((resolve, reject) => {
         let query = "SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?";
         db.get(query, [userId, courseId], (err, existingEnrollment) => {
-            if (err) return reject(new Error("Error checking if user enrolled into course!"));
+            if (err) return reject("Error checking if user is enrolled into courses!");
             existingEnrollment ? (object.isEnrolled = true) : (object.isEnrolled = false);
             return resolve(object);
         });

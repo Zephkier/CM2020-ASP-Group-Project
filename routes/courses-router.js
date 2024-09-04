@@ -19,15 +19,8 @@ const router = express.Router();
 
 // Home (Courses)
 router.get("/", async (request, response) => {
-    /**
-     * If user logged in, then check if user has enrolled into any courses,
-     * so that text displays either price or "Already Enrolled".
-     * But it takes time to complete the query.
-     * Thus, must use "async" above and Promise() below.
-     */
-
-    // Await for promised query result
-    let coursesPromised = await new Promise((resolve) => {
+    // Await for promised query result, no need for resolve() in this case, which leads to not needing "try-catch" block
+    let courses = await new Promise((resolve) => {
         db.all("SELECT * FROM courses", (err, courses) => {
             if (err) return errorPage(response, "Error retrieving courses!");
             if (!courses) return errorPage(response, "No courses found!");
@@ -35,36 +28,39 @@ router.get("/", async (request, response) => {
         });
     });
 
+    // Sort courses
     let sortOption = request.query.sort || "popular";
-    if (sortOption === "popular") coursesPromised.sort((a, b) => b.enrollCount - a.enrollCount);
-    else if (sortOption === "asc") coursesPromised.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortOption === "desc") coursesPromised.sort((a, b) => b.name.localeCompare(a.name));
+    if (sortOption === "popular") courses.sort((a, b) => b.enrollCount - a.enrollCount);
+    else if (sortOption === "asc") courses.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortOption === "desc") courses.sort((a, b) => b.name.localeCompare(a.name));
 
-    let coursesPromisedEdited = [];
+    // Format properties
+    courses.forEach((course) => {
+        course.price = return_twoDecimalPlaces(course.price);
+        course.picture = return_validPictureFilename("./public/images/courses/", course.name);
+        course.enrollCount = return_formattedNumber(course.enrollCount);
+    });
+
+    // If user logged in, then check if user has enrolled into any courses
+    // So that text displays either price or "Already Enrolled"
     try {
-        // Await for all promised query results in map() loop
-        coursesPromisedEdited = await Promise.all(
-            coursesPromised.map(async (course) => {
-                // Format properties
-                course.price = return_twoDecimalPlaces(course.price);
-                course.picture = return_validPictureFilename("./public/images/courses/", course.name);
-                course.enrollCount = return_formattedNumber(course.enrollCount);
-
-                // Await for promised query result
+        // Await for all (due to being in a map() loop) promised query results
+        await Promise.all(
+            courses.map(async (course) => {
+                // If query succeeds, then "course" has additional ".isEnrolled" property
                 if (request.session.user) course = await db_isEnrolledInCourse_promise(request.session.user.id, course.id, course);
                 else course.isEnrolled = false;
-
-                return course;
             })
         );
-    } catch (error) {
-        return errorPage(response, error.message);
+    } catch (rejectMessage) {
+        // If query fails, then render error page
+        return errorPage(response, rejectMessage);
     }
 
     return response.render("courses/courses.ejs", {
         pageName: "Courses",
-        courses: coursesPromisedEdited,
         sort: sortOption,
+        courses: courses,
     });
 });
 
