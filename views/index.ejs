@@ -70,25 +70,31 @@
 
             <section class="courses index">
                 <h1>Our Popular Courses</h1>
+                <!-- If "popularCourses" is not an array, then display its error message -->
+                <%if (!Array.isArray(popularCourses)) { %>
+                <p><%= popularCourses %></p>
+                <%} else { %>
+                <!-- If "popularCourses" is an array, then display its array of popular courses -->
                 <div class="container courses__container">
-                    <%topFewCourses.forEach(topCourse => { %>
-                    <a href="/courses/<%= topCourse.id %>" class="hidden">
+                    <%popularCourses.forEach(popularCourse => { %>
+                    <a href="/courses/<%= popularCourse.id %>" class="hidden">
                         <article class="course">
                             <div class="course__image">
-                                <img src="/images/courses/<%= topCourse.picture %>" />
+                                <img src="/images/courses/<%= popularCourse.picture %>" />
                             </div>
                             <div class="course__info">
-                                <h4>Learn <%= topCourse.name %></h4>
-                                <p class="course__description"><%= topCourse.description %></p>
+                                <h4>Learn <%= popularCourse.name %></h4>
+                                <p class="course__description"><%= popularCourse.description %></p>
                                 <p class="course__enroll">
-                                    Price: $<%= topCourse.price %><br />
-                                    Students enrolled: <%= topCourse.enrollCount %>
+                                    Price: $<%= popularCourse.price %><br />
+                                    Students enrolled: <%= popularCourse.enrollCount %>
                                 </p>
                             </div>
                         </article>
                     </a>
                     <%}) %>
                 </div>
+                <%} %>
             </section>
 
             <section class="faqs">

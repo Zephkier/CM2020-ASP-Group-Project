@@ -4,6 +4,18 @@ const fs = require("fs"); // For "return_validPictureFilename()"
 // ----- General helper functions ----- //
 
 /**
+ * Render error page with custom error message.
+ *
+ * For security reasons, do not reveal explicit details!
+ *
+ * @param {string} errorMessage
+ * Message to inform user, and for us to identify what went wrong.
+ */
+function errorPage(response, errorMessage) {
+    response.render("partials/error.ejs", { errorMessage: errorMessage });
+}
+
+/**
  * Display prices with cents.
  *
  * @param {*} number
@@ -48,18 +60,6 @@ function return_formattedNumber(number) {
 }
 
 /**
- * Render error page with custom error message.
- *
- * For security reasons, do not reveal explicit details!
- *
- * @param {string} errorMessage
- * Message to inform user, and for us to identify what went wrong.
- */
-function errorPage(response, errorMessage) {
-    response.render("partials/error.ejs", { errorMessage: errorMessage });
-}
-
-/**
  * Check `roles` against `request.session.user.role`:
  * - If match, then proceed.
  * - If does not match, then return error page.
@@ -97,26 +97,31 @@ function isNotLoggedIn(request, response, next) {
 // ----- Database-related helper functions ----- //
 
 /**
- * Get limited number of courses, ordered by enroll count from most to least.
+ * Create `new Promise()` to get limited number of courses, ordered from most to least `enrollCount`.
+ *
+ * - If query succeeds, then `resolve(popularCourses)`
+ * - If query fails, then `reject([])`
  *
  * Actual query:
  * - `SELECT * FROM courses`
  * - `ORDER BY enrollCount DESC`
  * - `LIMIT ?`
  *
- * @param {*} limit Number of courses to return.
+ * @param {integer} limit Number of courses to return.
  *
  * @returns Query result in `request.topFewCourses`
  */
-function db_getCoursesLimited(limit) {
-    return (request, response, next) => {
-        db.all("SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?", [limit], (err, topFewCourses) => {
-            if (err) return errorPage(response, "Error retrieving top courses!");
-            if (!topFewCourses) return errorPage(response, "No courses found!");
-            request.topFewCourses = topFewCourses;
-            return next();
+function db_getLimitedPopularCourses_promise(limit) {
+    return new Promise((resolve, reject) => {
+        let query = "SELECT * FROM courses ORDER BY enrollCount DESC LIMIT ?";
+        db.all(query, [limit], (err, popularCourses) => {
+            // err = true; // TEST
+            // popularCourses = false; // TEST
+            if (err) return reject("Error retrieving popular courses!");
+            if (!popularCourses) return reject("No popular courses found!");
+            return resolve(popularCourses);
         });
-    };
+    });
 }
 
 /**
@@ -126,7 +131,7 @@ function db_getCoursesLimited(limit) {
  * - `SELECT * FROM courses WHERE id = ?`
  */
 function db_getCourse_promise(courseId, response) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
             if (err) return errorPage(response, "Error retrieving course selected!");
             if (!course) return errorPage(response, "No course selected!");
@@ -419,15 +424,15 @@ function db_processTopics(request, courseId) {
 // Export module containing the following so external files can access it
 module.exports = {
     // General helper functions
+    errorPage,
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
-    errorPage,
     hasRoles,
     isLoggedIn,
     isNotLoggedIn,
     // Database-related helper functions
-    db_getCoursesLimited,
+    db_getLimitedPopularCourses_promise,
     db_getCourse_promise,
     db_isEnrolledInCourse,
     db_isEnrolledInCourse_promise,

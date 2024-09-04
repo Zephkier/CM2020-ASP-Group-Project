@@ -2,11 +2,12 @@
 const express = require("express");
 const {
     // General helper functions
+    errorPage,
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
     // Database-related helper functions
-    db_getCoursesLimited,
+    db_getLimitedPopularCourses_promise,
 } = require("../public/helper.js");
 
 // Initialise router
@@ -15,7 +16,7 @@ const router = express.Router();
 // Note that all these URLs have no prefix!
 
 // Home (Main)
-router.get("/", db_getCoursesLimited(3), (request, response) => {
+router.get("/", async (request, response) => {
     let categories = [
         {
             iconscoutName: "uil uil-desktop",
@@ -49,11 +50,19 @@ router.get("/", db_getCoursesLimited(3), (request, response) => {
         },
     ];
 
-    request.topFewCourses.forEach((topCourse) => {
-        topCourse.price = return_twoDecimalPlaces(topCourse.price);
-        topCourse.picture = return_validPictureFilename("./public/images/courses/", topCourse.name);
-        topCourse.enrollCount = return_formattedNumber(topCourse.enrollCount);
-    });
+    let popularCourses;
+    try {
+        // If query succeeds, then "popularCourses" is an array
+        popularCourses = await db_getLimitedPopularCourses_promise(3);
+        popularCourses.forEach((popularCourse) => {
+            popularCourse.price = return_twoDecimalPlaces(popularCourse.price);
+            popularCourse.picture = return_validPictureFilename("./public/images/courses/", popularCourse.name);
+            popularCourse.enrollCount = return_formattedNumber(popularCourse.enrollCount);
+        });
+    } catch (rejectMessage) {
+        // If query fails, then "popularCourses" is a string
+        popularCourses = rejectMessage;
+    }
 
     let faqs = [
         {
@@ -142,7 +151,7 @@ router.get("/", db_getCoursesLimited(3), (request, response) => {
     return response.render("index.ejs", {
         pageName: "Home",
         categories: categories,
-        topFewCourses: request.topFewCourses,
+        popularCourses: popularCourses,
         faqs: faqs,
         testimonials: testimonials,
     });
