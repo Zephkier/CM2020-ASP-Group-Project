@@ -125,11 +125,14 @@ function db_getLimitedPopularCourses_promise(limit) {
 /**
  * Create `new Promise()` to get specific course based on its ID.
  *
+ * - If query succeeds, then `resolve(course)`
+ * - If query fails, then return error page.
+ *
  * Actual query:
  * - `SELECT * FROM courses WHERE id = ?`
  */
 function db_getCourse_promise(courseId, response) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         db.get("SELECT * FROM courses WHERE id = ?", [courseId], (err, course) => {
             if (err) return errorPage(response, "Error retrieving course selected!");
             if (!course) return errorPage(response, "No course selected!");
@@ -142,7 +145,6 @@ function db_getCourse_promise(courseId, response) {
  * Check if user is enrolled into a course.
  *
  * - If user is enrolled, then proceed.
- *
  * - If user is not enrolled, then return error page.
  *
  * Actual query:
@@ -163,7 +165,6 @@ function db_isEnrolledInCourse(request, response, next) {
  * Create `new Promise()` to check if user is enrolled into a course.
  *
  * - If user is enrolled, then return `object` with additional `.isEnrolled = true` property.
- *
  * - If user is not enrolled, then return `object` with additional `.isEnrolled = false` property.
  *
  * Actual query:
@@ -345,6 +346,9 @@ function db_isUniqueLoginCredentials_promise(username, email) {
 /**
  * For `student-router.js' .post("/checkout")` route.
  *
+ * - If query succeeds, then proceed.
+ * - If query fails, then return error page.
+ *
  * Actual query:
  * - `INSERT INTO enrollments (user_id, course_id)`
  * - `VALUES (?, ?)`
@@ -362,6 +366,9 @@ function db_insertIntoEnrollments(request, response, next) {
 
 /**
  * For `student-router.js' .post("/checkout")` route.
+ *
+ * - If query succeeds, then proceed.
+ * - If query fails, then return error page.
  *
  * Actual query:
  * - `UPDATE courses`
@@ -382,6 +389,8 @@ function db_updateEnrollCount(request, response, next) {
  * For `educator-router.js' .post("/update/course")` route.
  *
  * This covers both inserting new and updating existing topics.
+ * - If query succeeds, then proceed.
+ * - If query fails, then return error page.
  *
  * Actual queries:
  * - `INSERT INTO topics (course_id, name, description, video_url)`
