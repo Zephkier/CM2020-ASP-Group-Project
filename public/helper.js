@@ -70,7 +70,7 @@ function return_formattedNumber(number) {
 function hasRoles(roles) {
     return function (request, response, next) {
         if (roles.includes(request.session.user.role)) return next();
-        return errorPage(response, "You do not have permission to access this page!");
+        else return response.redirect("/user/profile?error=no_permission");
     };
 }
 

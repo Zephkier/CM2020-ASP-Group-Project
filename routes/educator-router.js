@@ -4,6 +4,7 @@ const { db } = require("../public/db.js");
 const {
     // General helper functions
     errorPage,
+    hasRoles,
     isLoggedIn,
     // Database-related helper functions
     db_processTopics,
@@ -27,14 +28,14 @@ const router = express.Router();
 // Note that all these URLs have "/educator" prefix!
 
 // Home (Profile)
-router.get("/", (request, response) => {
+router.get("/", hasRoles(["educator"]), (request, response) => {
     return response.redirect("/user/profile");
 });
 
 let categories = ["Web Development", "Programming", "Game Development", "Data Science", "Design", "Others"];
 
 // Add course
-router.get("/add/course", isLoggedIn, (request, response) => {
+router.get("/add/course", isLoggedIn, hasRoles(["educator"]), (request, response) => {
     return response.render("educator/course-edit.ejs", {
         pageName: "Add Course",
         user: request.session.user,
@@ -44,7 +45,7 @@ router.get("/add/course", isLoggedIn, (request, response) => {
 });
 
 // Edit course
-router.get("/edit/course/:courseId", isLoggedIn, (request, response) => {
+router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (request, response) => {
     db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
         if (err) return errorPage(response, "Error retrieving course details!");
         if (!course) return errorPage(response, "Course not found!");

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Redirect to /user/profile
         if (error == "already_logged_in") message = "You are <b>already</b> logged in!";
+        if (error == "no_permission") message = "You do not have permission to access this page!";
 
         // Redirect to /user/login
         if (error == "not_logged_in") message = "You must login first!";
