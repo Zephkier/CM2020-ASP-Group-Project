@@ -43,8 +43,9 @@ router.get("/", async (request, response) => {
 
     // If user logged in, then check if user has enrolled into any courses
     // So that text displays either price or "Already Enrolled"
+
+    // Await for all (due to being in a map() loop) promised query results
     try {
-        // Await for all (due to being in a map() loop) promised query results
         await Promise.all(
             courses.map(async (course) => {
                 // If query succeeds, then "course" has additional ".isEnrolled" property
@@ -66,29 +67,34 @@ router.get("/", async (request, response) => {
 
 // Individual course
 router.get("/:courseId", async (request, response) => {
-    let userId = request.session.user ? request.session.user.id : null;
     let courseId = request.params.courseId;
 
     // Await for promised query result
     let course = await db_getCourse_promise(courseId, response);
 
-    // Set "course" properties
+    // Format properties
     course.price = return_twoDecimalPlaces(course.price);
     course.picture = return_validPictureFilename("./public/images/courses/", course.name);
 
+    // If user logged in, then check if user has enrolled into any courses
+    // So that text displays either price or "Already Enrolled"
+
     // Await for promised query result
     try {
-        course = await db_isEnrolledInCourse_promise(userId, courseId, course);
-    } catch (error) {
-        return errorPage(response, error.message);
+        // If query succeeds, then "course" has additional ".isEnrolled" property
+        if (request.session.user) course = await db_isEnrolledInCourse_promise(request.session.user.id, courseId, course);
+        else course.isEnrolled = false;
+    } catch (rejectMessage) {
+        // If query fails, then render error page
+        return errorPage(response, rejectMessage);
     }
 
     let query = "SELECT * FROM topics WHERE course_id = ? LIMIT 3";
     db.all(query, [courseId], (err, topics) => {
-        if (err) return errorPage(response, "Error retrieving course topics!");
-        if (!topics) return errorPage(response, "Course topics not found!");
+        if (err) course.topics = "Error retrieving course's topics!";
+        else if (!topics) course.topics = "Course's topics are not found!";
+        else course.topics = topics;
 
-        course.topics = topics;
         return response.render("courses/course.ejs", {
             pageName: `About ${course.name}`,
             course: course,

@@ -44,11 +44,16 @@
                         <p><%= course.description %></p>
                         <h2><strong>What you'll learn:</strong></h2>
                         <ul>
+                            <!-- If "popularCourses" is not an array, then display its error message -->
+                            <%if (!Array.isArray(course.topics)) { %>
+                            <li><%= course.topics %></li>
+                            <%} else { %>
+                            <!-- If "popularCourses" is an array, then display its array of popular courses -->
                             <%if (course.topics.length > 0) { course.topics.forEach((topic, index) => { %>
                             <li>Topic <%= index + 1 %>: <%= topic.name %>, <%= topic.description %>.</li>
                             <%}) } else { %>
                             <li>This course has no topics yet!</li>
-                            <%}%>
+                            <%}} %>
                         </ul>
 
                         <div class="course-detail__actions">
