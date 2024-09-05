@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + separator + appName %></title>
 
-        <!-- ICONSCOUT CDN -->
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= pageName + separator + appName %>
+    </title>
 
-        <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-        <!-- CSS -->
-        <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="/css/courses.css" />
-        <style>
-            body {
-                background-image: url("/images/bg-texture.png");
-            }
-            .container {
-                flex: 1;
-            }
-            footer {
-                margin-top: auto;
-            }
-        </style>
-    </head>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet" />
 
-    <body>
-        <%- include("../partials/navbar.ejs") %>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/courses.css" />
+    <style>
+        body {
+            background-image: url("/images/bg-texture.png");
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="container">
@@ -41,29 +48,34 @@
 
                     <div class="course-detail__info">
                         <h1>Learn <%= course.name %>!</h1>
-                        <p><%= course.description %></p>
+                        <p>
+                            <%= course.description %>
+                        </p>
                         <h2><strong>What you'll learn:</strong></h2>
                         <ul>
                             <!-- If "popularCourses" is not an array, then display its error message -->
                             <%if (!Array.isArray(course.topics)) { %>
-                            <li><%= course.topics %></li>
-                            <%} else { %>
-                            <!-- If "popularCourses" is an array, then display its array of popular courses -->
-                            <%if (course.topics.length > 0) { course.topics.forEach((topic, index) => { %>
-                            <li>Topic <%= index + 1 %>: <%= topic.name %>, <%= topic.description %>.</li>
-                            <%}) } else { %>
-                            <li>This course has no topics yet!</li>
-                            <%}} %>
+                                <li>
+                                    <%= course.topics %>
+                                </li>
+                                <%} else { %>
+                                    <!-- If "popularCourses" is an array, then display its array of popular courses -->
+                                    <%if (course.topics.length> 0) { course.topics.forEach((topic, index) => { %>
+                                        <li>Topic <%= index + 1 %>: <%= topic.name %>, <%= topic.description %>.</li>
+                                        <%}) } else { %>
+                                            <li>This course has no topics yet!</li>
+                                            <%}} %>
                         </ul>
 
                         <div class="course-detail__actions">
                             <form action="/courses/<%= course.id %>/enroll" method="POST">
                                 <input type="hidden" name="courseId" value="<%= course.id %>" />
                                 <%if (course.isEnrolled) { %>
-                                <button type="submit" class="btn btn-secondary" disabled>You are enrolled!</button>
-                                <%} else { %>
-                                <button type="submit" class="btn btn-secondary">Add to Cart ($<%= course.price %>)</button>
-                                <%} %>
+                                    <button type="submit" class="btn btn-secondary" disabled>You are enrolled!</button>
+                                    <%} else { %>
+                                        <button type="submit" class="btn btn-secondary">Add to Cart ($<%= course.price
+                                                %>)</button>
+                                        <%} %>
                             </form>
                         </div>
                     </div>
@@ -73,6 +85,7 @@
 
         <%- include("../partials/footer.ejs") %>
 
-        <script src="/main.js"></script>
-    </body>
+            <script src="/main.js"></script>
+</body>
+
 </html>
