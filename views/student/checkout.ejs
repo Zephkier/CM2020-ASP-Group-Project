@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + separator + appName %></title>
 
-        <!-- ICONSCOUT CDN -->
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= pageName + separator + appName %>
+    </title>
 
-        <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-        <!-- CSS -->
-        <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="/css/checkout.css" />
-        <style>
-            body {
-                background-image: url("/images/bg-texture.png");
-            }
-        </style>
-    </head>
-    <body>
-        <%- include("../partials/navbar.ejs") %>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/checkout.css" />
+    <style>
+        body {
+            background-image: url("/images/bg-texture.png");
+        }
+    </style>
+</head>
+
+<body>
+    <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="checkout-container">
@@ -32,26 +38,36 @@
 
                 <div class="user-details">
                     <h3>Your Details</h3>
-                    <p><strong>Name:</strong> <%= user.displayName %></p>
-                    <p><strong>Email:</strong> <%= user.email %></p>
-                    <p><strong>Bio:</strong> <%= user.bio %></p>
+                    <p><strong>Name:</strong>
+                        <%= user.displayName %>
+                    </p>
+                    <p><strong>Email:</strong>
+                        <%= user.email %>
+                    </p>
+                    <p><strong>Bio:</strong>
+                        <%= user.bio %>
+                    </p>
                 </div>
 
                 <div class="cart-summary">
                     <h3>Order Summary</h3>
-                    <%cart.forEach(item => { %>
-                    <div class="cart-item">
-                        <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
-                        <div>
-                            <h4><%= item.name %></h4>
-                            <p>$<%= item.price %></p>
+                    <%cart.forEach(item=> { %>
+                        <div class="cart-item">
+                            <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
+                            <div>
+                                <h4>
+                                    <%= item.name %>
+                                </h4>
+                                <p>$<%= item.price %>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <%}) %>
+                        <%}) %>
 
-                    <div class="total">
-                        <p>Total: $<%= totalPrice %></p>
-                    </div>
+                            <div class="total">
+                                <p>Total: $<%= totalPrice %>
+                                </p>
+                            </div>
                 </div>
 
                 <div class="payment-options">
@@ -68,18 +84,22 @@
                     </div>
 
                     <!-- Credit Card Form -->
-                    <form action="/student/checkout/creditcard" method="POST" id="credit-card-form" style="display: none; margin-top: 1rem">
+                    <form action="/student/checkout/creditcard" method="POST" id="credit-card-form"
+                        style="display: none; margin-top: 1rem">
                         <div class="form-group">
                             <label for="card-number">Card Number:</label>
-                            <input type="text" id="card-number" name="cardNumber" required pattern="[0-9]{16}" title="Please enter a valid 16-digit card number." />
+                            <input type="text" id="card-number" name="cardNumber" required pattern="[0-9]{16}"
+                                title="Please enter a valid 16-digit card number." />
                         </div>
                         <div class="form-group">
                             <label for="card-expiry">Expiry Date:</label>
-                            <input type="text" id="card-expiry" name="cardExpiry" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Please enter a valid expiry date (MM/YY)." />
+                            <input type="text" id="card-expiry" name="cardExpiry" required
+                                pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Please enter a valid expiry date (MM/YY)." />
                         </div>
                         <div class="form-group">
                             <label for="card-cvc">CVC:</label>
-                            <input type="text" id="card-cvc" name="cardCVC" required pattern="[0-9]{3}" title="Please enter a valid 3-digit CVC." />
+                            <input type="text" id="card-cvc" name="cardCVC" required pattern="[0-9]{3}"
+                                title="Please enter a valid 3-digit CVC." />
                         </div>
                         <button type="submit" class="btn btn-primary">Submit Payment</button>
                     </form>
@@ -94,13 +114,14 @@
 
         <%- include("../partials/footer.ejs") %>
 
-        <script src="/main.js"></script>
-        <script src="/error-popup-box.js"></script>
-        <script>
-            function toggleCreditCardForm() {
-                const form = document.getElementById("credit-card-form");
-                form.style.display = form.style.display === "none" ? "block" : "none";
-            }
-        </script>
-    </body>
+            <script src="/main.js"></script>
+            <script src="/error-popup-box.js"></script>
+            <script>
+                function toggleCreditCardForm() {
+                    const form = document.getElementById("credit-card-form");
+                    form.style.display = form.style.display === "none" ? "block" : "none";
+                }
+            </script>
+</body>
+
 </html>
