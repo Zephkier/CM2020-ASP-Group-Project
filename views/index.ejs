@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= pageName + separator + appName %></title>
 
-        <!-- ICONSCOUT CDN -->
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= pageName + separator + appName %>
+    </title>
 
-        <!-- GOOGLE FONTS -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-        <!-- CSS -->
-        <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="/css/courses.css" />
-        <style>
-            body {
-                background-image: url("/images/bg-texture.png");
-            }
-        </style>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet" />
 
-        <!-- SWIPER JS -->
-        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
-    </head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/courses.css" />
+    <style>
+        body {
+            background-image: url("/images/bg-texture.png");
+        }
+    </style>
 
-    <body>
-        <%- include("./partials/navbar.ejs") %>
+    <!-- SWIPER JS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <%- include("./partials/navbar.ejs") %>
+
 
         <main>
+            <!-- Header Section -->
             <section>
                 <div class="container header__container">
                     <div class="header__right">
@@ -39,100 +47,128 @@
                     </div>
                     <div class="header__left">
                         <h1>Grow your skills to advance your career path</h1>
-                        <p>Enhance your knowledge and expertise in your chosen field to propel your career forward. Regularly seek opportunities for professional development, attend workshops, and stay updated with industry trends.</p>
+                        <p>Enhance your knowledge and expertise in your chosen field to propel your career forward.
+                            Regularly seek opportunities for professional development, attend workshops, and stay
+                            updated with industry trends.</p>
                         <a href="/user/register" class="btn btn-primary">Sign Up</a>
                         <a href="/courses" class="btn btn-primary">See all Courses</a>
                     </div>
                 </div>
             </section>
 
+            <!-- Categories Section -->
             <section class="categories">
                 <div class="container categories__container">
                     <div class="categories__left">
                         <h1>Categories</h1>
-                        <p>Expand your coding expertise and dive into the world of technology. Whether you're a beginner or looking to advance your skills, explore these courses designed to enhance your programming knowledge.</p>
+                        <p>Expand your coding expertise and dive into the world of technology. Whether you're a beginner
+                            or looking to advance your skills, explore these courses designed to enhance your
+                            programming knowledge.</p>
                         <a href="/courses" class="btn">See all Courses</a>
                     </div>
 
                     <div class="categories__right">
-                        <%categories.forEach(category => { %>
-                        <article class="category hidden">
-                            <span class="category__icon">
-                                <i class="<%= category.iconscoutName %>"></i>
-                            </span>
-                            <h5><%= category.name %></h5>
-                            <p><%= category.description %></p>
-                        </article>
-                        <%}) %>
+                        <%categories.forEach(category=> { %>
+                            <article class="category hidden">
+                                <span class="category__icon">
+                                    <i class="<%= category.iconscoutName %>"></i>
+                                </span>
+                                <h5>
+                                    <%= category.name %>
+                                </h5>
+                                <p>
+                                    <%= category.description %>
+                                </p>
+                            </article>
+                            <%}) %>
                     </div>
                 </div>
             </section>
 
+            <!-- Popular Courses Section -->
             <section class="courses index">
                 <h1>Our Popular Courses</h1>
                 <!-- If "popularCourses" is not an array, then display its error message -->
                 <%if (!Array.isArray(popularCourses)) { %>
-                <p><%= popularCourses %></p>
-                <%} else { %>
-                <!-- If "popularCourses" is an array, then display its array of popular courses -->
-                <div class="container courses__container">
-                    <%popularCourses.forEach(popularCourse => { %>
-                    <a href="/courses/<%= popularCourse.id %>" class="hidden">
-                        <article class="course">
-                            <div class="course__image">
-                                <img src="/images/courses/<%= popularCourse.picture %>" />
-                            </div>
-                            <div class="course__info">
-                                <h4>Learn <%= popularCourse.name %></h4>
-                                <p class="course__description"><%= popularCourse.description %></p>
-                                <p class="course__enroll">
-                                    Price: $<%= popularCourse.price %><br />
-                                    Students enrolled: <%= popularCourse.enrollCount %>
-                                </p>
-                            </div>
-                        </article>
-                    </a>
-                    <%}) %>
-                </div>
-                <%} %>
+                    <p>
+                        <%= popularCourses %>
+                    </p>
+                    <%} else { %>
+                        <!-- If "popularCourses" is an array, then display its array of popular courses -->
+                        <div class="container courses__container">
+                            <%popularCourses.forEach(popularCourse=> { %>
+                                <a href="/courses/<%= popularCourse.id %>" class="hidden">
+                                    <article class="course">
+                                        <div class="course__image">
+                                            <img src="/images/courses/<%= popularCourse.picture %>" />
+                                        </div>
+                                        <div class="course__info">
+                                            <h4>Learn <%= popularCourse.name %>
+                                            </h4>
+                                            <p class="course__description">
+                                                <%= popularCourse.description %>
+                                            </p>
+                                            <p class="course__enroll">
+                                                Price: $<%= popularCourse.price %><br />
+                                                    Students enrolled: <%= popularCourse.enrollCount %>
+                                            </p>
+                                        </div>
+                                    </article>
+                                </a>
+                                <%}) %>
+                        </div>
+                        <%} %>
             </section>
 
+            <!-- Frequently Asked Question Section -->
             <section class="faqs">
                 <h2>Frequently Asked Questions</h2>
                 <div class="container faqs__container">
-                    <%faqs.forEach(faq => { %>
-                    <article class="faq hidden">
-                        <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                        <div class="question__answer">
-                            <h4><%= faq.question %></h4>
-                            <p><%= faq.answer %></p>
-                        </div>
-                    </article>
-                    <%}) %>
+                    <%faqs.forEach(faq=> { %>
+                        <article class="faq hidden">
+                            <div class="faq__icon"><i class="uil uil-plus"></i></div>
+                            <div class="question__answer">
+                                <h4>
+                                    <%= faq.question %>
+                                </h4>
+                                <p>
+                                    <%= faq.answer %>
+                                </p>
+                            </div>
+                        </article>
+                        <%}) %>
                 </div>
             </section>
 
+            <!-- Testimonial Section -->
             <section class="container testimonials__container mySwiper">
                 <h2>Students' Testimonials</h2>
                 <div class="swiper-wrapper">
-                    <%testimonials.forEach(testimonial => { %>
-                    <article class="testimonial swiper-slide">
-                        <div class="avatar">
-                            <img src="/images/testimonials/<%= testimonial.picture %>" />
-                        </div>
-                        <div class="testimonial__info">
-                            <h5><%= testimonial.name %></h5>
-                            <small><%= testimonial.role %></small>
-                        </div>
-                        <div class="testimonial__body">
-                            <p><%= testimonial.quote %></p>
-                        </div>
-                    </article>
-                    <%}) %>
+                    <%testimonials.forEach(testimonial=> { %>
+                        <article class="testimonial swiper-slide">
+                            <div class="avatar">
+                                <img src="/images/testimonials/<%= testimonial.picture %>" />
+                            </div>
+                            <div class="testimonial__info">
+                                <h5>
+                                    <%= testimonial.name %>
+                                </h5>
+                                <small>
+                                    <%= testimonial.role %>
+                                </small>
+                            </div>
+                            <div class="testimonial__body">
+                                <p>
+                                    <%= testimonial.quote %>
+                                </p>
+                            </div>
+                        </article>
+                        <%}) %>
                 </div>
                 <div class="swiper-pagination"></div>
             </section>
 
+            <!-- Pop up Message Section -->
             <div id="popup" class="popup hidden">
                 <p id="popup-message"></p>
                 <button id="popup-close" class="btn">Close</button>
@@ -141,24 +177,25 @@
 
         <%- include("./partials/footer.ejs") %>
 
-        <script src="/main.js"></script>
-        <script src="/scroll.js"></script>
-        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-        <script>
-            // Slides for testimonials section
-            let swiper = new Swiper(".mySwiper", {
-                slidesPerView: 1,
-                spaceBetween: 50,
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                // When window width is >= 600px
-                breakpoints: {
-                    600: { slidesPerView: 2 },
-                },
-            });
-        </script>
-        <script src="/error-popup-box.js"></script>
-    </body>
+            <script src="/main.js"></script>
+            <script src="/scroll.js"></script>
+            <!-- Include Swiper JS -->
+            <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+            <script>
+                // Slides for testimonials section
+                let swiper = new Swiper(".mySwiper", {
+                    slidesPerView: 1,
+                    spaceBetween: 50,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        600: { slidesPerView: 2 },
+                    },
+                });
+            </script>
+            <script src="/error-popup-box.js"></script>
+</body>
+
 </html>
