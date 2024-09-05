@@ -1,6 +1,10 @@
 <nav>
     <div class="container nav__container">
-        <a href="/"><h4><%= appName %></h4></a>
+        <a href="/">
+            <h4>
+                <%= appName %>
+            </h4>
+        </a>
         <ul class="nav__menu">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
@@ -20,18 +24,21 @@
 
             <!-- Profile, login, logout -->
             <%if (session.user) { %>
-            <li>
-                <a href="/user/profile" class="profile-link">
-                    <div class="nav-profile-info">
-                        <img src="/images/profile-pictures/<%=  session.user.profilePicture %>" alt="Profile Picture" class="nav-profile-image" />
-                        <span><%= session.user.displayName %></span>
-                    </div>
-                </a>
-            </li>
-            <li><a href="/user/logout">Logout</a></li>
-            <%} else { %>
-            <li><a href="/user/login">Login</a></li>
-            <%} %>
+                <li>
+                    <a href="/user/profile" class="profile-link">
+                        <div class="nav-profile-info">
+                            <img src="/images/profile-pictures/<%=  session.user.profilePicture %>"
+                                alt="Profile Picture" class="nav-profile-image" />
+                            <span>
+                                <%= session.user.displayName %>
+                            </span>
+                        </div>
+                    </a>
+                </li>
+                <li><a href="/user/logout">Logout</a></li>
+                <%} else { %>
+                    <li><a href="/user/login">Login</a></li>
+                    <%} %>
         </ul>
         <button id="open-menu-btn"><i class="uil uil-bars"></i></button>
         <button id="close-menu-btn"><i class="uil uil-multiply"></i></button>
