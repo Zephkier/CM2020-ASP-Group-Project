@@ -46,9 +46,11 @@ router.get("/add/course", isLoggedIn, hasRoles(["educator"]), (request, response
 
 // Edit course
 router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (request, response) => {
-    db.get("SELECT * FROM courses WHERE id = ?", [request.params.courseId], (err, course) => {
+    let query = "SELECT * FROM courses WHERE id = ? AND creator_id = ?";
+    let params = [request.params.courseId, request.session.user.id];
+    db.get(query, params, (err, course) => {
         if (err) return errorPage(response, "Error retrieving course details!");
-        if (!course) return errorPage(response, "Course not found!");
+        if (!course) return response.redirect("/user/profile?error=no_permission");
 
         db.all("SELECT * FROM topics WHERE course_id = ?", [request.params.courseId], (err, topics) => {
             if (err) return errorPage(response, "Error retrieving course topics!");
