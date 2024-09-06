@@ -238,6 +238,9 @@ router.get("/contact", (request, response) => {
 
 // Cart
 router.get("/cart", (request, response) => {
+    // If user is educator, then do not enter this page
+    if (request.session.user && request.session.user.role == "educator") return response.redirect("/user/profile?error=no_permission");
+
     let totalPrice = 0;
     let cart = request.session.cart || [];
     cart.forEach((item) => {

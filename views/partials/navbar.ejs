@@ -5,14 +5,19 @@
                 <%= appName %>
             </h4>
         </a>
+
         <ul class="nav__menu">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
-            <li><a href="/courses">Courses</a></li>
             <li><a href="/contact">Contact</a></li>
+            <li><a href="/courses">Courses</a></li>
+
+            <!-- If user is educator, then do not display cart page option -->
+            <%if (!session.user || session.user.role != "educator") { %>
             <li>
                 <a href="/cart"><i class="uil uil-shopping-cart" style="font-size: 1.5rem"></i></a>
             </li>
+            <%} %>
 
             <!-- Search text box -->
             <li>
@@ -22,7 +27,7 @@
                 </form>
             </li>
 
-            <!-- Profile, login, logout -->
+            <!-- If user logged in, then show profile and "logout". Else, show "login" only -->
             <%if (session.user) { %>
                 <li>
                     <a href="/user/profile" class="profile-link">
@@ -36,9 +41,9 @@
                     </a>
                 </li>
                 <li><a href="/user/logout">Logout</a></li>
-                <%} else { %>
-                    <li><a href="/user/login">Login</a></li>
-                    <%} %>
+            <%} else { %>
+                <li><a href="/user/login">Login</a></li>
+            <%} %>
         </ul>
         <button id="open-menu-btn"><i class="uil uil-bars"></i></button>
         <button id="close-menu-btn"><i class="uil uil-multiply"></i></button>
