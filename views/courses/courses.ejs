@@ -32,145 +32,146 @@
 <body>
     <%- include("../partials/navbar.ejs") %>
 
-        <main>
-            <!-- Our Courses Section Header -->
-            <section class="courses-header">
-                <div class="container courses-header__container">
-                    <div class="courses-header__left">
-                        <div class="courses-header__left-image">
-                            <img src="/images/courses-header.svg" />
-                        </div>
-                    </div>
-
-                    <div class="courses-header__right">
-                        <h1>Our Courses</h1>
-                        <p>Explore our wide range of courses designed to help you develop practical skills and
-                            real-world knowledge. Whether you're looking to advance in your career or pursue a passion,
-                            we have something for everyone.</p>
+    <main>
+        <!-- Our Courses Section Header -->
+        <section class="courses-header">
+            <div class="container courses-header__container">
+                <div class="courses-header__left">
+                    <div class="courses-header__left-image">
+                        <img src="/images/courses-header.svg" />
                     </div>
                 </div>
-            </section>
 
-            <!-- Featured Courses Section -->
-            <section class="container featured-courses__container mySwiper">
-                <h2>Featured Courses</h2>
-                <form action="/courses" method="GET" id="sortForm" class="sort-form">
-                    <label for="sort">Sort by:</label>
-                    <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();"
-                        class="sort-select">
-                        <option value="popular" <%=sort==='popular' ? 'selected' : '' %>>Most Popular</option>
-                        <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
-                        <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
-                    </select>
-                </form>
-                <div class="swiper-wrapper">
-                    <%courses.forEach(course=> { %>
-                        <article class="course swiper-slide">
-                            <a href="/courses/<%= course.id %>">
-                                <div class="course__image">
-                                    <img src="/images/courses/<%= course.picture %>" alt="Image of <%= course.name %>"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                                    <div class="no-image">No Image Available</div>
-                                </div>
-                                <div class="course__info">
-                                    <h4>Learn <%= course.name %>
-                                    </h4>
-                                    <p class="course__description">
-                                        <%= course.description %>
-                                    </p>
-                                    <p class="course__enroll">
-                                        <%if (course.isEnrolled) { %> You are enrolled!<br />
-                                            <%} else { %> Price: $<%= course.price %><br />
-                                                    <%} %> Students enrolled: <%= course.enrollCount %>
-                                    </p>
-                                </div>
-                            </a>
-                        </article>
-                        <%}) %>
+                <div class="courses-header__right">
+                    <h1>Our Courses</h1>
+                    <p>Explore our wide range of courses designed to help you develop practical skills and
+                        real-world knowledge. Whether you're looking to advance in your career or pursue a passion,
+                        we have something for everyone.</p>
                 </div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-pagination"></div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Categorized Courses Sections -->
-            <%const categories=[...new Set(courses.map(course=> course.category))]; %> <%categories.forEach(category=> {
-                    %>
-                    <section class="container categorized-courses__container mySwiper">
-                        <h2>
-                            <%= category %> Courses
-                        </h2>
-                        <div class="swiper-wrapper">
-                            <%const filteredCourses=courses.filter(course=> course.category === category); %>
-                                <%filteredCourses.forEach(course=> { %>
-                                    <article class="course swiper-slide">
-                                        <a href="/courses/<%= course.id %>">
-                                            <div class="course__image">
-                                                <img src="/images/courses/<%= course.picture %>"
-                                                    alt="Image of <%= course.name %>"
-                                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                                                <div class="no-image">No Image Available</div>
-                                            </div>
-                                            <div class="course__info">
-                                                <h4>Learn <%= course.name %>
-                                                </h4>
-                                                <p class="course__description">
-                                                    <%= course.description %>
-                                                </p>
-                                                <p class="course__enroll">
-                                                    <%if (course.isEnrolled) { %> You are enrolled!<br />
-                                                        <%} else { %> Price: $<%= course.price %><br />
-                                                                <%} %> Students enrolled: <%= course.enrollCount %>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </article>
-                                    <%}) %>
+        <!-- Featured Courses Section -->
+        <section class="container featured-courses__container mySwiper">
+            <h2>Featured Courses</h2>
+            <form action="/courses" method="GET" id="sortForm" class="sort-form">
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort" onchange="document.getElementById('sortForm').submit();"
+                    class="sort-select">
+                    <option value="popular" <%=sort==='popular' ? 'selected' : '' %>>Most Popular</option>
+                    <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Alphabetical (A-Z)</option>
+                    <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Alphabetical (Z-A)</option>
+                </select>
+            </form>
+            <div class="swiper-wrapper">
+                <%courses.forEach(course=> { %>
+                <article class="course swiper-slide">
+                    <a href="/courses/<%= course.id %>">
+                        <div class="course__image">
+                            <img src="/images/courses/<%= course.picture %>" alt="Image of <%= course.name %>"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                            <div class="no-image">No Image Available</div>
                         </div>
-                        <%if (filteredCourses.length> 4) { %>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                            <%} %>
-                                <div class="swiper-pagination"></div>
-                    </section>
-                    <%}) %>
-
-                        <div id="popup" class="popup hidden">
-                            <p id="popup-message"></p>
-                            <button id="popup-close" class="btn">Close</button>
+                        <div class="course__info">
+                            <h4>Learn <%= course.name %>
+                            </h4>
+                            <p class="course__description">
+                                <%= course.description %>
+                            </p>
+                            <p class="course__enroll">
+                                <%if (course.isEnrolled) { %>
+                                You are enrolled!<br />
+                                <%} else { %>
+                                Price: $<%= course.price %><br />
+                                <%} %>
+                                Students enrolled: <%= course.enrollCount %>
+                            </p>
                         </div>
-        </main>
+                    </a>
+                </article>
+                <%}) %>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </section>
 
-        <%- include("../partials/footer.ejs") %>
+        <!-- Categorized Courses Sections -->
+        <%const categories=[...new Set(courses.map(course=> course.category))]; %>
+        <%categories.forEach(category=> { %>
+        <section class="container categorized-courses__container mySwiper">
+            <h2>
+                <%= category %> Courses
+            </h2>
+            <div class="swiper-wrapper">
+                <%const filteredCourses=courses.filter(course=> course.category === category); %>
+                <%filteredCourses.forEach(course=> { %>
+                    <article class="course swiper-slide">
+                        <a href="/courses/<%= course.id %>">
+                            <div class="course__image">
+                                <img src="/images/courses/<%= course.picture %>"
+                                    alt="Image of <%= course.name %>"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                                <div class="no-image">No Image Available</div>
+                            </div>
+                            <div class="course__info">
+                                <h4>Learn <%= course.name %>
+                                </h4>
+                                <p class="course__description">
+                                    <%= course.description %>
+                                </p>
+                                <p class="course__enroll">
+                                    <%if (course.isEnrolled) { %> You are enrolled!<br />
+                                        <%} else { %> Price: $<%= course.price %><br />
+                                                <%} %> Students enrolled: <%= course.enrollCount %>
+                                </p>
+                            </div>
+                        </a>
+                    </article>
+                <%}) %>
+            </div>
+            <%if (filteredCourses.length> 4) { %>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <%} %>
+            <div class="swiper-pagination"></div>
+        </section>
+        <%}) %>
 
-            <!-- Swiper JS -->
-            <!-- Swiper JS -->
-            <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-            <script>
-                // Initialize Swiper for all sections
-                let swiper = new Swiper(".mySwiper", {
-                    slidesPerView: 4, // Show exactly 4 courses per view
-                    spaceBetween: 45, // Space between slides
-                    loop: false, // Loop through the slides
-                    pagination: {
-                        el: ".swiper-pagination",
-                        clickable: true,
-                    },
-                    navigation: {
-                        // Enable navigation buttons
-                        nextEl: ".swiper-button-next",
-                        prevEl: ".swiper-button-prev",
-                    },
-                    breakpoints: {
-                        600: { slidesPerView: 2 },
-                        900: { slidesPerView: 3 },
-                        1200: { slidesPerView: 4 },
-                    },
-                });
-            </script>
+        <div id="popup" class="popup hidden">
+            <p id="popup-message"></p>
+            <button id="popup-close" class="btn">Close</button>
+        </div>
+    </main>
 
-            <script src="/main.js"></script>
-            <script src="/error-popup-box.js"></script>
+    <%- include("../partials/footer.ejs") %>
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize Swiper for all sections
+        let swiper = new Swiper(".mySwiper", {
+            slidesPerView: 4, // Show exactly 4 courses per view
+            spaceBetween: 45, // Space between slides
+            loop: false, // Loop through the slides
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                // Enable navigation buttons
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                600: { slidesPerView: 2 },
+                900: { slidesPerView: 3 },
+                1200: { slidesPerView: 4 },
+            },
+        });
+    </script>
+    <script src="/main.js"></script>
+    <script src="/error-popup-box.js"></script>
 </body>
 
 </html>
