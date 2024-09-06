@@ -157,7 +157,7 @@ function db_isEnrolledInCourse(request, response, next) {
     db.get(query, params, (err, existingEnrollment) => {
         if (err) return errorPage(response, "Error retrieving enrollment information!");
         if (existingEnrollment) return next();
-        else return errorPage(response, "You are not enrolled into this course!");
+        else return response.redirect("/user/profile?error=not_enrolled");
     });
 }
 
