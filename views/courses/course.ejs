@@ -58,24 +58,29 @@
                                 <li>
                                     <%= course.topics %>
                                 </li>
-                                <%} else { %>
-                                    <!-- If "popularCourses" is an array, then display its array of popular courses -->
-                                    <%if (course.topics.length> 0) { course.topics.forEach((topic, index) => { %>
+                            <%} else { %>
+                            <!-- If "popularCourses" is an array, then display its array of popular courses -->
+                                <%if (course.topics.length> 0) { %>
+                                    <%course.topics.forEach((topic, index) => { %>
                                         <li>Topic <%= index + 1 %>: <%= topic.name %>, <%= topic.description %>.</li>
-                                        <%}) } else { %>
-                                            <li>This course has no topics yet!</li>
-                                            <%}} %>
+                                    <%}) %>
+                                <%} else { %>
+                                    <li>This course has no topics yet!</li>
+                                <%} %>
+                            <%} %>
                         </ul>
-
                         <div class="course-detail__actions">
                             <form action="/courses/<%= course.id %>/enroll" method="POST">
                                 <input type="hidden" name="courseId" value="<%= course.id %>" />
                                 <%if (course.isEnrolled) { %>
-                                    <button type="submit" class="btn btn-secondary" disabled>You are enrolled!</button>
-                                    <%} else { %>
-                                        <button type="submit" class="btn btn-secondary">Add to Cart ($<%= course.price
-                                                %>)</button>
-                                        <%} %>
+                                    <button type="submit" class="btn btn-secondary" disabled>
+                                        You are enrolled!
+                                    </button>
+                                <%} else { %>
+                                    <button type="submit" class="btn btn-secondary">
+                                        Add to Cart ($<%= course.price%>)
+                                    </button>
+                                <%} %>
                             </form>
                         </div>
                     </div>
@@ -83,9 +88,9 @@
             </div>
         </main>
 
-        <%- include("../partials/footer.ejs") %>
+    <%- include("../partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
+    <script src="/main.js"></script>
 </body>
 
 </html>
