@@ -69,7 +69,7 @@ router.post("/checkout/creditcard", (request, response, next) => {
 });
 
 // Learn
-router.get("/learn/course/:courseId", isLoggedIn, db_isEnrolledInCourse, (request, response, next) => {
+router.get("/learn/course/:courseId", isLoggedIn, hasRoles(["student"]), db_isEnrolledInCourse, (request, response, next) => {
     let userId = request.session.user.id;
     let courseId = request.params.courseId;
     let topicId = request.query.topicId || 1; // Default to topic 1
