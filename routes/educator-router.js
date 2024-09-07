@@ -71,7 +71,7 @@ router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (reques
 
 // Submit form for both "add" and "edit" course (thus, "?" means it is optional "courseId")
 router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (request, response) => {
-    let { category, name, description, price, video_url, button } = request.body;
+    let { category, name, description, price, video_url, button } = request.body; // "video_url" is passed for db_processTopics()
     let picture = request.file ? request.file.filename : null; // Get the uploaded file name
 
     if (button == "add") {
@@ -79,7 +79,8 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
             INSERT INTO courses (creator_id, category, name, description, price, picture)
             VALUES (?, ?, ?, ?, ?, ?)`;
         let params = [request.session.user.id, category, name, description, parseFloat(price), picture];
-        db.run(query, params, (err) => {
+        // Cannot use "=>" shorthand if using "this."
+        db.run(query, params, function (err) {
             if (err) return errorPage(response, "Error adding course!");
 
             let courseId = this.lastID;
