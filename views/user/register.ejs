@@ -39,6 +39,7 @@
 </head>
 
 <body>
+    <!-- Navbar -->
     <%- include("../partials/navbar.ejs") %>
 
         <main>
@@ -107,7 +108,7 @@
                 </section>
             </div>
         </main>
-
+        <!-- Footer -->
         <%- include("../partials/footer.ejs") %>
 
             <script src="/main.js"></script>
@@ -118,6 +119,7 @@
                     if (role) showForm(role);
                 });
 
+                // Show the forms for registration for Educator and Students button
                 function showForm(role) {
                     const extraFields = document.getElementById("extra-fields");
                     const formRoleInput = document.getElementById("form-role");

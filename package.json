@@ -4,7 +4,7 @@
     "description": "agile software project source code",
     "main": "main.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "build-db": "cat db_schema.sql | sqlite3 database.db #build anew database from the sql file",
         "clean-db": "rm database.db #remove the old database",
         "build-db-win": "sqlite3 database.db < db_schema.sql",
@@ -21,10 +21,13 @@
         "ejs": "^3.1.10",
         "express": "^4.19.2",
         "express-session": "^1.18.0",
+        "express-validator": "^7.2.0",
         "multer": "^1.4.5-lts.1",
         "sqlite3": "^5.1.7"
     },
     "devDependencies": {
-        "nodemon": "^3.1.4"
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.4",
+        "supertest": "^7.0.0"
     }
 }
