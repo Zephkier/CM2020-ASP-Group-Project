@@ -79,58 +79,52 @@
                             <h3>Topics</h3>
 
                             <!-- Existing topics area (if editing an existing course with topics) -->
-                            <%if (!formInputStored.topics || formInputStored.topics.length==0) { %>
+                            <%if (!formInputStored.topics || formInputStored.topics.length == 0) { %>
                                 <p>No topics yet. Add some below:</p>
-                                <%} else { formInputStored.topics.forEach((topic, index)=> { %>
-                                    <div class="topic-group" id="existing-topic-<%= index %>">
-                                        <h4>Topic <%= index + 1 %>
-                                        </h4>
-                                        <label for="topic-name-<%= index %>">Name:</label>
-                                        <input type="text" id="topic-name-<%= index %>"
-                                            name="existingTopics[<%= topic.id %>][name]" value="<%= topic.name %>"
-                                            required />
+                            <%} else { %>
+                                <%formInputStored.topics.forEach((topic, index)=> { %>
+                                <div class="topic-group" id="existing-topic-<%= index %>">
+                                    <h4>Topic <%= index + 1 %></h4>
+                                    <label for="topic-name-<%= index %>">Name:</label>
+                                    <input type="text" id="topic-name-<%= index %>" name="existingTopics[<%= topic.id %>][name]" value="<%= topic.name %>" required />
 
-                                        <label for="topic-description-<%= index %>">Description:</label>
-                                        <textarea id="topic-description-<%= index %>"
-                                            name="existingTopics[<%= topic.id %>][description]" rows="2"
-                                            required><%= topic.description %></textarea>
+                                    <label for="topic-description-<%= index %>">Description:</label>
+                                    <textarea id="topic-description-<%= index %>" name="existingTopics[<%= topic.id %>][description]" rows="2" required><%= topic.description %></textarea>
 
-                                        <label for="topic-video-url-<%= index %>">Video URL:</label>
-                                        <input type="url" id="topic-video-url-<%= index %>"
-                                            name="existingTopics[<%= topic.id %>][video_url]"
-                                            value="<%= topic.video_url %>" required />
-                                    </div>
-                                    <%}); } %>
+                                    <label for="topic-video-url-<%= index %>">Video URL:</label>
+                                    <input type="url" id="topic-video-url-<%= index %>" name="existingTopics[<%= topic.id %>][video_url]" value="<%= topic.video_url %>" required />
+                                </div>
+                                <%}); %>
+                            <%} %>
 
-                                        <!-- New topics area -->
-                                        <div id="new-topics-area">
-                                            <div class="topic-group" id="new-topic-0">
-                                                <h4>New Topic 1</h4>
-                                                <label for="new-topic-name-0">Name:</label>
-                                                <input type="text" id="new-topic-name-0" name="newTopics[0][name]"
-                                                    required />
+                            <!-- New topics area -->
+                            <% let topicIndex = formInputStored.topics ? formInputStored.topics.length : 0; %>
+                            <div id="new-topics-area">
+                                <div class="topic-group" id="new-topic-<%= topicIndex %>">
+                                    <h4>New Topic <%= topicIndex + 1 %></h4>
+                                    <label for="new-topic-name-<%= topicIndex %>">Name:</label>
+                                    <input type="text" id="new-topic-name-<%= topicIndex %>" name="newTopics[<%= topicIndex %>][name]" required />
 
-                                                <label for="new-topic-description-0">Description:</label>
-                                                <textarea id="new-topic-description-0" name="newTopics[0][description]"
-                                                    rows="2" required></textarea>
+                                    <label for="new-topic-description-<%= topicIndex %>">Description:</label>
+                                    <textarea id="new-topic-description-<%= topicIndex %>" name="newTopics[<%= topicIndex %>][description]" rows="2" required></textarea>
 
-                                                <label for="new-topic-video-url-0">Video URL:</label>
-                                                <input type="url" id="new-topic-video-url-0"
-                                                    name="newTopics[0][video_url]" required />
-                                            </div>
-                                        </div>
+                                    <label for="new-topic-video-url-<%= topicIndex %>">Video URL:</label>
+                                    <input type="url" id="new-topic-video-url-<%= topicIndex %>" name="newTopics[<%= topicIndex %>][video_url]" required />
+                                </div>
+                            </div>
 
-                                        <!-- Add more topics button -->
-                                        <button type="button" id="add-more-topics" onclick="addMoreTopics()">+ Add More
-                                            Topics</button>
+                            <!-- Add more topics button -->
+                            <button type="button" id="add-more-topics" onclick="addMoreTopics()">
+                                + Add More Topics
+                            </button>
                         </div>
 
                         <!-- Submit button -->
                         <%if (formInputStored.id) { %>
                             <button type="submit" name="button" value="update">Update Course</button>
-                            <%} else { %>
-                                <button type="submit" name="button" value="add">Add Course</button>
-                                <%} %>
+                        <%} else { %>
+                            <button type="submit" name="button" value="add">Add Course</button>
+                        <%} %>
                     </form>
             </div>
 
