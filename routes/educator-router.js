@@ -71,16 +71,15 @@ router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (reques
 
 // Submit form for both "add" and "edit" course (thus, "?" means it is optional "courseId")
 router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (request, response) => {
-    let { category, name, description, price, video_url, button } = request.body; // "video_url" is passed for db_processTopics()
-    let picture = request.file ? request.file.filename : null; // Get the uploaded file name
+    let { category, name, description, price, video_url, button, existingPicture } = request.body;
+    let picture = request.file ? request.file.filename : existingPicture; // Use new upload or keep the existing one
 
-    if (button == "add") {
+    if (button === "add") {
         let query = `
             INSERT INTO courses (creator_id, category, name, description, price, picture)
             VALUES (?, ?, ?, ?, ?, ?)`;
         let params = [request.session.user.id, category, name, description, parseFloat(price), picture];
-        // Cannot use "=>" shorthand if using "this."
-        db.run(query, params, function (err) {
+        db.run(query, params, (err) => {
             if (err) return errorPage(response, "Error adding course!");
 
             let courseId = this.lastID;
@@ -89,7 +88,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
         });
     }
 
-    if (button == "update") {
+    if (button === "update") {
         let query = `
             UPDATE courses
             SET category = ?, name = ?, description = ?, price = CAST(? AS DECIMAL (10, 2)), picture = ?
@@ -103,6 +102,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
         });
     }
 });
+
 
 // Handle invalid URLs (eg. "/educator/*")
 router.get("/*", (request, response) => {
