@@ -182,21 +182,6 @@ router.post("/learn/course/:courseId/notes/:noteId/delete", (request, response) 
     });
 });
 
-// Learn: Update time spent on course
-router.post("/learn/course/:courseId/update-time", (request, response) => {
-    let userId = request.session.user.id;
-    let courseId = request.params.courseId;
-    let { timeSpent } = request.body;
-    let query = `
-        UPDATE enrollments
-        SET time_spent = time_spent + ?
-        WHERE user_id = ? AND course_id = ?`;
-    db.run(query, [timeSpent, userId, courseId], (err) => {
-        if (err) return errorPage(response, "Error updating time spent!");
-        return response.json({ success: true });
-    });
-});
-
 // Handle invalid URLs (eg. "/student/*")
 router.get("/*", (request, response) => {
     return response.redirect("/?error=invalid_url");

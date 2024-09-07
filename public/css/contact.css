@@ -1,3 +1,4 @@
+/* ============== CONTACT CONTAINER ============= */
 .contact__container {
     background: var(--color-bg1);
     padding: 4rem;
@@ -85,7 +86,8 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-    color: rgba(255, 255, 255, 0.7); /* Slightly transparent white */
+    color: rgba(255, 255, 255, 0.7);
+    /* Slightly transparent white */
 }
 
 .contact__form .btn {

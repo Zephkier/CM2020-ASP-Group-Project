@@ -11,7 +11,7 @@
 
 /* Form section styling */
 .form-section {
-    background-color:  rgb(17, 38, 73); /* Match background color */
+    background-color:  rgb(17, 38, 73); 
     border-radius: 20px;
     padding: 5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
