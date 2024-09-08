@@ -3,9 +3,9 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // General helper functions
+    errorPage,
     return_twoDecimalPlaces,
     return_validPictureFilename,
-    errorPage,
     hasRoles,
     isLoggedIn,
     // Database-related helper functions
@@ -87,8 +87,10 @@ router.get("/learn/course/:courseId", isLoggedIn, hasRoles(["student"]), db_isEn
             // Find selected topic, default to topic 1
             let selectedTopic = topics.find((topic) => topic.id == topicId) || topics[0];
 
-            // Change its ".video_url" property into embed version URL
+            // In event that educator did not add any topics
             if (!selectedTopic) return response.redirect(`/courses/${courseId}?error=no_topics_yet`);
+
+            // Change its ".video_url" property into embed version URL
             selectedTopic.video_url = selectedTopic.video_url.replace("watch?v=", "embed/");
 
             // Get notes belonging to selected course and user

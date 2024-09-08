@@ -3,10 +3,10 @@ const express = require("express");
 const { db } = require("../public/db.js");
 const {
     // General helper functions
+    errorPage,
     return_twoDecimalPlaces,
     return_validPictureFilename,
     return_formattedNumber,
-    errorPage,
     isLoggedIn,
     isNotLoggedIn,
     // Database-related helper functions
@@ -52,7 +52,7 @@ router.post("/login", async (request, response) => {
         });
     }
 
-    // This is for when not-logged-in users checkout their cart
+    // This is for: When unauthenticated users checkout their cart
     // Thus, upon login, redirect to checkout page
     if (request.session.cart) return response.redirect("/student/checkout");
 
@@ -72,6 +72,7 @@ router.get("/profile", isLoggedIn, async (request, response) => {
 
         // Role-specific queries
         let roleSpecificData;
+
         if (request.session.user.role == "student") {
             roleSpecificData = await db_getProfileEnrolledCourses_promise(userId);
             profile.enrolledCourses = roleSpecificData.map((course) => {
@@ -80,6 +81,7 @@ router.get("/profile", isLoggedIn, async (request, response) => {
                 return course;
             });
         }
+
         if (request.session.user.role == "educator") {
             roleSpecificData = await db_getProfileCreatedCourses_promise(userId);
             profile.createdCourses = roleSpecificData.map((course) => {
