@@ -64,7 +64,7 @@ INSERT INTO courses (creator_id, category, name, description, price) VALUES (2, 
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (2, 'Programming', 'C Sharp', 'Build robust applications using C# and .NET framework.', 50.50); 
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (2, 'Programming', 'Java', 'Write cross-platform applications with Java.', 70.50); 
 
--- Game development
+-- Game development (add "enrollCount" just as refernece)
 INSERT INTO courses (creator_id, category, name, description, price, enrollCount) VALUES (2, 'Game Development', 'C++', 'Enhance your programming skills with C++.', 80.50, 100000); 
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (3, 'Game Development', 'Unreal Engine', 'Kick off your game developer career with Unreal Engine', 80.50); 
 
@@ -72,7 +72,7 @@ INSERT INTO courses (creator_id, category, name, description, price) VALUES (3, 
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (3, 'Data Science', 'Python', 'Explore Python for web development, data science, and more.', 90.50); 
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (3, 'Data Science', 'Data Science', 'Explore Python and data science.', 90.50);
 
--- Design
+-- Design (add "enrollCount" just as refernece)
 INSERT INTO courses (creator_id, category, name, description, price) VALUES (3, 'Design', 'UI-UX Design', 'The Complete guide for UI/UX design', 20.50);
 INSERT INTO courses (creator_id, category, name, description, price, enrollCount) VALUES (3, 'Design', 'Adobe Illustrator', 'Essential course for graphic designers.', 30.50, 999);
 
