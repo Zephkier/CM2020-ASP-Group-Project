@@ -35,14 +35,19 @@ This project is an Agile Software Development initiative for Bright Learning Aca
 The project utilises `Node.js` and its dependencies as seen in `package.json`:
 
 ```json
-"dependencies": {
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "express-validator": "^7.2.0",
-    "multer": "^1.4.5-lts.1",
-    "sqlite3": "^5.1.7"
-}
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "express-session": "^1.18.0",
+        "express-validator": "^7.2.0",
+        "multer": "^1.4.5-lts.1",
+        "sqlite3": "^5.1.7"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.4",
+        "supertest": "^7.0.0"
+    }
 ```
 
 ### Contributing

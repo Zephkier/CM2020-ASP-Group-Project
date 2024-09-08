@@ -1,3 +1,416 @@
+commit f489c37a3d2e5b88c0721e0a8cbe81c4185dad67
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:50:10 2024 +0800
+
+    contact page's formspree works
+
+commit 3cce367bf671d0511ad0d699ae1d9075d5a43955
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:45:51 2024 +0800
+
+    format EJS files
+
+commit 65f1fafc3dd0532963b4cd6ff5ee8e16c532586f
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:44:59 2024 +0800
+
+    format CSS files
+
+commit 45c4a23cdbc5fff3249929a0ef25b1d6eb776f06
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:44:02 2024 +0800
+
+    format .sql
+
+commit 55342f0c1dbf6d87e79b2a17f165af74913b9710
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:37:50 2024 +0800
+
+    format router JS files
+
+commit 33e16463bcf70c1c37b49e601aad35fc499bf150
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:34:53 2024 +0800
+
+    fix: student is redirected when course has no topics, no '=>' function when using 'this.'
+
+commit f04e74994095806166200f7724307faa8c9fff1c
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:32:46 2024 +0800
+
+    add 1 more possible error into error popup box
+
+commit 5224847fabd237850a3509dc225d0c69fc9829e7
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 21:05:44 2024 +0800
+
+    format non-router JS files
+
+commit 9e00f303bc92b5a2c0c10d5aa329566a58b658a4
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 20:55:08 2024 +0800
+
+    fix: course photos are relevant now
+
+commit 2bec15bc7281fbdaf539f7a0e34f3d2fedafa233
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 20:50:30 2024 +0800
+
+    feat: allow .jpeg image file type for courses
+
+commit d9358eb39fda1b50a44b39fbe0a2d38a3b28d303
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 20:48:09 2024 +0800
+
+    fix: photo issue when educator add/edit courses
+
+commit 708335fcc8a8ec746282b3dbd411dde438381ca7
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 20:09:32 2024 +0800
+
+    update
+
+commit 5b54f76b5a053e36da76d0351e4ea5a5b718dc99
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 20:09:13 2024 +0800
+
+    Commit
+
+commit ab5777e2cc5808c3cd3aee2c8bd2bb3c3f663bd2
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 20:07:12 2024 +0800
+
+    educator edit course picture works
+
+commit 94d4bac0e9f020f936680df576a1f7193cb2e1d9
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 04:01:14 2024 +0800
+
+    fix the add new topics issue
+
+commit 6008ad6e9b1f582694070f1411100e8b4c4b520b
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 03:59:15 2024 +0800
+
+    CSS sorting
+
+commit ed30ccba922094b1312ab8aeb78a5e35a13126a6
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 02:42:39 2024 +0800
+
+    added jest + commenting
+
+commit 74724b2d4fcbdc0c97342fc3dd19a262b42640bb
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Sun Sep 8 02:42:08 2024 +0800
+
+    add: dev test
+
+commit b907c93cbff66486e61c6c19a9f507229e6e121a
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 00:34:48 2024 +0800
+
+    fix: adding new course's topics now properly updates database
+    
+    it was an error due to using '=>' arrow function shorthand
+
+commit fc4fd310bfe270ab542001418edefb2a9004f709
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sun Sep 8 00:11:07 2024 +0800
+
+    fix: course edit page to continue topic's numbering sequence
+    
+    example:
+    - previously: existing topic 1 to topic 5, new topics 1 to topic 5
+    - now:        existing topic 1 to topic 5, new topics 6 to topic 10
+
+commit 4cf7367aab22cf088959352074bfbe3157f4a1d4
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 22:42:14 2024 +0800
+
+    npm uninstall express-validator as it is unused
+
+commit c9737956056dea172ae666f4d5d989b8adeec8f9
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 02:33:44 2024 +0800
+
+    fix: error in footer
+
+commit d2a666f2fcbd39dc03307435b72fb234fa72aca2
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 01:24:11 2024 +0800
+
+    fix: educators cannot access another educator's created course
+
+commit b727f3058847d389f2a7f9e5dc88b6a8b641a678
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 01:17:54 2024 +0800
+
+    fix: educators cannot access student pages
+
+commit 07c9624986cb040aef740cc65590b0ff52e1f190
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 01:13:28 2024 +0800
+
+    fix: if student learns unenrolled course, then notify instead of redirect to error page
+
+commit 9778794ab1d9b9d53a269986fcec4ef47a874e84
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Sat Sep 7 00:52:29 2024 +0800
+
+    fix: remove line break to match report's screenshot
+
+commit 9fab1dc5e3a8d4cee62855839cc1849342516b35
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Fri Sep 6 23:54:29 2024 +0800
+
+    fix: display text when educator has no created courses
+
+commit 2df1a0dd89469f93feec68dcf6068068d217e366
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Fri Sep 6 22:33:25 2024 +0800
+
+    fix: format course.ejs to match report's screenshot
+
+commit d55e87c1eabccdf1940edeea2867d18a13947d5c
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Fri Sep 6 21:48:05 2024 +0800
+
+    fix: format courses.ejs
+    
+    it had some nasty-looking stuff lol
+
+commit 599215cd744869a8192675a6085a6b2a7a72fdd1
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Fri Sep 6 18:29:33 2024 +0800
+
+    feat: educators cannot access cart page
+    
+    if user log in as educator, then:
+    - navbar does not show cart page button
+    - manipulating URL will redirect to profile with error message
+
+commit 565b9d557076978080a518f8846da3e71a882eed
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Thu Sep 5 19:33:07 2024 +0800
+
+    fix: remove 1 line break
+
+commit e1e1255bd97b5b670821cffba4abc15c30736374
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 19:31:55 2024 +0800
+
+    Update cart.ejs
+
+commit e93e48952a1ddd1a922097294028467a5b0ec7d1
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:44:02 2024 +0800
+
+    Format users folder
+    
+    including login,profile-edit,profile and register.ejs
+
+commit f6aced7d9df51c102fd6bf180247a34918928fec
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:43:09 2024 +0800
+
+    Format students.ejs
+
+commit a335da9e25b8921fd66c43026fe57261540a71f6
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:42:59 2024 +0800
+
+    Formatted Partials.ejs
+
+commit d7ab1bedbc0f22bbd9ea035f81df75795cffabc1
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:42:03 2024 +0800
+
+    Format course-edit.ejs
+
+commit 0aee4448ddc7022eaea8226165343ce73ebb4d9d
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:41:34 2024 +0800
+
+    Format code (course.ejs + courses.ejs)
+
+commit 78faf0f9be51e678d90db85e223d30aded450354
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:40:35 2024 +0800
+
+    Updated about.ejs format + comment
+
+commit 80e262fa3e2c290ec9f3c7ee1c44c1636e8a923f
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:40:19 2024 +0800
+
+    Updated cart.ejs format + comment
+
+commit 20b00394009f14e514745053239bdb061b753bd6
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:35:48 2024 +0800
+
+    Updated contact.ejs format + comment
+
+commit 65670003e47a9815aace7f41b52a0f1f6dc93933
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Thu Sep 5 15:27:24 2024 +0800
+
+    Format and Added comment for index page
+
+commit 0ecc5cc5ee453181e1ee5c9cbf83b37d62d4b406
+Author: sharmaine7 <sharmainelam2003@gmail.com>
+Date:   Wed Sep 4 22:56:11 2024 +0800
+
+    aligned text area
+
+commit 67443e18c00375a9f5b43fcdb8d63a65c141d2c1
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 19:52:30 2024 +0800
+
+    feat: students cannot educator endpoints
+    
+    if user is student and tries to access educator endpoint,
+    then they will be redirected to profile with error message
+
+commit 29d5034d922435a6749ed7365b64b789393d9b77
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 18:35:28 2024 +0800
+
+    fix: comments in helper.js
+
+commit 7d8912433414341c2f1795cc7ed7259a68a4526f
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 18:30:47 2024 +0800
+
+    feat: course page still displays text upon failed query
+    
+    when !topics...
+    - last time: render error page
+    - now: displays text
+
+commit 64ecf107a491140c40328c97364c1dad0d58ea6c
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 18:11:53 2024 +0800
+
+    fix: function nesting in courses-index's courses route
+
+commit 174c2debc4044118d5912e35a9dd57d77667c48a
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 17:20:23 2024 +0800
+
+    fix: formatting in index-router and helper.js
+
+commit b42e4d9d2c90e9f2057bdad0d6199f8145c88ae6
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 17:19:22 2024 +0800
+
+    feat: index page still displays text upon failed query
+    
+    when !popularCourses...
+    - last time: render error page
+    - now: displays text
+
+commit 46663b286b7003ee1076fd2307d8c731387e4091
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 01:24:47 2024 +0800
+
+    fix: edit comment
+
+commit 7fe86de1ba3fd07c9e1a743d944fe5d97ecb4c2e
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Wed Sep 4 01:24:09 2024 +0800
+
+    feat: enable handling invalid URLs
+
+commit 339196dbed490695f7f66bd49f86dcd53854dca0
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 23:29:12 2024 +0800
+
+    feat: add varying number of topics for every course
+
+commit c3a6797433c4787cddc33ecba913c68c5ee31679
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 22:56:42 2024 +0800
+
+    fix: replace 'database error' message to be less specific
+
+commit a41cce2462d11646582eac09876417df43bcac73
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 22:51:46 2024 +0800
+
+    fix: format all EJS files
+
+commit 772539aaf35ecfd826256677996637f4f7e694da
+Merge: 2334fff 610f00d
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 22:44:20 2024 +0800
+
+    Merge branch 'main' of https://github.com/imK44/asp
+
+commit 2334fff059868d01e5dfcb0b8d5bb574c2bb3727
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 22:13:11 2024 +0800
+
+    fix: helper.js JSDoc strings, router.js require() comments
+
+commit c9c6bac82c87426aec5aec7dd285cc741094f8b9
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 21:09:13 2024 +0800
+
+    feat: improve helper.js and student/educator-router.js
+
+commit d7829c71dbb4562e66c23e83cafba3a8a7a52d14
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 21:04:45 2024 +0800
+
+    fix: register form's selected role remains open upon invalid submission
+
+commit 82c8b4bbaa95569e84cfc93a535951804c531145
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 19:40:19 2024 +0800
+
+    feat: improve helper.js and user-router.js
+
+commit 57e44c87cd587afed91e733d40721fa14dcf08c1
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 17:12:34 2024 +0800
+
+    feat: improve helper.js and courses-router.js
+    
+    worked on
+    - making helper.js use less niche functions
+    - courses-router.js and its EJS to use improved helper.js
+
+commit 4275edc66f94683df06847e1ebbe186b4c70e9d3
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 04:31:34 2024 +0800
+
+    feat: improve helper.js and index-router.js
+    
+    worked on
+    - making helper.js use less niche functions
+    - index-router.js and its EJS to use improved helper.js
+
+commit 610f00dc3b0249b8290ab2cb7541cfb1f487819c
+Merge: 9c4143d 648e03c
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Tue Sep 3 03:44:16 2024 +0800
+
+    Merge branch 'main' of https://github.com/imK44/asp
+
+commit 9c4143d5f0f057033a576bb1480e78e8be246848
+Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
+Date:   Tue Sep 3 03:44:07 2024 +0800
+
+    Create log.txt
+
+commit 648e03c2d039516aaa99eace81970fdb04dac8da
+Author: Bn <bnjmn.kmc+github@gmail.com>
+Date:   Tue Sep 3 03:18:10 2024 +0800
+
+    fix: index page popular courses' CSS has rounded corners
+
 commit a15b87ffc578f8c19ba15df02343141e140d925f
 Author: justinlhy <101177774+justinlhy@users.noreply.github.com>
 Date:   Tue Sep 3 03:15:16 2024 +0800
