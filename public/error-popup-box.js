@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Redirect to /courses
         if (error.includes("already_in_cart")) message = `The "${error.split("_")[0]}" course is already in your cart!<br>Your cart has <b>remained unchanged</b>.`;
 
+        // Redirect to /course
+        if (error.includes("no_topics_yet")) message = `This course has no learning content yet.<br>Please wait for the educator to update.`;
+
         // Redirect to /cart
         if (error == "empty_checkout") message = "You cannot checkout an <b>empty</b> cart!";
 
