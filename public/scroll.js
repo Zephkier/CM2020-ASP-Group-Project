@@ -1,7 +1,8 @@
 let observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) entry.target.classList.add("show");
-        // else entry.target.classList.remove("show"); // This restarts animation every time element comes into view
+        // This restarts animation every time element comes into view
+        // else entry.target.classList.remove("show");
     });
 });
 

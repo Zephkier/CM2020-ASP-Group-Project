@@ -1,4 +1,5 @@
-const { db } = require("./db.js"); // For any database queries
+// Import and setup modules
+const { db } = require("./db.js");
 const fs = require("fs"); // For "return_validPictureFilename()"
 
 // ----- General helper functions ----- //

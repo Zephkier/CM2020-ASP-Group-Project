@@ -4,22 +4,22 @@ window.addEventListener("scroll", () => {
 });
 
 // Show and Hide FAQ answer
-const faqs = document.querySelectorAll(".faq");
+let faqs = document.querySelectorAll(".faq");
 
 faqs.forEach((faq) => {
     faq.addEventListener("click", () => {
         faq.classList.toggle("open");
         // Change icon
-        const icon = faq.querySelector(".faq__icon i");
-        if (icon.className === "uil uil-plus") icon.className = "uil uil-minus";
+        let icon = faq.querySelector(".faq__icon i");
+        if (icon.className == "uil uil-plus") icon.className = "uil uil-minus";
         else icon.className = "uil uil-plus";
     });
 });
 
 // Show/Hide nav menu
-const menu = document.querySelector(".nav__menu");
-const menuBtn = document.querySelector("#open-menu-btn");
-const closeBtn = document.querySelector("#close-menu-btn");
+let menu = document.querySelector(".nav__menu");
+let menuBtn = document.querySelector("#open-menu-btn");
+let closeBtn = document.querySelector("#close-menu-btn");
 
 menuBtn.addEventListener("click", () => {
     menu.style.display = "flex";
@@ -28,7 +28,7 @@ menuBtn.addEventListener("click", () => {
 });
 
 // Close nav menu
-const closeNav = () => {
+let closeNav = () => {
     menu.style.display = "none";
     closeBtn.style.display = "none";
     menuBtn.style.display = "inline-block";

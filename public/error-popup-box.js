@@ -26,8 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (error == "already_enrolled") message = "You are already enrolled into the course!<br>No payment was made.<br>Your cart has <b>remained unchanged</b>.";
 
         if (message) {
-            document.getElementById("popup-message").innerHTML = message; // Set <p>'s text to message
-            document.getElementById("popup").classList.remove("hidden"); // Display entire <div> by removing "hidden" class that was used to hide it
+            // Set <p>'s text to message
+            document.getElementById("popup-message").innerHTML = message;
+            // Display entire <div> by removing "hidden" class that was used to hide it
+            document.getElementById("popup").classList.remove("hidden");
         }
     }
 
