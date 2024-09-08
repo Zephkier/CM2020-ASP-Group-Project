@@ -149,7 +149,6 @@ iframe {
     background-color: #b52a37;
 }
 
-/* Button Styles */
 .btn {
     padding: 8px 16px;
     border: none;
@@ -186,7 +185,6 @@ iframe {
     background-color: #c82333;
 }
 
-/* Styling for the "Edit" Button */
 .btn-secondary {
     display: inline-block;
     padding: 6px 12px;
@@ -205,7 +203,6 @@ iframe {
     transform: translateY(-2px);
 }
 
-/* Responsive styling for better mobile experience */
 @media (max-width: 768px) {
     .btn {
         font-size: 0.8rem;

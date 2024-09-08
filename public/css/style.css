@@ -131,9 +131,7 @@ button:disabled:hover {
 
 /* =================== NAVBAR ===================== */
 nav {
-    /* background: transparent; */
     background: var(--color-primary);
-
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
     width: 100vw;
     height: 5rem;
@@ -215,7 +213,6 @@ nav button {
     border: none;
     outline: none;
     flex-grow: 1;
-    /* Allow the input to take up remaining space */
     font-size: 1rem;
 }
 
@@ -485,7 +482,7 @@ footer {
     padding-bottom: 2rem;
 }
 
-.footer__container>div h4 {
+.footer__container > div h4 {
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
 }

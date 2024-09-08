@@ -1,5 +1,4 @@
 /* ============== COURSES PAGE ============= */
-/* Courses Header */
 .courses-header__container {
     display: grid;
     grid-template-columns: 40% 60%;
@@ -26,10 +25,9 @@
     margin-bottom: 2rem;
 }
 
-/* Updated Featured and Categorized Courses Containers */
 .featured-courses__container,
 .categorized-courses__container {
-    overflow: hidden; 
+    overflow: hidden;
     position: relative;
     margin-bottom: 2rem;
     margin-top: -1rem;
@@ -37,22 +35,20 @@
     padding: 0 30px;
 }
 
-/* Swiper Wrapper for Proper Dragging */
 .swiper-wrapper {
     display: flex;
-    flex-wrap: nowrap; 
+    flex-wrap: nowrap;
     align-items: stretch;
-    height: auto; 
+    height: auto;
 }
 
-/* Swiper Slide Styles */
 .swiper-slide {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 300px; 
-    height: 500px; /* Fixed height for all course slides */
+    width: 300px;
+    height: 500px;
     flex-shrink: 0;
     background: var(--color-bg1);
     border-radius: 1.2rem;
@@ -66,10 +62,9 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Image and Content Styles */
 .course__image {
     width: 100%;
-    height: 250px; /* Fixed height for the image container */
+    height: 250px;
     overflow: hidden;
     border-radius: 1.2rem 1.2rem 0 0;
     position: relative;
@@ -88,8 +83,8 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: 200px; /* Fixed height for the course info */
-    overflow: hidden; /* Prevents overflow of text/content */
+    height: 200px;
+    overflow: hidden;
     margin-bottom: 20px;
 }
 
@@ -104,7 +99,7 @@
     align-items: center;
     text-align: center;
     width: 100%;
-    white-space: wrap; /* Prevents text from wrapping */
+    white-space: wrap;
     overflow: hidden;
 }
 
@@ -117,7 +112,6 @@
     width: 100%;
 }
 
-
 .no-image {
     display: none;
     text-align: center;
@@ -125,45 +119,42 @@
     color: #777;
 }
 
-/* Enhanced Swiper Navigation Buttons */
 .swiper-button-next,
 .swiper-button-prev {
     color: #ffffff;
-    background-color: #232f3c;
+    background: linear-gradient(145deg, #232f3c, #1b2430);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 10; 
-    top: 47%;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    cursor: pointer;
 }
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-    font-size: 1rem; 
+    font-size: 1.2rem;
 }
 
-/* Hover Effect for Swiper Buttons */
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-    background-color: #0056b3;
+    background: linear-gradient(145deg, #576c82, #193450);
     color: #ffffff;
-    transform: scale(1.15); 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+    transform: scale(1.2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25), 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Positioning for Swiper Buttons */
 .swiper-button-next {
-    right: 15px;
+    right: 20px;
 }
 
 .swiper-button-prev {
-    left: 15px;
+    left: 20px;
 }
 
 /* =================== INDIVIDUAL COURSE ===================== */
