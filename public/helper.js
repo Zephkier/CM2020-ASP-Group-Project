@@ -38,9 +38,10 @@ function return_twoDecimalPlaces(number) {
  * File to validate. Must exclude its file type! *(eg. "C Sharp")*
  *
  * @returns
- * `filename` with either `.jpg` or `.png` at the end *(eg. "C Sharp.jpg")*
+ * `filename` with its type at the end *(eg. "C Sharp.jpg")*
  */
 function return_validPictureFilename(pathToPicture, filename) {
+    if (fs.existsSync(`${pathToPicture}${filename}.jpeg`)) return `${filename}.jpeg`;
     if (fs.existsSync(`${pathToPicture}${filename}.jpg`)) return `${filename}.jpg`;
     if (fs.existsSync(`${pathToPicture}${filename}.png`)) return `${filename}.png`;
     return false;
