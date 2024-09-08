@@ -1,12 +1,18 @@
 // Import and setup modules
 const express = require("express");
-const fs = require("fs");
 const { db } = require("../public/db.js");
-const { errorPage, hasRoles, isLoggedIn, db_processTopics, return_validPictureFilename } = require("../public/helper.js");
-
-// Configure multer for file uploads
+const {
+    // General helper functions
+    errorPage,
+    return_validPictureFilename,
+    hasRoles,
+    isLoggedIn,
+    // Database-related helper functions
+    db_processTopics,
+} = require("../public/helper.js");
+const fs = require("fs");
 const multer = require("multer");
-let storage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: function (request, file, cb) {
         cb(null, "./public/images/courses/");
     },
@@ -14,7 +20,7 @@ let storage = multer.diskStorage({
         cb(null, `${request.body.name}.${file.mimetype.split("/")[1]}`);
     },
 });
-let upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 // Initialise router
 const router = express.Router();
@@ -47,7 +53,6 @@ router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (reques
         if (err) return errorPage(response, "Error retrieving course details!");
         if (!course) return response.redirect("/user/profile?error=no_permission");
 
-        // Determine the current picture filename or use default if exists
         let currentPicture = course.picture || return_validPictureFilename("./public/images/courses/", course.name);
 
         db.all("SELECT * FROM topics WHERE course_id = ?", [request.params.courseId], (err, topics) => {
@@ -74,14 +79,28 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
     let { category, name, description, price, video_url, button, existingPicture } = request.body;
     let picture = request.file ? request.file.filename : existingPicture; // Use new upload or keep the existing one
 
-    // If updating an existing course, handle image deletion and replacement
-    if (button === "update") {
+    // If adding a new course, then query database
+    if (button == "add") {
+        let query = `
+                INSERT INTO courses (creator_id, category, name, description, price, picture)
+                VALUES (?, ?, ?, ?, ?, ?)`;
+        let params = [request.session.user.id, category, name, description, parseFloat(price), picture];
+        // If using "this.", then cannot use arrow shorthand function ("=>")
+        db.run(query, params, function (err) {
+            if (err) return errorPage(response, "Error adding course!");
+
+            let courseId = this.lastID;
+            db_processTopics(request, courseId);
+            return response.redirect("/user/profile");
+        });
+    }
+
+    // If updating an existing course, then delete and replace image, then query database
+    if (button == "update") {
         if (request.file) {
             // If a new image is uploaded, delete the existing one if it exists
-            const existingImagePath = `./public/images/courses/${existingPicture}`;
-            if (fs.existsSync(existingImagePath)) {
-                fs.unlinkSync(existingImagePath);
-            }
+            let existingImagePath = `./public/images/courses/${existingPicture}`;
+            if (fs.existsSync(existingImagePath)) fs.unlinkSync(existingImagePath);
         }
 
         let query = `
@@ -93,18 +112,6 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
             if (err) return errorPage(response, "Error updating course!");
 
             db_processTopics(request, request.params.courseId);
-            return response.redirect("/user/profile");
-        });
-    } else if (button === "add") {
-        let query = `
-            INSERT INTO courses (creator_id, category, name, description, price, picture)
-            VALUES (?, ?, ?, ?, ?, ?)`;
-        let params = [request.session.user.id, category, name, description, parseFloat(price), picture];
-        db.run(query, params, (err) => {
-            if (err) return errorPage(response, "Error adding course!");
-
-            let courseId = this.lastID;
-            db_processTopics(request, courseId);
             return response.redirect("/user/profile");
         });
     }

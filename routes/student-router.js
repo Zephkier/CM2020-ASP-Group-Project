@@ -88,6 +88,7 @@ router.get("/learn/course/:courseId", isLoggedIn, hasRoles(["student"]), db_isEn
             let selectedTopic = topics.find((topic) => topic.id == topicId) || topics[0];
 
             // Change its ".video_url" property into embed version URL
+            if (!selectedTopic) return response.redirect(`/courses/${courseId}?error=no_topics_yet`);
             selectedTopic.video_url = selectedTopic.video_url.replace("watch?v=", "embed/");
 
             // Get notes belonging to selected course and user
