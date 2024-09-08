@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + separator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= pageName + separator + appName %>
-    </title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/cart.css" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/cart.css" />
-    <style>
-        body {
-            background-image: url("/images/bg-texture.png");
-        }
-    </style>
-</head>
+        <!-- style for background image -->
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
 
-<body>
-    <!-- Navbar -->
-    <%- include("./partials/navbar.ejs") %>
+    <body>
+        <!-- Navbar -->
+        <%- include("./partials/navbar.ejs") %>
 
         <main>
             <!-- Checkout Container -->
@@ -38,42 +35,39 @@
                 <h1>Your Cart</h1>
 
                 <%if (cart.length> 0) { cart.forEach(item => { %>
-                    <div class="cart-item">
-                        <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
-                        <div>
-                            <h4>
-                                <%= item.name %>
-                            </h4>
-                            <p>
-                                <%= item.description %>
-                            </p>
-                            <p>$<%= item.price %>
-                            </p>
-                            <!-- Remove Button -->
-                            <form action="/cart/remove" method="POST" style="display: inline">
-                                <input type="hidden" name="courseId" value="<%= item.id %>" />
-                                <button type="submit" class="btn btn-secondary">Remove</button>
-                            </form>
-                        </div>
+                <div class="cart-item">
+                    <img src="/images/courses/<%= item.picture %>" alt="<%= item.name %>" />
+                    <div>
+                        <h4><%= item.name %></h4>
+                        <p><%= item.description %></p>
+                        <p>$<%= item.price %></p>
+                        <!-- Remove Button -->
+                        <form action="/cart/remove" method="POST" style="display: inline">
+                            <input type="hidden" name="courseId" value="<%= item.id %>" />
+                            <button type="submit" class="btn btn-secondary">Remove</button>
+                        </form>
                     </div>
-                    <%}) %>
+                </div>
+                <%}) %>
 
-                        <div class="total">
-                            <p>Total: $<%= totalPrice %>
-                            </p>
-                        </div>
+                <!-- Display total price and checkout button if there are items in the cart -->
+                <div class="total">
+                    <p>Total: $<%= totalPrice %></p>
+                </div>
 
-                        <div class="checkout-actions">
-                            <form action="/student/checkout" method="GET">
-                                <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
-                            </form>
-                        </div>
-                        <%} else { %>
-                            <p>Your cart is empty.</p>
-                            <%} %>
+                <div class="checkout-actions">
+                    <form action="/student/checkout" method="GET">
+                        <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+                    </form>
+                </div>
+
+                <!-- Display a message if the cart is empty -->
+                <%} else { %>
+                <p>Your cart is empty.</p>
+                <%} %>
             </div>
 
-            <!-- Pop up Message -->
+            <!-- Pop up Message for error notifications-->
             <div id="popup" class="popup hidden">
                 <p id="popup-message"></p>
                 <button id="popup-close" class="btn">Close</button>
@@ -83,8 +77,8 @@
         <!-- Footer -->
         <%- include("./partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
-            <script src="/error-popup-box.js"></script>
-</body>
-
+        <!-- JavaScript files for interactivity and error handling -->
+        <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
+    </body>
 </html>

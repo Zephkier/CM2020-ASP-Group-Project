@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + separator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= pageName + separator + appName %>
-    </title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/about.css" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/about.css" />
-    <style>
-        body {
-            background-image: url("/images/bg-texture.png");
-        }
-    </style>
-</head>
+        <!-- Style for background image -->
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
 
-<body>
-    <!-- Navbar -->
-    <%- include("./partials/navbar.ejs") %>
+    <body>
+        <!-- Navbar -->
+        <%- include("./partials/navbar.ejs") %>
 
         <main>
             <!-- About Section -->
@@ -42,10 +39,7 @@
 
                     <div class="about__achievements-right">
                         <h1>About Us</h1>
-                        <p>Our mission is to provide high-quality education and resources that empower individuals to
-                            achieve their goals. With a focus on practical skills and real-world applications, we aim to
-                            bridge the gap between knowledge and implementation. Join us on this journey of continuous
-                            growth and discovery, and let’s shape the future together.</p>
+                        <p>Our mission is to provide high-quality education and resources that empower individuals to achieve their goals. With a focus on practical skills and real-world applications, we aim to bridge the gap between knowledge and implementation. Join us on this journey of continuous growth and discovery, and let's shape the future together.</p>
 
                         <div class="achievements__cards">
                             <article class="achievement__card">
@@ -81,24 +75,25 @@
                 <h2>Meet Our Team</h2>
                 <div class="container team__container">
                     <%teamMembers.forEach(teamMember=> { %>
-                        <article class="team__member">
-                            <div class="team__member-image"><img src="/images/team members/<%= teamMember.picture %>" />
-                            </div>
-                            <div class="team__member-info">
-                                <h4>
-                                    <%= teamMember.name %>
-                                </h4>
-                                <p>
-                                    <%= teamMember.role %>
-                                </p>
-                            </div>
-                            <div class="team__member-socials">
-                                <a href="<%= teamMember.linkToInstagram %>"><i class="uil uil-instagram"></i></a>
-                                <a href="<%= teamMember.linkToTwitter %>"><i class="uil uil-twitter-alt"></i></a>
-                                <a href="<%= teamMember.linkToLinkedin %>"><i class="uil uil-linkedin-alt"></i></a>
-                            </div>
-                        </article>
-                        <%}) %>
+                    <article class="team__member">
+                        <div class="team__member-image">
+                            <img src="/images/team members/<%= teamMember.picture %>" />
+                        </div>
+
+                        <!-- Team member info -->
+                        <div class="team__member-info">
+                            <h4><%= teamMember.name %></h4>
+                            <p><%= teamMember.role %></p>
+                        </div>
+
+                        <!-- Social media links -->
+                        <div class="team__member-socials">
+                            <a href="<%= teamMember.linkToInstagram %>"><i class="uil uil-instagram"></i></a>
+                            <a href="<%= teamMember.linkToTwitter %>"><i class="uil uil-twitter-alt"></i></a>
+                            <a href="<%= teamMember.linkToLinkedin %>"><i class="uil uil-linkedin-alt"></i></a>
+                        </div>
+                    </article>
+                    <%}) %>
                 </div>
             </section>
         </main>
@@ -106,7 +101,7 @@
         <!-- Footer -->
         <%- include("./partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
-</body>
-
+        <!-- Main JavaScript file for interactivity -->
+        <script src="/main.js"></script>
+    </body>
 </html>

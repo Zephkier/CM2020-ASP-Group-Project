@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + separator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= pageName + separator + appName %>
-    </title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/login.css" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/login.css" />
-    <style>
-        body {
-            background-image: url("/images/bg-texture.png");
-        }
-    </style>
-</head>
+        <!-- background image -->
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
 
-<body>
-    <!-- Navbar -->
-    <%- include("../partials/navbar.ejs") %>
+    <body>
+        <!-- Navbar -->
+        <%- include("../partials/navbar.ejs") %>
 
         <main>
             <div class="login-container">
                 <section class="form-section">
                     <h2>Login to Your Account</h2>
 
+                    <!-- Display error message if present -->
                     <%if (errorMessage) { %>
-                        <div class="error-message">
-                            <%= errorMessage %>
+                    <div class="error-message"><%= errorMessage %></div>
+                    <%} %>
+
+                    <!-- Login form, posts data to /user/login -->
+                    <form action="/user/login" method="POST" class="login-form">
+                        <!-- Username or email input field -->
+                        <div class="form-group">
+                            <label for="usernameOrEmail">Username or Email:</label>
+                            <input type="text" id="usernameOrEmail" name="usernameOrEmail" value="<%= usernameOrEmailStored %>" required />
                         </div>
-                        <%} %>
 
-                            <form action="/user/login" method="POST" class="login-form">
-                                <div class="form-group">
-                                    <label for="usernameOrEmail">Username or Email:</label>
-                                    <input type="text" id="usernameOrEmail" name="usernameOrEmail"
-                                        value="<%= usernameOrEmailStored %>" required />
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input type="password" id="password" name="password" required />
-                                    <span class="toggle-password" onclick="togglePassword()">Show Password</span>
-                                </div>
-                                <button type="submit">Login</button>
-                            </form>
+                        <!-- Password field -->
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required />
+                            <span class="toggle-password" onclick="togglePassword()">Show Password</span>
+                        </div>
+                        <!-- Submit button -->
+                        <button type="submit">Login</button>
+                    </form>
 
-                            <div class="login-redirect">
-                                <a href="/user/register">Create new account</a>
-                            </div>
+                    <!-- Link to registration page -->
+                    <div class="login-redirect">
+                        <a href="/user/register">Create new account</a>
+                    </div>
                 </section>
             </div>
-
+            <!-- Popup for error messages, hidden by default -->
             <div id="popup" class="popup hidden">
                 <p id="popup-message"></p>
                 <button id="popup-close" class="btn">Close</button>
             </div>
         </main>
-         <!-- Footer -->
+
+        <!-- Footer -->
         <%- include("../partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
-            <script src="/error-popup-box.js"></script>
-            <script>
-                function togglePassword() {
-                    const passwordField = document.getElementById("password");
-                    const togglePassword = document.querySelector(".toggle-password");
-                    if (passwordField.type === "password") {
-                        passwordField.type = "text";
-                        togglePassword.textContent = "Hide Password";
-                    } else {
-                        passwordField.type = "password";
-                        togglePassword.textContent = "Show Password";
-                    }
+        <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
+        <script>
+            // Function to toggle password visibility
+            function togglePassword() {
+                const passwordField = document.getElementById("password");
+                const togglePassword = document.querySelector(".toggle-password");
+                // Toggle between showing and hiding the password
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    togglePassword.textContent = "Hide Password";
+                } else {
+                    passwordField.type = "password";
+                    togglePassword.textContent = "Show Password";
                 }
-            </script>
-</body>
-
+            }
+        </script>
+    </body>
 </html>

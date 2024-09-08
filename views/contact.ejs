@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + separator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= pageName + separator + appName %>
-    </title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/contact.css" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/contact.css" />
-    <style>
-        body {
-            background-image: url("/images/bg-texture.png");
-        }
-    </style>
-</head>
+        <!-- Style for background image -->
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
 
-<body>
-    <!-- Navbar -->
-    <%- include("./partials/navbar.ejs") %>
+    <body>
+        <!-- Navbar -->
+        <%- include("./partials/navbar.ejs") %>
 
         <main>
             <!-- Contact Us Container -->
@@ -42,9 +39,9 @@
                         </div>
 
                         <h2>Contact Us</h2>
-                        <p>Asperiores veniam vel doloribus assumenda soluta blanditiis dolores qui voluptates,
-                            consequatur vitae.</p>
+                        <p>Get in touch with us anytime and we'll get back to you as soon as possible!</p>
 
+                        <!-- Contact details: phone, email, and address -->
                         <ul class="contact__details">
                             <li>
                                 <i class="uil uil-phone-times"></i>
@@ -76,6 +73,7 @@
                         </ul>
                     </aside>
 
+                    <!-- Form to contact-->
                     <form action="https://formspree.io/f/xeqnevgj" method="POST" class="contact__form">
                         <div class="form__name">
                             <input type="text" name="First Name" placeholder="First Name" required />
@@ -92,7 +90,6 @@
         <!-- Footer -->
         <%- include("./partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
-</body>
-
+        <script src="/main.js"></script>
+    </body>
 </html>

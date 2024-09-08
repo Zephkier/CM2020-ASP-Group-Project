@@ -1,78 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= pageName + separator + appName %></title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= pageName + separator + appName %>
-    </title>
+        <!-- ICONSCOUT CDN -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
 
-    <!-- ICONSCOUT CDN -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css" />
+        <!-- GOOGLE FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/profile.css" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/profile.css" />
-    <style>
-        body {
-            background-image: url("/images/bg-texture.png");
-        }
-    </style>
-</head>
+        <!--Background image-->
+        <style>
+            body {
+                background-image: url("/images/bg-texture.png");
+            }
+        </style>
+    </head>
 
-<body>
-    <!-- Navbar -->
-    <%- include("../partials/navbar.ejs") %>
+    <body>
+        <!-- Navbar -->
+        <%- include("../partials/navbar.ejs") %>
 
         <main class="profile-main">
             <div class="profile-container">
                 <!-- Student and Educator: Profile Header and Details -->
                 <div class="profile-left-section">
                     <div class="profile-card">
+                        <!-- Profile header with image and role -->
                         <div class="profile-header">
-                            <img src="/images/profile-pictures/<%= user.profilePicture %>" alt="Profile Picture"
-                                class="profile-image" />
-                            <h1 class="profile-name">
-                                <%= user.displayName %>
-                            </h1>
+                            <img src="/images/profile-pictures/<%= user.profilePicture %>" alt="Profile Picture" class="profile-image" />
+                            <h1 class="profile-name"><%= user.displayName %></h1>
+
+                            <!-- Display user role -->
                             <%if (user.role=="student" ) { %>
-                                <p class="profile-role">Student</p>
-                                <%} else if (user.role=="educator" ) { %>
-                                    <p class="profile-role">Educator</p>
-                                    <%} %>
+                            <p class="profile-role">Student</p>
+                            <%} else if (user.role=="educator" ) { %>
+                            <p class="profile-role">Educator</p>
+                            <%} %>
                         </div>
 
+                        <!-- Profile details section -->
                         <div class="profile-details">
                             <h2>Your Details</h2>
+
+                            <!-- User details rows -->
                             <div class="details-row">
                                 <i class="uil uil-user"></i>
-                                <p><strong>Username:</strong>
+                                <p>
+                                    <strong>Username:</strong>
                                     <%= user.username %>
                                 </p>
                             </div>
                             <div class="details-row">
                                 <i class="uil uil-envelope"></i>
-                                <p><strong>Email:</strong>
+                                <p>
+                                    <strong>Email:</strong>
                                     <%= user.email %>
                                 </p>
                             </div>
                             <div class="details-row">
                                 <i class="uil uil-file-alt"></i>
-                                <p><strong>Bio:</strong>
+                                <p>
+                                    <strong>Bio:</strong>
                                     <%= user.bio %>
                                 </p>
                             </div>
+
+                            <!-- Profile actions -->
                             <div class="profile-actions">
-                                <button class="btn btn-primary" onclick="window.location.href='/user/profile/edit'">Edit
-                                    Profile</button>
+                                <!-- Button to edit profile -->
+                                <button class="btn btn-primary" onclick="window.location.href='/user/profile/edit'">Edit Profile</button>
+
+                                <!-- Form to logout -->
                                 <form action="/user/logout" method="GET" style="margin-top: 1rem">
                                     <button type="submit" class="btn btn-secondary">Logout</button>
                                 </form>
@@ -83,105 +90,100 @@
 
                 <!-- Student: Enrolled Courses -->
                 <%if (user.role=="student" ) { %>
-                    <div class="enrolled-courses">
-                        <h2>Your Enrolled Courses</h2>
-                        <%if (profile.enrolledCourses.length> 0) { %>
-                            <ul>
-                                <%profile.enrolledCourses.forEach(course=> { %>
-                                    <a href="/student/learn/course/<%= course.id %>" class="course-link">
-                                        <li class="course-item">
-                                            <div class="course-info">
-                                                <h4>
-                                                    <%= course.name %>
-                                                </h4>
-                                                <p>
-                                                    <%= course.description %>
-                                                </p>
-                                                <p>Progress: <%= course.progress %> % completed</p>
-                                            </div>
-                                            <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>"
-                                                class="course-image" />
-                                        </li>
-                                    </a>
-                                    <%}) %>
-                            </ul>
-                            <%} else { %>
-                                <p>You have not enrolled in any courses yet.</p>
-                                <%} %>
-                    </div>
-
-                    <!-- Student: Recent Activity -->
-                    <div class="profile-row">
-                        <div class="recent-activity">
-                            <h2>Recent Activity</h2>
-                            <%if (recentActivities.length> 0) { %>
-                                <ul>
-                                    <%recentActivities.forEach(activity=> { %>
-                                        <li class="activity-item">
-                                            <p><strong>
-                                                    <%= activity.activityType %>:
-                                                </strong>
-                                                <%= activity.description %>
-                                            </p>
-                                            <p>Date: <%= new Date(activity.activityDate).toLocaleString() %>
-                                            </p>
-                                        </li>
-                                        <%}) %>
-                                </ul>
-                                <%} else { %>
-                                    <p>No recent activities. Start learning to see your progress here!</p>
-                                    <%} %>
-                        </div>
-                    </div>
+                <div class="enrolled-courses">
+                    <h2>Your Enrolled Courses</h2>
+                    <%if (profile.enrolledCourses.length> 0) { %>
+                    <ul>
+                        <!-- List of enrolled courses -->
+                        <%profile.enrolledCourses.forEach(course=> { %>
+                        <a href="/student/learn/course/<%= course.id %>" class="course-link">
+                            <li class="course-item">
+                                <div class="course-info">
+                                    <h4><%= course.name %></h4>
+                                    <p><%= course.description %></p>
+                                    <p>Progress: <%= course.progress %> % completed</p>
+                                </div>
+                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                            </li>
+                        </a>
+                        <%}) %>
+                    </ul>
+                    <%} else { %>
+                    <p>You have not enrolled in any courses yet.</p>
                     <%} %>
+                </div>
 
-                        <!-- Educator: Created Courses -->
-                        <%if (user.role=="educator" ) { %>
-                            <div class="enrolled-courses">
-                                <h2>Your Dashboard</h2>
-                                <button class="add-course-btn" onclick="window.location.href='/educator/add/course'">Add
-                                    New Course</button>
-                                <%if (profile.createdCourses.length> 0) { %>
-                                    <ul>
-                                        <%profile.createdCourses.forEach(course=> { %>
-                                            <a href="/educator/edit/course/<%= course.id %>" class="course-link">
-                                                <li class="course-item">
-                                                    <div class="course-info">
-                                                        <h4>
-                                                            <%= course.name %>
-                                                        </h4>
-                                                        <p>
-                                                            <%= course.description %>
-                                                        </p>
-                                                        <p>
-                                                            Price: $<%= course.price %>
-                                                                <br />
-                                                                Students enrolled: <%= course.enrollCount %>
-                                                        </p>
-                                                    </div>
-                                                    <img src="/images/courses/<%= course.picture %>"
-                                                        alt="<%= course.name %>" class="course-image" />
-                                                </li>
-                                            </a>
-                                            <%}) %>
-                                    </ul>
-                                    <%} else { %>
-                                        <p>You have not created any courses yet.</p>
-                                        <%} %>
-                            </div>
-                            <%} %>
+                <!-- Student: Recent Activity -->
+                <div class="profile-row">
+                    <div class="recent-activity">
+                        <h2>Recent Activity</h2>
+                        <%if (recentActivities.length> 0) { %>
+                        <ul>
+                            <!-- List of activities -->
+                            <%recentActivities.forEach(activity=> { %>
+                            <li class="activity-item">
+                                <p>
+                                    <strong> <%= activity.activityType %>: </strong>
+                                    <%= activity.description %>
+                                </p>
+                                <p>Date: <%= new Date(activity.activityDate).toLocaleString() %></p>
+                            </li>
+                            <%}) %>
+                        </ul>
+                        <%} else { %>
+                        <p>No recent activities. Start learning to see your progress here!</p>
+                        <%} %>
+                    </div>
+                </div>
+                <%} %>
+
+                <!-- Educator: Created Courses -->
+                <%if (user.role=="educator" ) { %>
+                <div class="enrolled-courses">
+                    <h2>Your Dashboard</h2>
+
+                    <!-- Button to add a new course -->
+                    <button class="add-course-btn" onclick="window.location.href='/educator/add/course'">Add New Course</button>
+                    <%if (profile.createdCourses.length> 0) { %>
+                    <ul>
+                        <!-- List of created courses -->
+                        <%profile.createdCourses.forEach(course=> { %>
+                        <a href="/educator/edit/course/<%= course.id %>" class="course-link">
+                            <li class="course-item">
+                                <div class="course-info">
+                                    <h4><%= course.name %></h4>
+                                    <p><%= course.description %></p>
+                                    <p>
+                                        Price: $<%= course.price %>
+                                        <br />
+                                        Students enrolled: <%= course.enrollCount %>
+                                    </p>
+                                </div>
+                                <img src="/images/courses/<%= course.picture %>" alt="<%= course.name %>" class="course-image" />
+                            </li>
+                        </a>
+                        <%}) %>
+                    </ul>
+
+                    <%} else { %>
+                    <p>You have not created any courses yet.</p>
+                    <%} %>
+                </div>
+                <%} %>
             </div>
 
+            <!-- Popup for notifications -->
             <div id="popup" class="popup hidden">
                 <p id="popup-message"></p>
                 <button id="popup-close" class="btn">Close</button>
             </div>
         </main>
+
         <!-- Footer -->
         <%- include("../partials/footer.ejs") %>
 
-            <script src="/main.js"></script>
-            <script src="/error-popup-box.js"></script>
-</body>
-
+        <!-- External JavaScript files -->
+        <script src="/main.js"></script>
+        <script src="/error-popup-box.js"></script>
+    </body>
 </html>
