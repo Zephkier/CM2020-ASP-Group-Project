@@ -1,14 +1,8 @@
 // Import and setup modules
 const express = require("express");
-const fs = require("fs"); 
+const fs = require("fs");
 const { db } = require("../public/db.js");
-const {
-    errorPage,
-    hasRoles,
-    isLoggedIn,
-    db_processTopics,
-    return_validPictureFilename
-} = require("../public/helper.js");
+const { errorPage, hasRoles, isLoggedIn, db_processTopics, return_validPictureFilename } = require("../public/helper.js");
 
 // Configure multer for file uploads
 const multer = require("multer");
@@ -41,6 +35,7 @@ router.get("/add/course", isLoggedIn, hasRoles(["educator"]), (request, response
         user: request.session.user,
         formInputStored: {},
         categories: categories,
+        return_validPictureFilename: return_validPictureFilename,
     });
 });
 
@@ -64,10 +59,11 @@ router.get("/edit/course/:courseId", isLoggedIn, hasRoles(["educator"]), (reques
                 user: request.session.user,
                 formInputStored: {
                     ...course,
-                    picture: currentPicture, 
+                    picture: currentPicture,
                     topics: topics,
                 },
                 categories: categories,
+                return_validPictureFilename: return_validPictureFilename,
             });
         });
     });
@@ -84,7 +80,7 @@ router.post("/update/course/:courseId?", isLoggedIn, upload.single("picture"), (
             // If a new image is uploaded, delete the existing one if it exists
             const existingImagePath = `./public/images/courses/${existingPicture}`;
             if (fs.existsSync(existingImagePath)) {
-                fs.unlinkSync(existingImagePath); 
+                fs.unlinkSync(existingImagePath);
             }
         }
 
