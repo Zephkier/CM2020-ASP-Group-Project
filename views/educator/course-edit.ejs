@@ -71,17 +71,19 @@
 
                 <div class="form-group">
                     <label for="picture">Course Photo:</label>
-                    <% if (formInputStored.picture) { %>
-                        <!-- Show existing photo -->
+                    <% let currentPicture = formInputStored.picture ? formInputStored.picture : return_validPictureFilename('/images/courses/', formInputStored.name); %>
+                    <% if (currentPicture) { %>
+                        <!-- Show existing or default photo -->
                         <div>
-                            <img src="/images/courses/<%= formInputStored.picture %>" alt="Current Course Photo" style="width: 150px; height: auto; margin-bottom: 10px;" />
+                            <img src="/images/courses/<%= currentPicture %>" alt="Current Course Photo" style="width: 150px; height: auto; margin-bottom: 10px;" />
                         </div>
                         <!-- Hidden input to keep track of the existing picture -->
-                        <input type="hidden" name="existingPicture" value="<%= formInputStored.picture %>">
+                        <input type="hidden" name="existingPicture" value="<%= currentPicture %>">
                     <% } %>
                     <!-- New picture upload -->
                     <input type="file" id="picture" name="picture" accept="image/jpeg, image/png" />
                 </div>
+                
                 <!-- Topics -->
                 <div class="form-group">
                     <h3>Topics</h3>
