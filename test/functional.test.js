@@ -35,3 +35,5 @@ describe('Functional Test for Logout Functionality', () => {
     expect(response.headers.location).toBe('/'); 
   });
 });
+
+

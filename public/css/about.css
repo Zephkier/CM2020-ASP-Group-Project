@@ -7,7 +7,7 @@
     height: 100%;
 }
 
-.about__achievements-right > p {
+.about__achievements-right>p {
     margin: 1.6rem 0 2.5rem;
 }
 
@@ -123,6 +123,7 @@
 .team__member-socials a:hover {
     background: var(--color-bg2);
 }
+
 /* ==================== MEDIA QUERIES (TABLETS) ================= */
 @media screen and (max-width: 1024px) {
     .about__achievements {

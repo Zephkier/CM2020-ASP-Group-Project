@@ -1,5 +1,3 @@
-// test/helper.test.js
-
 const { return_twoDecimalPlaces } = require('../public/helper.js');
 
 describe('Helper Function Tests', () => {
