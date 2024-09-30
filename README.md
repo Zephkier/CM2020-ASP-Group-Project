@@ -1,59 +1,67 @@
-# 🌟 Agile Software Project (ASP) - Bright Learning Academy
+This was created in Year 2, Semester 2, of my university's CM2020 Agile Software Projects Final exam.
 
-Welcome to the Agile Software Project (ASP) for **Bright Learning Academy**! This guide will help you set up and run the project on your local machine in just a few simple steps.
+This was a group project that uses the Agile methodology to create an online learning platform.
 
-## 🚀 Quick Start Guide
+# Table of Contents
 
-### Within the terminal...
+-   [Getting Started](#getting-started)
+-   [Preset Accounts](#preset-accounts)
+-   [Preview](#preview)
 
-1.  **Install dependencies used in project**
+# Getting Started
 
-    Run: `npm install`
+Open the terminal to this directory and execute the following commands to setup and run the web application:
 
-2.  **Build backend database**
+![Screenshot of terminal accessing this directory](image-4.png)
 
-    If you're on Mac, Linux or Unix-based system, then run: `npm run build-db`
+Install the necessary Node dependencies as per `package.json`:
 
-    If you're on Windows, then run: `npm run build-db-win`
-
-    A `database.db` file should appear in the directory.
-
-3.  **Start application**
-
-    Run: `npm run start`
-
-    There should be a `localhost` link to access the project.
-
-## Additional Information
-
-### Project Overview
-
-This project is an Agile Software Development initiative for Bright Learning Academy, aiming to deliver a comprehensive and interactive learning experience.
-
-### Technologies Used
-
-The project utilises `Node.js` and its dependencies as seen in `package.json`:
-
-```json
-    "dependencies": {
-        "ejs": "^3.1.10",
-        "express": "^4.19.2",
-        "express-session": "^1.18.0",
-        "express-validator": "^7.2.0",
-        "multer": "^1.4.5-lts.1",
-        "sqlite3": "^5.1.7"
-    },
-    "devDependencies": {
-        "jest": "^29.7.0",
-        "nodemon": "^3.1.4",
-        "supertest": "^7.0.0"
-    }
+```powershell
+npm install
 ```
 
-### Contributing
+If you're on Windows, then run this to build the database:
 
-Contributions are welcomed! Please follow the `CONTRIBUTING.md` guidelines.
+```powershell
+npm run build-db-win
+```
 
-### License
+If you're on Mac or Linux, then run this to build the database:
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+```powershell
+npm run build-db
+```
+
+Start the application:
+
+```powershell
+npm run start
+```
+
+# Preset Accounts
+
+You may create a new account, or login with the following presets:
+
+| Username  | Password  |
+| --------- | --------- |
+| student   | student   |
+| educator  | educator  |
+| educator2 | educator2 |
+
+# Preview
+
+Home page:
+
+![Screenshot of home page](image.png)
+
+Student enrolling into courses:
+
+![Screenshot of student's checkout page](image-1.png)
+
+Student's learning page:
+
+![Screenshot of student's learning page](image-2.png)
+
+Educator's profile page:
+
+![Screenshot of educator's profile page](image-3.png)
