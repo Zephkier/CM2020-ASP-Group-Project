@@ -12,7 +12,7 @@ This was a group project that uses the Agile methodology to create an online lea
 
 Open the terminal to this directory and execute the following commands to setup and run the web application:
 
-![Screenshot of terminal accessing this directory](image-4.png)
+![Screenshot of terminal accessing this directory](https://github.com/user-attachments/assets/9d0988c3-e69c-4052-a847-df7e6c24fd59)
 
 Install the necessary Node dependencies as per `package.json`:
 
@@ -52,16 +52,16 @@ You may create a new account, or login with the following presets:
 
 Home page:
 
-![Screenshot of home page](image.png)
+![Screenshot of home page](https://github.com/user-attachments/assets/44129860-71e3-43b7-a9bd-d25fc2e76d6d)
 
 Student enrolling into courses:
 
-![Screenshot of student's checkout page](image-1.png)
+![Screenshot of student's checkout page](https://github.com/user-attachments/assets/fd5a3dee-dc70-4c6e-8f48-d2fbc8e9474d)
 
 Student's learning page:
 
-![Screenshot of student's learning page](image-2.png)
+![Screenshot of student's learning page](https://github.com/user-attachments/assets/7963144e-2ff0-4dc4-9a3f-2e42a5f61cd9)
 
 Educator's profile page:
 
-![Screenshot of educator's profile page](image-3.png)
+![Screenshot of educator's profile page](https://github.com/user-attachments/assets/337cfea8-03bd-49c3-80b0-dd37fd641ef0)
