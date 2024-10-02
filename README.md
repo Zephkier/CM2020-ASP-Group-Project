@@ -12,7 +12,7 @@ This was a group project that uses the Agile methodology to create an online lea
 
 Open the terminal to this directory and execute the following commands to setup and run the web application:
 
-![Screenshot of terminal accessing this directory](https://github.com/user-attachments/assets/9d0988c3-e69c-4052-a847-df7e6c24fd59)
+![Screenshot of terminal accessing this directory](https://github.com/user-attachments/assets/94eaabbb-94a7-40f0-9081-becdc615a640)
 
 Install the necessary Node dependencies as per `package.json`:
 
